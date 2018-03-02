@@ -1,12 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="BwInf36_Runde02_Fritsch" company="" webLink="https://github.com/atalantus/BwInf36_Runde02" view-date="2018-03-02" view-index="0" gantt-divider-location="300" resource-divider-location="300" version="2.8.6" locale="de">
+<?xml version="1.0" encoding="UTF-8"?><project name="BwInf36_Runde02_Fritsch" company="" webLink="https://github.com/atalantus/BwInf36_Runde02" view-date="2018-03-09" view-index="0" gantt-divider-location="555" resource-divider-location="300" version="2.8.6" locale="de">
     <description>
-        <![CDATA[Projekt Management für die zweite Runde des Bundeswettbewerbs Informatik von 2017
-(Stand: 02.03.2018)]]>
+        <![CDATA[
+        
+        
+        
+        
+        Projekt Management für die zweite Runde des Bundeswettbewerbs Informatik von 2017
+(Stand: 02.03.2018)
+    
+    
+    
+    
+    ]]>
     </description>
-    <view zooming-state="default:2" id="gantt-chart">
-        <field id="tpd3" name="Vorgang" width="167" order="0"/>
-        <field id="tpd4" name="Anfang" width="65" order="1"/>
-        <field id="tpd5" name="Ende" width="64" order="2"/>
+    <view zooming-state="default:0" id="gantt-chart">
+        <field id="tpd3" name="Vorgang" width="222" order="0"/>
+        <field id="tpd4" name="Anfang" width="165" order="1"/>
+        <field id="tpd5" name="Ende" width="164" order="2"/>
+        <option id="color.recent">
+            <![CDATA[#999900 #cc00cc #0066cc #ccffcc #ccccff #009999 #ffff00 #ff0033]]>
+        </option>
     </view>
     <view id="resource-table">
         <field id="0" name="Ressource" width="210" order="0"/>
@@ -36,6 +49,48 @@
             <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
             <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
         </taskproperties>
+        <task id="41" name="BwInf" color="#ccccff" meeting="false" start="2018-03-02" duration="26" complete="0" thirdDate="2018-02-07" thirdDate-constraint="0" expand="true">
+            <task id="42" name="Programmieren" color="#000000" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" project="true" start="2018-03-02" duration="21" complete="0" thirdDate="2018-02-26" thirdDate-constraint="0" expand="true">
+                <task id="43" name="Aufgabe 1" color="#999900" meeting="false" start="2018-03-02" duration="16" complete="0" thirdDate="2018-03-02" thirdDate-constraint="0" expand="true">
+                    <task id="74" name="WallBuilder Grundlegendes programmieren" color="#8cb6ce" meeting="false" start="2018-03-02" duration="2" complete="0" thirdDate="2018-03-02" thirdDate-constraint="0" expand="true"/>
+                    <task id="76" name="Performanten Algorithmus finden" color="#8cb6ce" meeting="false" start="2018-03-02" duration="7" complete="0" thirdDate="2018-03-02" thirdDate-constraint="0" priority="2" expand="true"/>
+                    <task id="79" name="Algorithmus programmieren" color="#8cb6ce" meeting="false" start="2018-03-12" duration="5" complete="0" thirdDate="2018-03-12" thirdDate-constraint="0" priority="2" expand="true"/>
+                    <task id="82" name="ABSCHLUSS | Algorithmus" color="#999900" meeting="true" start="2018-03-16" duration="0" complete="0" thirdDate="2018-03-16" thirdDate-constraint="0" expand="true"/>
+                    <task id="121" name="Testing" color="#8cb6ce" meeting="false" start="2018-03-16" duration="2" complete="0" thirdDate="2018-03-16" thirdDate-constraint="0" expand="true"/>
+                    <task id="84" name="Refactoring" color="#8cb6ce" meeting="false" start="2018-03-19" duration="5" complete="0" thirdDate="2018-03-19" thirdDate-constraint="0" priority="0" expand="true"/>
+                    <task id="123" name="Testing" color="#8cb6ce" meeting="false" start="2018-03-23" duration="1" complete="0" thirdDate="2018-03-22" thirdDate-constraint="0" expand="true"/>
+                    <task id="86" name="ABSCHLUSS | Aufgabe 1" color="#999900" meeting="true" start="2018-03-26" duration="0" complete="0" thirdDate="2018-03-23" thirdDate-constraint="0" expand="true"/>
+                </task>
+                <task id="44" name="Aufgabe 3" color="#009999" meeting="false" start="2018-03-05" duration="20" complete="0" thirdDate="2018-02-26" thirdDate-constraint="0" expand="true">
+                    <task id="45" name="Pseudocode Algorithmus Map01" color="#8cb6ce" meeting="false" start="2018-03-05" duration="1" complete="0" thirdDate="2018-03-07" thirdDate-constraint="0" expand="true"/>
+                    <task id="46" name="Map02 fertigmachen" color="#8cb6ce" meeting="false" start="2018-03-05" duration="1" complete="0" thirdDate="2018-03-07" thirdDate-constraint="0" expand="true"/>
+                    <task id="47" name="Pseudocode Algorithmus Map02" color="#8cb6ce" meeting="false" start="2018-03-06" duration="1" complete="0" thirdDate="2018-03-08" thirdDate-constraint="0" expand="true"/>
+                    <task id="48" name="Algorithmus programmieren" color="#8cb6ce" meeting="false" start="2018-03-06" duration="10" complete="0" thirdDate="2018-03-08" thirdDate-constraint="0" priority="2" expand="true"/>
+                    <task id="49" name="ABSCHLUSS | Algorithmus" color="#009999" meeting="true" start="2018-03-19" duration="0" complete="0" thirdDate="2018-03-21" thirdDate-constraint="0" expand="true"/>
+                    <task id="50" name="GUI programmieren" color="#8cb6ce" meeting="false" start="2018-03-19" duration="6" complete="0" thirdDate="2018-03-21" thirdDate-constraint="0" expand="true"/>
+                    <task id="51" name="Unterstützung von .ppm Dateien" color="#8cb6ce" meeting="false" start="2018-03-26" duration="3" complete="0" thirdDate="2018-03-29" thirdDate-constraint="0" expand="true"/>
+                    <task id="133" name="Testing" color="#8cb6ce" meeting="false" start="2018-03-28" duration="1" complete="0" thirdDate="2018-04-02" thirdDate-constraint="0" expand="true"/>
+                    <task id="52" name="Refactoring" color="#8cb6ce" meeting="false" start="2018-03-28" duration="3" complete="0" thirdDate="2018-04-30" thirdDate-constraint="0" expand="true"/>
+                    <task id="134" name="Testing" color="#8cb6ce" meeting="false" start="2018-03-30" duration="1" complete="0" thirdDate="2018-04-05" thirdDate-constraint="0" expand="true"/>
+                    <task id="53" name="ABSCHLUSS | Aufgabe 3" color="#009999" meeting="true" start="2018-04-02" duration="0" complete="0" thirdDate="2018-04-06" thirdDate-constraint="0" expand="true"/>
+                </task>
+            </task>
+            <task id="54" name="Dokumentation" color="#cc00cc" meeting="false" project="true" start="2018-03-26" duration="10" complete="0" thirdDate="2018-03-02" thirdDate-constraint="0" expand="true">
+                <task id="55" name="Aufgabe 1" color="#999900" meeting="false" start="2018-03-26" duration="5" complete="0" thirdDate="2018-03-26" thirdDate-constraint="0" priority="2" expand="true"/>
+                <task id="56" name="Aufgabe 3" color="#009999" meeting="false" start="2018-03-27" duration="7" complete="0" thirdDate="2018-04-02" thirdDate-constraint="0" priority="2" expand="true"/>
+                <task id="145" name="Korrektur" color="#8cb6ce" meeting="false" start="2018-04-04" duration="3" complete="0" thirdDate="2018-04-05" thirdDate-constraint="0" expand="true"/>
+            </task>
+            <task id="143" name="ABSCHLUSS | Dokumentation" color="#cc00cc" meeting="true" start="2018-04-06" duration="0" complete="0" thirdDate="2018-02-12" thirdDate-constraint="0" expand="true"/>
+            <task id="110" name="BwInf Einsendeschluss" color="#ff0033" meeting="true" start="2018-04-09" duration="0" complete="0" thirdDate="2018-04-09" thirdDate-constraint="0" priority="4" expand="true"/>
+        </task>
+        <task id="59" name="W-Seminar" color="#ccffcc" meeting="false" start="2018-04-20" duration="139" complete="0" thirdDate="2018-02-26" thirdDate-constraint="0" expand="false">
+            <task id="67" name="Refactoring" meeting="false" start="2018-04-20" duration="1" complete="0" expand="true">
+                <task id="68" name="Aufgabe 1" color="#8cb6ce" meeting="false" start="2018-04-20" duration="1" complete="0" thirdDate="2018-02-26" thirdDate-constraint="0" expand="true"/>
+                <task id="69" name="Aufgabe 3" color="#8cb6ce" meeting="false" start="2018-04-20" duration="1" complete="0" thirdDate="2018-02-26" thirdDate-constraint="0" expand="true"/>
+            </task>
+            <task id="70" name="Seminararbeit" color="#0066cc" meeting="false" start="2018-07-20" duration="1" complete="0" thirdDate="2018-07-20" thirdDate-constraint="0" priority="4" expand="true"/>
+            <task id="111" name="Seminararbeit Abgabe" color="#ff0033" meeting="true" start="2018-11-01" duration="0" complete="0" thirdDate="2018-02-26" thirdDate-constraint="0" priority="4" expand="true"/>
+        </task>
     </tasks>
     <resources/>
     <allocations/>
