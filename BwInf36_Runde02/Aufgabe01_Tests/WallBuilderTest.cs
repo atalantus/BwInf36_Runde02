@@ -12,21 +12,30 @@ namespace Aufgabe01_Tests
         {
             WallBuilder wb = new WallBuilder
             {
-                AnzahlKloetzchen = 2
+                AnzahlKloetze = 2
             };
-            Assert.AreEqual(2, wb.AnzahlKloetzchen);
+            Assert.AreEqual(2, wb.AnzahlKloetze);
             Assert.AreEqual(3, wb.MauerBreite);
             Assert.AreEqual(2, wb.MaxMauerHoehe);
             Assert.AreEqual(2, wb.AnzahlFugenStellen);
+            Assert.AreEqual(2, wb.Mauer.GetLength(0));
+            Assert.AreEqual(2, wb.Mauer.GetLength(1));
+            Assert.AreEqual(-1, wb.Mauer[0, 1]);
 
-            wb.AnzahlKloetzchen = 4;
-            Assert.AreEqual(4, wb.AnzahlKloetzchen);
+            wb.AnzahlKloetze = 4;
+            Assert.AreEqual(4, wb.AnzahlKloetze);
             Assert.AreEqual(10, wb.MauerBreite);
             Assert.AreEqual(3, wb.MaxMauerHoehe);
             Assert.AreEqual(9, wb.AnzahlFugenStellen);
+            Assert.AreEqual(3, wb.Mauer.GetLength(0));
+            Assert.AreEqual(4, wb.Mauer.GetLength(1));
+            Assert.AreEqual(-1, wb.Mauer[2, 3]);
 
-            wb.AnzahlKloetzchen = 10;
+            wb.AnzahlKloetze = 10;
             Assert.AreEqual(6, wb.MaxMauerHoehe);
+            Assert.AreEqual(6, wb.Mauer.GetLength(0));
+            Assert.AreEqual(10, wb.Mauer.GetLength(1));
+            Assert.AreEqual(-1, wb.Mauer[4, 7]);
         }
     }
 }

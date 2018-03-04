@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Mauerersteller</title>
+
+    <script defer src="jquery.min.js"></script>
+    <script defer src="main.js"></script>
+
+    <style type="text/css">
+        .row {
+            display: flex;
+        }
+        .row:not(:last-child) .brick {
+            border-bottom-width: 0px !important;
+        }
+        .brick {
+            border: 1px solid black;
+            text-align: center;
+            font-size: 20px;
+        }
+        .brick:not(:last-child) {
+            border-right-color: red;
+        }
+        .brick:not(:first-child) {
+            border-left-color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tool zum Erstellen von Mauern</h1>
+    <h3><a href="https://github.com/atalantus/BwInf36_Runde02">Für die 2 Runde des 36 BwInf</a></h3>
+    <hr>
+    <div id="wall-container"></div>
+</body>
+</html>

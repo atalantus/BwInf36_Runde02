@@ -11,17 +11,23 @@ namespace Aufgabe01
     {
         static void Main(string[] args)
         {
-            // Variablen
+            /**
+             * Variablen
+             */
             WallBuilder wallBuilder = new WallBuilder();
 
-            // Header
+            /**
+             * Header
+             */
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("BwInf36 | Runde 2 | Aufgabe 1 (Die Kunst der Fuge)");
             Console.WriteLine("==================================================");
             Console.WriteLine();
             Console.ResetColor();
 
-            // Eingabe: Anzahl Kloetzchen
+            /**
+             * Eingabe: Anzahl Kloetzchen
+             */
             Console.Write("Anzahl der Kloetzchen in einer Reihe: ");
             int.TryParse(Console.ReadLine(), out var eingabe);
 
@@ -36,20 +42,23 @@ namespace Aufgabe01
                 int.TryParse(Console.ReadLine(), out eingabe);
             }
 
-            wallBuilder.AnzahlKloetzchen = eingabe;
+            wallBuilder.AnzahlKloetze = eingabe;
 
             Console.ResetColor();
 
             Console.WriteLine();
 
-            // Ausgabe der Werte
+            /**
+             * Ausgabe der Werte
+             */
 
-            Console.WriteLine($"Anzahl Kloetzchen in einer Reihe: {wallBuilder.AnzahlKloetzchen}");
+            Console.WriteLine($"Anzahl Kloetzchen in einer Reihe: {wallBuilder.AnzahlKloetze}");
             Console.WriteLine($"Breite der Mauer: {wallBuilder.MauerBreite}");
             Console.WriteLine($"Maximale Hoehe der Mauer: {wallBuilder.MaxMauerHoehe}");
-            Console.WriteLine($"Anzahl verfuegbare Stellen fuer Fugen: {wallBuilder.AnzahlFugenStellen}");
+            Console.WriteLine($"Anzahl verfuegbarer Stellen fuer Fugen: {wallBuilder.AnzahlFugenStellen}");
+            Console.WriteLine($"Anzahl benoetigter Fugen fuer Mauer der maximalen Hoehe: {wallBuilder.MaxFugenBenutzt}");
 
-            BigInteger varianten = BigInteger.Pow(Utilities.FakultaetBerechnen(wallBuilder.AnzahlKloetzchen), 2);
+            BigInteger varianten = BigInteger.Pow(Utilities.FakultaetBerechnen(wallBuilder.AnzahlKloetze), 2);
             try
             {
                 Console.WriteLine($"Anzahl an Mauer Varianten: {varianten.ToString()}");
@@ -58,18 +67,18 @@ namespace Aufgabe01
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("ACHTUNG!");
-                Console.WriteLine($"Die Anzahl an moeglichen Varianten für eine Mauer mit einer Kloetzchen Anzahl von {wallBuilder.AnzahlKloetzchen} ist zu gross, um sie auszurechnen!");
+                Console.WriteLine($"Die Anzahl an moeglichen Varianten für eine Mauer mit einer Kloetzchen Anzahl von {wallBuilder.AnzahlKloetze} ist zu gross, um sie auszurechnen!");
                 Console.ResetColor();
             }
 
             Console.WriteLine();
-            Console.WriteLine("Druecke ENTER, um den Brute Force Vorgang zur Suche der Mauer zu starten.");
+            Console.WriteLine("Druecke ENTER, um den Algorithmus zur Suche der Mauer zu starten.");
             Console.WriteLine();
 
-            // TODO: Starte Brute Force
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("TODO: Starte Brute Force");
-            Console.ResetColor();
+            /**
+             * Starte Algorithmus
+             */
+            wallBuilder.StartBruteForce();
 
             Console.ReadLine();
         }
