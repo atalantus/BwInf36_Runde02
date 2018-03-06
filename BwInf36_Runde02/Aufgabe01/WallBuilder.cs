@@ -167,17 +167,28 @@ namespace Aufgabe01
 
         public void PrintMauer()
         {
+            var mauerBuilder = "";
             for (int y = 0; y < Mauer.GetLength(0); y++)
             {
                 var reihe = "";
+                var mauerBuilderReihe = "[";
                 for (int x = 0; x < Mauer.GetLength(1); x++)
                 {
                     var placeholder = String.Concat(Enumerable.Repeat("0", Mauer[y, x]));
                     var value = Mauer[y, x].ToString(placeholder);
                     reihe += $"|{value}";
+
+                    if (x != Mauer.GetLength(1) - 1)
+                        mauerBuilderReihe += $"{Mauer[y, x]}, ";
+                    else
+                        mauerBuilderReihe += $"{Mauer[y, x]}],\n";
                 }
                 Console.WriteLine($"{reihe}|");
+                mauerBuilder += mauerBuilderReihe;
             }
+            Console.WriteLine();
+            Console.WriteLine("String für Mauerersteller Website:");
+            Console.WriteLine($"[\n{mauerBuilder}]");
         }
 
         #endregion
