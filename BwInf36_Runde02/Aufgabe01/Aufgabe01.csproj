@@ -43,8 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FugenUeberlappungException.cs" />
+    <Compile Include="KeinMoeglicherKlotzException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reihe.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="WallBuilder.cs" />
   </ItemGroup>

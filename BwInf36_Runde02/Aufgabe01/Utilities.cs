@@ -10,9 +10,6 @@ namespace Aufgabe01
         /// <summary>
         /// Berechnet die Fakultaet einer Zahl
         /// </summary>
-        /// 
-        /// Keine Rekursion wegen StackOverflowException bei zu grossen Zahlen!
-        /// 
         /// <param name="n">Der Wert von dem die Fakultaet berechnet werden soll</param>
         /// <returns>Die Fakultaet</returns>
         public static BigInteger FakultaetBerechnen(int n)

@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Aufgabe01
 {
@@ -29,28 +25,43 @@ namespace Aufgabe01
              * Eingabe: Anzahl Kloetzchen
              */
             Console.Write("Anzahl der Kloetzchen in einer Reihe: ");
-            int.TryParse(Console.ReadLine(), out var eingabe);
+            int.TryParse(Console.ReadLine(), out var anzahlKloetze);
 
             Console.ForegroundColor = ConsoleColor.Red;
-            while (eingabe <= 1)
+            while (anzahlKloetze <= 1)
             {
                 Console.WriteLine();
-                Console.WriteLine(eingabe == 1
+                Console.WriteLine(anzahlKloetze == 1
                     ? "Fuer die maximale Anzahl von 1 Klotz, kann eine unendlich hohe Mauer gebaut werden!"
                     : "Die von Ihnen angegebene Anzahl Kloetzchen kann nicht verarbeitet werden!");
                 Console.Write("Bitte waehlen Sie eine andere Anzahl von Kloetzchen in einer Reihe: ");
-                int.TryParse(Console.ReadLine(), out eingabe);
+                int.TryParse(Console.ReadLine(), out anzahlKloetze);
             }
-
-            wallBuilder.AnzahlKloetze = eingabe;
 
             Console.ResetColor();
 
             Console.WriteLine();
 
             /**
-             * Ausgabe der Werte
+             * Debug Modus Abfrage und Ausgabe der Werte
              */
+            var started = false;
+            while (!started)
+            {
+                Console.WriteLine("Starte den Algorithmus im Debug oder Normalem Modus: (D/N)");
+                var input = Console.ReadLine()?.ToUpper();
+                if (input == "D")
+                {
+                    started = true;
+                    wallBuilder.SetUpWallBuilder(anzahlKloetze, true);
+                }
+                else if (input == "N")
+                {
+                    started = true;
+                    wallBuilder.SetUpWallBuilder(anzahlKloetze, false);
+                }
+            }
+            Console.WriteLine();
 
             Console.WriteLine($"Anzahl Kloetzchen in einer Reihe: {wallBuilder.AnzahlKloetze}");
             Console.WriteLine($"Breite der Mauer: {wallBuilder.MauerBreite}");
@@ -58,7 +69,7 @@ namespace Aufgabe01
             Console.WriteLine($"Anzahl verfuegbarer Stellen fuer Fugen: {wallBuilder.AnzahlFugenStellen}");
             Console.WriteLine($"Anzahl benoetigter Fugen fuer Mauer der maximalen Hoehe: {wallBuilder.MaxFugenBenutzt}");
 
-            BigInteger varianten = BigInteger.Pow(Utilities.FakultaetBerechnen(wallBuilder.AnzahlKloetze), 2);
+            var varianten = BigInteger.Pow(Utilities.FakultaetBerechnen(wallBuilder.AnzahlKloetze), 2);
             try
             {
                 Console.WriteLine($"Anzahl an Mauer Varianten: {varianten.ToString()}");
@@ -72,14 +83,78 @@ namespace Aufgabe01
             }
 
             Console.WriteLine();
-            Console.WriteLine("Druecke ENTER, um den Algorithmus zur Suche der Mauer zu starten.");
-            Console.WriteLine();
+            
 
             /**
              * Starte Algorithmus
              */
-            wallBuilder.StartBruteForce();
+            var end = false;
+            while (!end)
+            {
+                try
+                {
+                    wallBuilder.StartAlgorithmus();
+                    end = true;
+                }
+                catch (FugenUeberlappungException e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine();
+                    Console.WriteLine("ERROR:");
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine();
+                    Console.ResetColor();
 
+                    if (!wallBuilder.IsDebug)
+                    {
+                        Console.WriteLine("Algorithmus nochmal im Debug Modus starten? (Y/N)");
+                        var input = Console.ReadLine()?.ToUpper();
+                        if (input == "Y")
+                        {
+                            wallBuilder.SetUpWallBuilder(anzahlKloetze, true);
+                        }
+                    }
+                    else
+                    {
+                        end = true;
+                    }
+
+                    Console.WriteLine();
+                }
+                catch (KeinMoeglicherKlotzException e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine();
+                    Console.WriteLine("ERROR:");
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine();
+                    Console.ResetColor();
+
+                    if (!wallBuilder.IsDebug)
+                    {
+                        Console.WriteLine("Algorithmus nochmal im Debug Modus starten? (Y/N)");
+                        var input = Console.ReadLine()?.ToUpper();
+                        if (input == "Y")
+                        {
+                            wallBuilder.SetUpWallBuilder(anzahlKloetze, true);
+                        }
+                    }
+                    else
+                    {
+                        end = true;
+                    }
+
+                    Console.WriteLine();
+                }
+                catch (Exception e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine();
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine();
+                    Console.ResetColor();
+                }
+            }
             Console.ReadLine();
         }
     }

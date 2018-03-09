@@ -13,28 +13,44 @@ namespace Aufgabe01
 
         private int _anzahlKloetze;
         private bool _isWorking;
+        private bool _isDebug;
 
         #endregion
 
         #region Properties
 
+        private int Counter { get; set; }
+
+        /// <summary>
+        /// Wurde der Algorithmus im Debug Mode gestartet
+        /// </summary>
+        public bool IsDebug
+        {
+            get => _isDebug;
+            set
+            {
+                if (!IsWorking)
+                    _isDebug = value;
+            }
+        }
+
         /// <summary>
         /// Die aktuelle Mauer
         /// </summary>
-        public int[,] Mauer { get; set; }
+        public Reihe[] Mauer { get; set; }
 
         /// <summary>
-        /// Enthaelt die bisherigen Spalten, inklusive Anfang und Ende
+        /// Enthaelt die bisherigen Spalten (Ohne Anfangs- und End-Spalte)
         /// </summary>
         public bool[] Spalten { get; set; }
 
         /// <summary>
-        /// Die Anzahl von Kloetze in einer Reihe
+        /// Die Anzahl von Nummern in einer Reihe
         /// </summary>
         public int AnzahlKloetze
         {
             get => _anzahlKloetze;
-            set
+            private set
             {
                 if (value > 1 && !IsWorking)
                 {
@@ -78,31 +94,41 @@ namespace Aufgabe01
 
         #region Methods
 
-        public void StartBruteForce()
+        public void SetUpWallBuilder(int anzahlKloetze, bool debug)
+        {
+            AnzahlKloetze = anzahlKloetze;
+            IsDebug = debug;
+        }
+
+        public void StartAlgorithmus()
         {
             IsWorking = true;
-            for (int y = 0; y < Mauer.GetLength(0); y++)
-            {
-                for (int x = 0; x < Mauer.GetLength(1); x++)
-                {
-                    AddKlotz(y, x, x + 1);
-                }
-            }
-
-            //for (int i = 0; i < Utilities.FakultaetBerechnen(AnzahlKloetze); i++)
+            //for (int y = 0; y < Mauer.Length; y++)
             //{
-            //    for (int n = 1; n <= AnzahlKloetze; n++)
+            //    Reihe curReihe = Mauer[y];
+            //    for (int x = 0; x < AnzahlKloetze; x++)
             //    {
-            //        for (int xPos = 0; xPos < AnzahlKloetze; xPos++)
+            //        if (!AddKlotz(y, x, x + 1))
             //        {
-            //            AddKlotz(0, xPos, n);
+            //            IsWorking = false;
+            //            PrintMauer(false);
+            //            throw new FugenUeberlappungException($"Spalten wuerden sich ueberlappen!\n{x+1}er Klotz in Reihe {y}, Platz {x}");
             //        }
             //    }
             //}
+            Counter = 0;
+            for (int n = 0; n < AnzahlKloetze; n++)
+            {
+                //Reihe[] sortedMauer = Mauer;
+                for (int m = 0; m < Mauer.Length; m++)
+                {
+                    Counter++;
+                    Array.Sort(Mauer);
+                    FindNextKlotz(Mauer[0]);
+                }
+            }
 
-
-
-            PrintMauer();
+            PrintMauer(true);
             IsWorking = false;
         }
 
@@ -115,97 +141,96 @@ namespace Aufgabe01
             AnzahlFugenStellen = MauerBreite - 1;
             MaxMauerHoehe = AnzahlFugenStellen / (AnzahlKloetze - 1);
             MaxFugenBenutzt = (AnzahlKloetze - 1) * MaxMauerHoehe;
-            Mauer = new int[MaxMauerHoehe, AnzahlKloetze];
-            Mauer.Fill2DArray(-1);
-            Spalten = new bool[MauerBreite + 1];
+            Mauer = new Reihe[MaxMauerHoehe];
+
+            for (var i = 0; i < Mauer.Length; i++)
+            {
+                Mauer[i] = new Reihe(AnzahlKloetze);
+            }
+
+            Spalten = new bool[AnzahlFugenStellen];
+        }
+
+        private void FindNextKlotz(Reihe reihe)
+        {
+            for (int n = 1; n <= AnzahlKloetze; n++)
+            {
+                if (reihe.Nummern[n - 1])
+                    if (AddKlotz(reihe, reihe.LastKlotzIndex + 1, n)) return;
+            }
+
+            IsWorking = false;
+            throw new KeinMoeglicherKlotzException("Es gibt keinen passenden Klotz mehr fuer die naechste Reihe!");
         }
 
         /// <summary>
         /// Fuegt einen Klotz in die Mauer ein
         /// </summary>
-        /// <param name="y">y-Position des Klotzes</param>
+        /// <param name="reihe">Reihe des Klotzes</param>
         /// <param name="x">x-Position des Klotzes</param>
         /// <param name="value">Der Wert des Klotzes</param>
-        private void AddKlotz(int y, int x, int value)
+        private bool AddKlotz(Reihe reihe, int x, int value)
         {
-            Mauer[y, x] = value;
-        }
-
-        /// <summary>
-        /// Berechnet die Summen von einem
-        /// </summary>
-        /// <param name="searchedY">y-Position des Klotzes</param>
-        /// <param name="searchedX">x-Position des Klotzes</param>
-        /// <returns><see cref="RowSum"/></returns>
-        private RowSum GetRowSum(int searchedY, int searchedX)
-        {
-            var right = 0;
-            var left = 0;
-
-            for (int i = 0; i <= searchedX; i++)
+            var letzterKlotz = !(x < AnzahlKloetze - 1);
+            if (!letzterKlotz)
             {
-                if (Mauer[searchedY, i] == -1)
-                {
-                    right = -1;
-                    break;
-                }
-                right += Mauer[searchedY, i];
+                // Es ist nicht der letzte Klotz in der Reihe
+                int rsRight = reihe.GetRowSum(x);
+                rsRight += value;
+                if (Spalten[rsRight - 1]) return false; // Spalte bereits belegt
+                Spalten[rsRight - 1] = true; // Neue Spalte eintragen
+            }
+            
+            reihe.SetKlotz(x, value);
+
+            if (IsDebug)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"Step {Counter} - {value}er Klotz an der {x}ten Stelle der obersten Reihe");
+                Console.WriteLine();
+                PrintMauer(false);
             }
 
-            for (int i = Mauer.GetLength(0); i >= searchedX; i--)
-            {
-                if (Mauer[searchedY, i] == -1)
-                {
-                    right = -1;
-                    break;
-                }
-                left += Mauer[searchedY, i];
-            }
-
-            return new RowSum(right, left);
+            return true;
         }
 
-        public void PrintMauer()
+        public void PrintMauer(bool fertig)
         {
+            if (fertig)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"FERTIGE MAUER FUER N = {AnzahlKloetze}");
+                Console.WriteLine();
+                Console.ResetColor();
+            }
             var mauerBuilder = "";
-            for (int y = 0; y < Mauer.GetLength(0); y++)
+            for (int y = 0; y < Mauer.Length; y++)
             {
+                Reihe curReihe = Mauer[y];
                 var reihe = "";
                 var mauerBuilderReihe = "[";
-                for (int x = 0; x < Mauer.GetLength(1); x++)
+                for (int x = 0; x < AnzahlKloetze; x++)
                 {
-                    var placeholder = String.Concat(Enumerable.Repeat("0", Mauer[y, x]));
-                    var value = Mauer[y, x].ToString(placeholder);
+                    var placeholder = "";
+                    placeholder = String.Concat(Enumerable.Repeat("0", curReihe.Kloetze[x]));
+                    var value = curReihe.Kloetze[x].ToString(placeholder);
                     reihe += $"|{value}";
 
-                    if (x != Mauer.GetLength(1) - 1)
-                        mauerBuilderReihe += $"{Mauer[y, x]}, ";
+                    if (x != curReihe.Kloetze.Length - 1)
+                        mauerBuilderReihe += $"{curReihe.Kloetze[x]}, ";
                     else
-                        mauerBuilderReihe += $"{Mauer[y, x]}],\n";
+                        mauerBuilderReihe += $"{curReihe.Kloetze[x]}],\n";
                 }
                 Console.WriteLine($"{reihe}|");
                 mauerBuilder += mauerBuilderReihe;
             }
             Console.WriteLine();
-            Console.WriteLine("String für Mauerersteller Website:");
-            Console.WriteLine($"[\n{mauerBuilder}]");
-        }
 
-        #endregion
-
-        #region Structs
-        /// <summary>
-        /// Speichert die Reihen-Summen eines Klotzes
-        /// </summary>
-        private struct RowSum
-        {
-            public int Right { get; }
-            public int Left { get; }
-
-            public RowSum(int right, int left)
+            if (fertig && IsDebug)
             {
-                Right = right;
-                Left = left;
+                Console.WriteLine("String für Mauerersteller Website:");
+                Console.WriteLine();
+                Console.WriteLine($"[\n{mauerBuilder}]");
             }
         }
 
