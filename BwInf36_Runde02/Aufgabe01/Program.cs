@@ -61,28 +61,6 @@ namespace Aufgabe01
                     wallBuilder.SetUpWallBuilder(anzahlKloetze, false);
                 }
             }
-            Console.WriteLine();
-
-            Console.WriteLine($"Anzahl Kloetzchen in einer Reihe: {wallBuilder.AnzahlKloetze}");
-            Console.WriteLine($"Breite der Mauer: {wallBuilder.MauerBreite}");
-            Console.WriteLine($"Maximale Hoehe der Mauer: {wallBuilder.MaxMauerHoehe}");
-            Console.WriteLine($"Anzahl verfuegbarer Stellen fuer Fugen: {wallBuilder.AnzahlFugenStellen}");
-            Console.WriteLine($"Anzahl benoetigter Fugen fuer Mauer der maximalen Hoehe: {wallBuilder.MaxFugenBenutzt}");
-
-            var varianten = BigInteger.Pow(Utilities.FakultaetBerechnen(wallBuilder.AnzahlKloetze), 2);
-            try
-            {
-                Console.WriteLine($"Anzahl an Mauer Varianten: {varianten.ToString()}");
-            }
-            catch (OutOfMemoryException)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("ACHTUNG!");
-                Console.WriteLine($"Die Anzahl an moeglichen Varianten für eine Mauer mit einer Kloetzchen Anzahl von {wallBuilder.AnzahlKloetze} ist zu gross, um sie auszurechnen!");
-                Console.ResetColor();
-            }
-
-            Console.WriteLine();
             
 
             /**
@@ -98,6 +76,8 @@ namespace Aufgabe01
                 }
                 catch (FugenUeberlappungException e)
                 {
+                    if (wallBuilder.IsDebug) wallBuilder.PrintWallProperties();
+
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine();
                     Console.WriteLine("ERROR:");
@@ -107,12 +87,13 @@ namespace Aufgabe01
 
                     if (!wallBuilder.IsDebug)
                     {
-                        Console.WriteLine("Algorithmus nochmal im Debug Modus starten? (Y/N)");
+                        Console.WriteLine("Schreibe [Y] um den Algorithmus nochmal im Debug Modus zu starten");
                         var input = Console.ReadLine()?.ToUpper();
                         if (input == "Y")
                         {
                             wallBuilder.SetUpWallBuilder(anzahlKloetze, true);
                         }
+                        else end = true;
                     }
                     else
                     {
@@ -123,6 +104,8 @@ namespace Aufgabe01
                 }
                 catch (KeinMoeglicherKlotzException e)
                 {
+                    if (wallBuilder.IsDebug) wallBuilder.PrintWallProperties();
+
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine();
                     Console.WriteLine("ERROR:");
@@ -132,12 +115,13 @@ namespace Aufgabe01
 
                     if (!wallBuilder.IsDebug)
                     {
-                        Console.WriteLine("Algorithmus nochmal im Debug Modus starten? (Y/N)");
+                        Console.WriteLine("Schreibe [Y] um den Algorithmus nochmal im Debug Modus zu starten");
                         var input = Console.ReadLine()?.ToUpper();
                         if (input == "Y")
                         {
                             wallBuilder.SetUpWallBuilder(anzahlKloetze, true);
                         }
+                        else end = true;
                     }
                     else
                     {
@@ -148,6 +132,8 @@ namespace Aufgabe01
                 }
                 catch (Exception e)
                 {
+                    if (wallBuilder.IsDebug) wallBuilder.PrintWallProperties();
+
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine();
                     Console.WriteLine(e.Message);
@@ -155,6 +141,7 @@ namespace Aufgabe01
                     Console.ResetColor();
                 }
             }
+            Console.WriteLine("Druecke ENTER um das Programm zu beenden");
             Console.ReadLine();
         }
     }

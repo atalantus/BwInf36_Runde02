@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 
 namespace Aufgabe01
 {
@@ -194,10 +194,36 @@ namespace Aufgabe01
             return true;
         }
 
+        public void PrintWallProperties()
+        {
+            Console.WriteLine();
+
+            Console.WriteLine($"Anzahl Kloetzchen in einer Reihe: {AnzahlKloetze}");
+            Console.WriteLine($"Breite der Mauer: {MauerBreite}");
+            Console.WriteLine($"Maximale Hoehe der Mauer: {MaxMauerHoehe}");
+            Console.WriteLine($"Anzahl verfuegbarer Stellen fuer Fugen: {AnzahlFugenStellen}");
+            Console.WriteLine($"Anzahl benoetigter Fugen fuer Mauer der maximalen Hoehe: {MaxFugenBenutzt}");
+
+            var varianten = BigInteger.Pow(Utilities.FakultaetBerechnen(AnzahlKloetze), 2);
+            try
+            {
+                Console.WriteLine($"Anzahl an Mauer Varianten: {varianten.ToString()}");
+            }
+            catch (OutOfMemoryException)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Die Anzahl an moeglichen Varianten für eine Mauer mit einer Kloetzchen Anzahl von {AnzahlKloetze} ist zu gross, um sie auszurechnen!");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine();
+        }
+
         public void PrintMauer(bool fertig)
         {
             if (fertig)
             {
+                PrintWallProperties();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine($"FERTIGE MAUER FUER N = {AnzahlKloetze}");
                 Console.WriteLine();
