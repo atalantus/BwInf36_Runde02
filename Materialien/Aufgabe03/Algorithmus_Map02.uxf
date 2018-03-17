@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>952</x>
+      <y>152</y>
+      <w>168</w>
+      <h>128</h>
+    </coordinates>
+    <panel_attributes>Pathfinder
+--
+StartNode Start
+Vector2 QuaxPos
+Vector2 StadtPos
+bool WegGefunden
+bool WegWirdGesucht
+--
+bool FindPath() // Später am besten der Weg</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>616</x>
+      <y>304</y>
+      <w>168</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>/NodeElement/
+/{abstract}/
+--
+bool SearchPath(Vector2 targetPos)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>792</x>
+      <y>184</y>
+      <w>176</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0
+m2=1
+&lt; hat als start node 
+</panel_attributes>
+    <additional_attributes>10.0;20.0;200.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>168</x>
+      <y>368</y>
+      <w>272</w>
+      <h>208</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=4
+m2=0
+hat als innere Quadrate &gt;</panel_attributes>
+    <additional_attributes>10.0;150.0;10.0;240.0;310.0;240.0;310.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>392</x>
+      <y>664</y>
+      <w>200</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>Quadrat
+--
+enum RechteckTypen { UNBEKANNT (Noch nicht geprüft), PASSIERBAR (Land und gemischt 20x20), WASSER, GEMISCHT }
+RechteckTypen rechteckTyp
+int LinksUntenPos
+int RechtsObenPos
+int Breite
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>480</x>
+      <y>368</y>
+      <w>112</w>
+      <h>312</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0
+m2=1
+hat als Quadrat &gt;
+</panel_attributes>
+    <additional_attributes>10.0;370.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>144</x>
+      <y>424</y>
+      <w>168</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Node
+--
+QuadratNode[] InnereQuadrate
+--
+Node(int linksUntenPos, int rechtsObenPos)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>144</x>
+      <y>272</y>
+      <w>168</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>AbschlussNode
+--
+AbschlussNode(int linksUntenPos, int rechtsObenPos)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>304</x>
+      <y>288</y>
+      <w>88</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>224</x>
+      <y>360</y>
+      <w>168</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>190.0;10.0;10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>608</x>
+      <y>152</y>
+      <w>192</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>StartNode
+--
+NodeElement[] StartQuadrate // Geht nur für Rechteckige Maps
+MapDaten mapData // Daten über die Map
+--
+StartNode(int linksUntenPos, int rechtsObenPos)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>688</x>
+      <y>216</y>
+      <w>24</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>376</x>
+      <y>288</y>
+      <w>168</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>/QuadratNode/
+/{abstract}/
+--
+Quadrat Quadrat
+int Checked
+int GCost // distance to QuaxPos
+int HCost // distance to StadtPos</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>536</x>
+      <y>328</y>
+      <w>96</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>744</x>
+      <y>216</y>
+      <w>176</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0
+m2=1,2
+hat als größte(s) Quadrat(e) &gt;
+</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>376</x>
+      <y>160</y>
+      <w>96</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>MapDaten
+--
+Vector2 Scale
+...</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>464</x>
+      <y>176</y>
+      <w>160</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0
+m2=1
+&lt; enthält Map Daten
+</panel_attributes>
+    <additional_attributes>10.0;20.0;180.0;20.0</additional_attributes>
+  </element>
+</diagram>

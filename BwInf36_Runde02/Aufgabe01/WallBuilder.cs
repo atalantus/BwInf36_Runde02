@@ -245,18 +245,24 @@ namespace Aufgabe01
                     if (x != curReihe.Kloetze.Length - 1)
                         mauerBuilderReihe += $"{curReihe.Kloetze[x]}, ";
                     else
-                        mauerBuilderReihe += $"{curReihe.Kloetze[x]}],\n";
+                        mauerBuilderReihe += $"{curReihe.Kloetze[x]}],";
                 }
                 Console.WriteLine($"{reihe}|");
                 mauerBuilder += mauerBuilderReihe;
             }
+
+            mauerBuilder = mauerBuilder.Remove(mauerBuilder.Length - 1);
             Console.WriteLine();
 
-            if (fertig && IsDebug)
+            if (fertig)
             {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine();
                 Console.WriteLine("String für Mauerersteller Website:");
                 Console.WriteLine();
-                Console.WriteLine($"[\n{mauerBuilder}]");
+                Console.WriteLine($"[{mauerBuilder}]");
+                Console.WriteLine();
+                Console.ResetColor();
             }
         }
 

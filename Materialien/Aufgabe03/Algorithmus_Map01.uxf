@@ -15,7 +15,9 @@ Node Start
 Vector2 QuaxPos
 Vector2 StadtPos
 bool WegGefunden
-bool WegWirdGesucht</panel_attributes>
+bool WegWirdGesucht
+--
+bool FindPath() // Später am besten der Weg</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -24,17 +26,17 @@ bool WegWirdGesucht</panel_attributes>
       <x>380</x>
       <y>100</y>
       <w>210</w>
-      <h>130</h>
+      <h>150</h>
     </coordinates>
     <panel_attributes>/NodeElement/
 /{abstract}/
 --
 Quadrat Quadrat
-bool Checked
+int Checked
 int GCost // distance to QuaxPos
 int HCost // distance to StadtPos
-int KeineAhnungCost // GCost + HCost
-</panel_attributes>
+--
+bool SearchPath(Vector2 targetPos)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -76,7 +78,7 @@ hat als innere Quadrate &gt;</panel_attributes>
     </coordinates>
     <panel_attributes>Quadrat
 --
-enum RechteckTypen { PASSIERBAR (Land und gemischt 20x20), WASSER, GEMISCHT }
+enum RechteckTypen { UNBEKANNT (Noch nicht geprüft), PASSIERBAR (Land und gemischt 20x20), WASSER, GEMISCHT }
 RechteckTypen rechteckTyp
 int LinksUntenPos
 int RechtsObenPos
@@ -88,16 +90,16 @@ int Breite
     <id>Relation</id>
     <coordinates>
       <x>490</x>
-      <y>220</y>
+      <y>240</y>
       <w>140</w>
-      <h>260</h>
+      <h>240</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0
 m2=1
 hat als Quadrat &gt;
 </panel_attributes>
-    <additional_attributes>10.0;240.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;220.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>

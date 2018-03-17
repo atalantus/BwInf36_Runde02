@@ -1,17 +1,19 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		Algorithmus aufteilen:
-		1. Suche nach QuaxPos (Algorithmus 1)
-		2. Dann nach TargetPos suchen (Algorithmus 2)
+		Algorithmus:
+		1. Suche nach QuaxPos
+		2. Dann Suche nach StadtPos
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class Pathfinder 
 {
+	Vector2 QuaxPos;
+	Vector2 StadtPos;
 	Node Start;
 	
-	public bool FindPath(Vector2 startPos, Vector2 targetPos) 
+	public bool FindPath() 
 	{
-		if (Start.SearchQuax(Vector2 startPos)) // Quax gefunden
-			return Start.SearchPath(Vector2 targetPos);
+		if (Start.SearchPath(QuaxPos)) // Quax gefunden
+			return Start.SearchPath(StadtPos); // Weg zu Ziel finden
 		else // Quax nicht gefunden!!!
 			return false;
 	}
@@ -29,6 +31,46 @@ class Node
 	RechteckTypen rechteckTyp;
 	int Breite;
 	
+	public bool SearchPath(Vector2 targetPos) 
+	{
+		if (rechteckTyp == RechteckTypen.UNBEKANNT) rechteckTyp = GetRechteckTyp(Breite); // ist ein Flug der Drohne
+		
+		if (rechteckTyp == WASSER) return false;
+		if (rechteckTyp == PASSIERBAR) return true;
+		if (rechteckTyp == GEMISCHT) 
+		{
+			Unterteile in innere Quadrate
+			bool möglicherWeg = false;
+			Quadrat[] sortedQuadrate = new Quadrat[4];
+			
+			sortedQuadrate = Innere Quadrate sortiert nach Nähe zu targetPos (Erste ist das mit der geringsten Entfernung)
+			
+			for (int i = 0; i < sortedQuadrate.length; i++) 
+			{
+				Node aktuellesInneresQuadrat = sortedQuadrate[i]
+				bool foundTarget = nächstesQuadrat.SearchPath(targetPos);
+				
+				if (foundTarget) // Weg zum Ziel wurde gefunden
+					return true;
+			}
+			
+			// Dieses Quadrat hilft nicht weiter!
+			return false;
+		}
+	}
+	
+	///
+	/// REPRAESENTIERT EINEN DROHNEN FLUG !!!
+	///
+	private RechteckTypen GetRechteckTyp(int breite) 
+	{
+		// TODO: Markiere Gebiet auf Karte
+		if (allesWasser) return RechteckTypen.WASSER;
+		else if (allesLand || breite == 2) return RechteckTypen.PASSIERBAR;
+		else return RechteckTypen.GEMISCHT;
+	}
+	
+	/*
 	public bool SearchQuax(Vector2 startPos) 
 	{
 		rechteckTyp = GetRechteckTyp(Breite);
@@ -56,37 +98,5 @@ class Node
 			return false;
 		}
 	}
-	
-	public bool SearchPath(Vector2 startPos, Vector2 targetPos) 
-	{
-		rechteckTyp = GetRechteckTyp(Breite);
-		
-		if (rechteckTyp == WASSER) return false;
-		if (rechteckTyp == PASSIERBAR) return true;
-		if (rechteckTyp == GEMISCHT) 
-		{
-			Unterteile in innere Quadrate
-			bool möglicherWeg = false;
-			Quadrat[] sortedQuadrate = new Quadrat[4];
-			
-			sortedQuadrate = Innere Quadrate sortiert nach Nähe zu targetPos (Erste ist das nächste)
-			
-			for (int i = 0; i < sortedQuadrate.length; i++) 
-			{
-				Node aktuellesInneresQuadrat = sortedQuadrate[i]
-				bool value = nächstesQuadrat.SearchPath(Vector2 startPos, Vector2 targetPos, hatQuaxPos);
-			}
-			
-			// Dieses Quadrat hilft nicht weiter!
-			return false;
-		}
-	}
-	
-	
-	private RechteckTypen GetRechteckTyp(int breite) 
-	{
-		if alles Wasser return RechteckTypen.WASSER;
-		else if alles Land ODER breite == 2 return RechteckTypen.PASSIERBAR;
-		else return RechteckTypen.GEMISCHT;
-	}
+	*/
 }
