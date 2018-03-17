@@ -4,8 +4,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>550</x>
-      <y>270</y>
+      <x>800</x>
+      <y>90</y>
       <w>210</w>
       <h>160</h>
     </coordinates>
@@ -21,28 +21,27 @@ bool WegWirdGesucht</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>130</x>
-      <y>270</y>
+      <x>380</x>
+      <y>100</y>
       <w>210</w>
-      <h>160</h>
+      <h>130</h>
     </coordinates>
-    <panel_attributes>Node
+    <panel_attributes>/NodeElement/
+/{abstract}/
 --
-Rechteck Rechteck
-Quadrat[] InnereQuadrate
+Quadrat Quadrat
 bool Checked
 int GCost // distance to QuaxPos
 int HCost // distance to StadtPos
 int KeineAhnungCost // GCost + HCost
---
-Node(int linksUntenPos, int rechtsObenPos)</panel_attributes>
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>330</x>
-      <y>340</y>
+      <x>580</x>
+      <y>160</y>
       <w>240</w>
       <h>50</h>
     </coordinates>
@@ -56,24 +55,24 @@ m2=1
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>140</x>
-      <y>150</y>
-      <w>210</w>
-      <h>140</h>
+      <x>80</x>
+      <y>290</y>
+      <w>180</w>
+      <h>110</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=4
 m2=0
-&lt; hat als innere Quadrate</panel_attributes>
-    <additional_attributes>180.0;120.0;180.0;20.0;10.0;20.0;10.0;120.0</additional_attributes>
+hat als innere Quadrate &gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0;150.0;90.0;150.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>170</x>
-      <y>630</y>
-      <w>700</w>
-      <h>230</h>
+      <x>420</x>
+      <y>460</y>
+      <w>250</w>
+      <h>170</h>
     </coordinates>
     <panel_attributes>Quadrat
 --
@@ -88,16 +87,68 @@ int Breite
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>240</x>
-      <y>420</y>
-      <w>150</w>
-      <h>230</h>
+      <x>490</x>
+      <y>220</y>
+      <w>140</w>
+      <h>260</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0
 m2=1
-hat als Rechteck &gt;
+hat als Quadrat &gt;
 </panel_attributes>
-    <additional_attributes>10.0;210.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;240.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>50</x>
+      <y>220</y>
+      <w>210</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Node
+--
+Node[] InnereQuadrate
+--
+Node(int linksUntenPos, int rechtsObenPos)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>50</x>
+      <y>80</y>
+      <w>210</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>AbschlussNode
+--
+
+--
+Node(int linksUntenPos, int rechtsObenPos)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>250</x>
+      <y>130</y>
+      <w>150</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>250</x>
+      <y>190</y>
+      <w>150</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;70.0</additional_attributes>
   </element>
 </diagram>
