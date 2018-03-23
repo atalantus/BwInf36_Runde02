@@ -1,44 +1,78 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
-using static Aufgabe01.WallBuilder;
 
 namespace Aufgabe01
 {
     /// <summary>
-    /// Hilf Methoden fuer Aufgabe 1
+    /// Helfer Methoden fuer Aufgabe 1
     /// </summary>
     public static class Utilities
     {
+
+        /// <summary>
+        /// Display the timer frequency and resolution
+        /// </summary>
+        public static void DisplayTimerProperties()
+        {
+            Console.WriteLine();
+            Console.WriteLine(Stopwatch.IsHighResolution
+                ? "Operations timed using the system's high-resolution performance counter."
+                : "Operations timed using the DateTime class.");
+
+            var frequency = Stopwatch.Frequency;
+            Console.WriteLine("  Timer frequency in ticks per second = {0}",
+                frequency);
+            var nanosecPerTick = (1000L * 1000L * 1000L) / frequency;
+            Console.WriteLine("  Timer is accurate within {0} nanoseconds",
+                nanosecPerTick);
+            Console.WriteLine();
+        }
+
         /// <summary>
         /// Erstellt eine neue Mauer aus der <paramref name="first"/> Mauer und der <paramref name="second"/> Mauer
         /// </summary>
         /// <param name="first">Die erste Mauer</param>
         /// <param name="second">Die zweite Mauer</param>
-        /// <returns></returns>
+        /// <returns>Ein neues Mauer Objekt, dass die Reihen der <paramref name="first"/> Mauer und der <paramref name="second"/> Mauer enthaelt</returns>
         public static Mauer MergeMauer(Mauer first, Mauer second)
         {
-            Mauer newMauer = new Mauer(first.Reihen.Length, first.FreieFugen.Length);
-            Mauer[] oldMauern = new Mauer[] { first, second };
+            var newMauer = new Mauer(first.Reihen.Length, first.FreieFugen.Length);
+            var oldMauern = new[] { first, second };
 
-            for (int n = 0; n < oldMauern.Length; n++)
+            for (var n = 0; n < oldMauern.Length; n++)
             {
-                for (int i = 0; i < newMauer.Reihen.Length; i++)
+                for (var i = 0; i < newMauer.Reihen.Length; i++)
                 {
-                    if (!newMauer.Reihen[i].IsInitialized()) newMauer.Reihen[i] = oldMauern[n].Reihen[i];
+                    if (!newMauer.Reihen[i].IsInitialized()) newMauer.AddReihe(oldMauern[n].Reihen[i]);
                 }
             }
            
             return newMauer;
         }
 
-        public static bool ReihenSindKompatibel(Reihe a, int aIndex, Reihe b, int bIndex, int[,] matrix, List<Reihe> reihen, bool[,] bereitsKombiniertMatrix)
+        /// <summary>
+        /// Ueberprueft, ob die Reihen <paramref name="a"/> und <paramref name="b"/> kompatibel sind.
+        /// </summary>
+        /// <param name="a">Die erste Reihe</param>
+        /// <param name="b">Die zweite Reihe</param>
+        /// <param name="matrix">Die gesamt Matrix aller einzelnen Reihen</param>
+        /// <param name="reihen">Die gesamt Liste aller einzelnen Reihen</param>
+        /// <returns>True wenn die Reihen kompatibel sind</returns>
+        public static bool ReihenSindKompatibel(Reihe a, Reihe b, byte[,] matrix, List<Reihe> reihen)
         {
-            if (bereitsKombiniertMatrix[aIndex, bIndex]) return false; // Reihen Bereits kombiniert
-            //if (a == null) return true; // Weil die Mauer ja direkt die maximal Hoehe hat
-            return matrix[reihen.IndexOf(a), reihen.IndexOf(b)] == 1;
+            if (!a.IsInitialized()) return true;                        // Weil die Mauer ja direkt die maximal Hoehe hat
+            return matrix[reihen.IndexOf(a), reihen.IndexOf(b)] == 2;
         }
 
+        /// <summary>
+        /// Berechnet alle Permutationen der Elemente in einer Collection
+        /// </summary>
+        /// <typeparam name="T">Der Typ der Collection</typeparam>
+        /// <param name="items">Die Collection, deren Elemente permutiert werden sollen</param>
+        /// <returns></returns>
         public static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> items)
         {
             if (items.Count() > 1)
@@ -61,22 +95,12 @@ namespace Aufgabe01
         {
             if (n == 0) return 1;
             BigInteger value = 1;
-            for (int i = 1; i <= n; i++)
+            for (var i = 1; i <= n; i++)
             {
                 value *= i;
             }
 
             return value;
-        }
-
-        /// <summary>
-        /// Ueberprueft, ob eine Zahl gerade oder ungerade ist
-        /// </summary>
-        /// <param name="n">Die zu ueberpruefende Zahl</param>
-        /// <returns>True wenn die Zahl gerade ist</returns>
-        public static bool IsNumberEven(int n)
-        {
-            return n % 2 == 0;
         }
 
         /// <summary>
@@ -87,7 +111,7 @@ namespace Aufgabe01
         /// <param name="value">Der Wert mit dem das Array gefuellt werden soll</param>
         public static void FillArray<T>(this T[] array, T value)
         {
-            for (int i = 0; i < array.Length; i++)
+            for (var i = 0; i < array.Length; i++)
             {
                 array[i] = value;
             }
@@ -101,9 +125,9 @@ namespace Aufgabe01
         /// <param name="value">Der Wert mit dem das Array gefuellt werden soll</param>
         public static void Fill2DArray<T>(this T[,] array, T value)
         {
-            for (int x = 0; x < array.GetLength(0); x++)
+            for (var x = 0; x < array.GetLength(0); x++)
             {
-                for (int y = 0; y < array.GetLength(1); y++)
+                for (var y = 0; y < array.GetLength(1); y++)
                 {
                     array[x, y] = value;
                 }

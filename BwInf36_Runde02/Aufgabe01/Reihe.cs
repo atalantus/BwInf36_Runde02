@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Dynamic;
-using System.Runtime.CompilerServices;
-using System.Text;
+﻿using System.Text;
 
 namespace Aufgabe01
 {
@@ -16,12 +12,21 @@ namespace Aufgabe01
         /// <summary>
         /// Enthaelt die Kloetze in dieser Reihe
         /// </summary>
-        public int[] Kloetze { get; }
+        public byte[] Kloetze { get; }
 
         /// <summary>
         /// Die ID der Reihe
         /// </summary>
-        public int ID { get; private set; }
+        public uint Id { get; private set; }
+
+        /// <summary>
+        /// Enthaelt die Freien Fugen in der Reihe
+        ///
+        /// Beim durchiterieren immer 'Length - 1', 
+        /// da das Ende der Mauer die letzte Fuge ist, 
+        /// obwohl es eigentlich keine Fuge ist
+        /// </summary>
+        public bool[] FreieFugen { get; private set; }
 
         #endregion
 
@@ -31,12 +36,29 @@ namespace Aufgabe01
         /// Erzeugt ein neues <see cref="Reihe"/> Objekt
         /// </summary>
         /// <param name="n">Anzahl der Kloetze in einer Reihe</param>
+        /// <param name="breite">Breite einer Reihe</param>
         /// <param name="id">Index der Reihe in der Permutations Collection</param>
-        public Reihe(int n, int id)
+        public Reihe(int n, int breite, uint id)
         {
-            Kloetze = new int[n];
-            Kloetze.FillArray(1);
-            ID = id;
+            Kloetze = new byte[n];
+            Kloetze.FillArray((byte) 1); // 0x1; 0b0000_0001
+            FreieFugen = new bool[breite];
+            FreieFugen.FillArray(true);
+            Id = id;
+        }
+
+        public Reihe(byte[] kloetze, int breite, uint id)
+        {
+            Kloetze = kloetze; // HACK: so oder anders (referenz)
+            FreieFugen = new bool[breite];
+            FreieFugen.FillArray(true);
+            ushort zaehler = 0;
+            for (var i = 0; i < Kloetze.Length; i++)
+            {
+                zaehler += Kloetze[i];
+                FreieFugen[zaehler - 1] = false;
+            }
+            Id = id;
         }
 
         /// <summary>
@@ -46,6 +68,16 @@ namespace Aufgabe01
         public bool IsInitialized()
         {
             return Kloetze != null;
+        }
+
+        /// <summary>
+        /// Ueberprueft, ob zwei Objekte der Klasse <see cref="Reihe"/> gleich sind
+        /// </summary>
+        /// <param name="other">Die zu vergleichende Reihe</param>
+        /// <returns>True wenn die Objekte gleich sind</returns>
+        public bool Equals(Reihe other)
+        {
+            return Equals(Kloetze, other.Kloetze) && Id == other.Id && Equals(FreieFugen, other.FreieFugen);
         }
 
         /// <summary>
@@ -60,6 +92,33 @@ namespace Aufgabe01
                 reihe.Append($"{klotz}|");
             }
             return reihe.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Reihe reihe && Equals(reihe);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (Kloetze != null ? Kloetze.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (int)Id;
+                hashCode = (hashCode * 397) ^ (FreieFugen != null ? FreieFugen.GetHashCode() : 0);
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(Reihe r1, Reihe r2)
+        {
+            return r1.Equals(r2);
+        }
+
+        public static bool operator !=(Reihe r1, Reihe r2)
+        {
+            return !r1.Equals(r2);
         }
 
         #endregion

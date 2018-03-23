@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Aufgabe01
 {
@@ -19,22 +15,18 @@ namespace Aufgabe01
         public Reihe[] Reihen { get; private set; }
 
         /// <summary>
-        /// <seealso cref="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/indexers/"/>
-        /// </summary>
-        public Reihe this[int i]
-        {
-            set { AddReihe(i, value); }
-            get { return Reihen[i]; }
-        }
-
-        /// <summary>
-        /// Enthaelt die Freien Fugen in der Reihe
+        /// Enthaelt die Freien Fugen in der Mauer
         ///
         /// Beim durchiterieren immer 'Length - 1', 
         /// da das Ende der Mauer die letzte Fuge ist, 
         /// obwohl es eigentlich keine Fuge ist
         /// </summary>
         public bool[] FreieFugen { get; private set; }
+
+        /// <summary>
+        /// Die Id der Mauer. Mauern mit den gleichen Reihen haben auch die gleiche ID
+        /// </summary>
+        public uint Id { get; private set; }
 
         #endregion
 
@@ -50,16 +42,32 @@ namespace Aufgabe01
             FreieFugen = new bool[maxBreite];
             FreieFugen.FillArray(true);
             Reihen = new Reihe[maxHoehe];
+            Id = 0;
         }
 
         /// <summary>
-        /// Fuegt der Mauer eine neue Reihe hinzu
+        /// Fuegt der Mauer eine neue Reihe hinzu, wenn noch Platz ist
         /// </summary>
-        /// <param name="index">Index der neuen Reihe</param>
-        /// <param name="reihe"></param>
-        private void AddReihe(int index, Reihe reihe)
+        /// <param name="newReihe">Die Reihe, die hinzugefuegt werden soll</param>
+        public Mauer AddReihe(Reihe newReihe)
         {
-            Reihen[index] = reihe;
+            if (!newReihe.IsInitialized()) return this;
+            for (var i = 0; i < Reihen.Length; i++)
+            {
+                if (!Reihen[i].IsInitialized())
+                {
+                    Reihen[i] = newReihe;
+                    for (var j = 0; j < newReihe.FreieFugen.Length - 1; j++)
+                    {
+                        if (!newReihe.FreieFugen[j]) FreieFugen[j] = false;
+                    }
+
+                    Id += newReihe.Id;
+                    return this;
+                }
+            }
+
+            return this;
         }
 
         /// <summary>
@@ -69,7 +77,7 @@ namespace Aufgabe01
         public override string ToString()
         {
             var mauer = new StringBuilder();
-            for (int i = 0; i < Reihen.Length; i++)
+            for (var i = 0; i < Reihen.Length; i++)
             {
                 mauer.Append(Reihen[i].ToString());
                 if (i < Reihen.Length - 1) mauer.Append("\n");

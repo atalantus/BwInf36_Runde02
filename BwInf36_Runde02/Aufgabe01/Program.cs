@@ -8,16 +8,15 @@ namespace Aufgabe01
     {
         static void Main(string[] args)
         {
-            Reihe[] r = new Reihe[5];
-            foreach (var item in r)
-            {
-                Console.WriteLine(item);
-            }
-              
+
+
+
             /**
              * Variablen
              */
-            WallBuilder wallBuilder = new WallBuilder();
+            var wallBuilder = new WallBuilder();
+
+
 
             /**
              * Header
@@ -28,12 +27,13 @@ namespace Aufgabe01
             Console.WriteLine();
             Console.ResetColor();
 
+
+
             /**
              * Eingabe: Anzahl Kloetzchen
              */
             Console.Write("Anzahl der Kloetzchen in einer Reihe: ");
             int.TryParse(Console.ReadLine(), out var anzahlKloetze);
-
             Console.ForegroundColor = ConsoleColor.Red;
             while (anzahlKloetze <= 1)
             {
@@ -44,10 +44,10 @@ namespace Aufgabe01
                 Console.Write("Bitte waehlen Sie eine andere Anzahl von Kloetzchen in einer Reihe: ");
                 int.TryParse(Console.ReadLine(), out anzahlKloetze);
             }
-
             Console.ResetColor();
-
             Console.WriteLine();
+
+
 
             /**
              * Debug Modus Abfrage und Ausgabe der Werte
@@ -61,6 +61,7 @@ namespace Aufgabe01
                 {
                     started = true;
                     wallBuilder.SetUpWallBuilder(anzahlKloetze, true);
+                    Utilities.DisplayTimerProperties();
                 }
                 else if (input == "N")
                 {
@@ -68,7 +69,8 @@ namespace Aufgabe01
                     wallBuilder.SetUpWallBuilder(anzahlKloetze, false);
                 }
             }
-            
+
+
 
             /**
              * Starte Algorithmus
