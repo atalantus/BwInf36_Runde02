@@ -220,10 +220,10 @@ namespace Aufgabe01
                 foreach (var row in rows)
                 {
                     Mauer m = new Mauer(MaxMauerHoehe, MauerBreite);
-                    Reihe r = new Reihe(m, row.ToArray(), MauerBreite);
-                    m.Reihen[0] = r;
-                    passendeReihen.Add(r);
-                    passendeMauern.Add(m);
+                    //Reihe r = new Reihe(m, row.ToArray(), MauerBreite);
+                    //m.Reihen[0] = r;
+                    //passendeReihen.Add(r);
+                    //passendeMauern.Add(m);
                 }
             } catch (Exception e)
             {

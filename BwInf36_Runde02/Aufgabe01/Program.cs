@@ -8,7 +8,12 @@ namespace Aufgabe01
     {
         static void Main(string[] args)
         {
-          
+            Reihe[] r = new Reihe[5];
+            foreach (var item in r)
+            {
+                Console.WriteLine(item);
+            }
+              
             /**
              * Variablen
              */

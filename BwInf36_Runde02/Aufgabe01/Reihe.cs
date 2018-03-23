@@ -6,21 +6,12 @@ using System.Text;
 
 namespace Aufgabe01
 {
-    public class Reihe : IComparable
+    /// <summary>
+    /// Repraesentiert eine Reihe von Klotzen
+    /// </summary>
+    public struct Reihe
     {
         #region Properties
-
-        /// <summary>
-        /// Index des zuletzt gesetzten Klotzes
-        /// </summary>
-        public int LastKlotzIndex { get; private set; } = -1;
-
-        /// <summary>
-        /// Enthaelt die noch verfuegbaren Zahlen in der Reihe |
-        /// Index - 1 = Zahl;
-        /// True = Noch verfuegbar
-        /// </summary>
-        public bool[] Nummern { get; }
 
         /// <summary>
         /// Enthaelt die Kloetze in dieser Reihe
@@ -28,91 +19,39 @@ namespace Aufgabe01
         public int[] Kloetze { get; }
 
         /// <summary>
-        /// Die RowSum der gesamten Reihe
+        /// Die ID der Reihe
         /// </summary>
-        public int WholeRowSum => GetRowSum(Kloetze.Length);
-
-        /// <summary>
-        /// Die Mauer der Reihe
-        /// </summary>
-        public Mauer Mauer { get; private set; }
+        public int ID { get; private set; }
 
         #endregion
 
         #region Methods
 
-        public Reihe(Mauer mauer, int n)
+        /// <summary>
+        /// Erzeugt ein neues <see cref="Reihe"/> Objekt
+        /// </summary>
+        /// <param name="n">Anzahl der Kloetze in einer Reihe</param>
+        /// <param name="id">Index der Reihe in der Permutations Collection</param>
+        public Reihe(int n, int id)
         {
-            Mauer = mauer;
-            Nummern = new bool[n];
-            Nummern.FillArray(true);
             Kloetze = new int[n];
-            //Kloetze.FillArray(0);
-            Kloetze.FillArray(1); // HACK: Fuer BruteForce
+            Kloetze.FillArray(1);
+            ID = id;
         }
 
         /// <summary>
-        /// HACK: Konstruktor um eine Reihe zu kopieren
-        /// Fuer BruteForce
+        /// Checks if this struct has already been initialized
         /// </summary>
-        /// <param name="klotze"></param>
-        public Reihe(Mauer mauer, int[] klotze, int breite)
+        /// <returns>True if the struct has been initialized</returns>
+        public bool IsInitialized()
         {
-            Mauer = mauer;
-            Nummern = new bool[klotze.Length];
-            Nummern.FillArray(true);
-            Kloetze = new int[klotze.Length];
-            for (int i = 0; i < klotze.Length; i++)
-            {
-                Kloetze[i] = klotze[i];
-                if (!Mauer.FreieFugen[GetRowSum(i) + klotze[i] - 1])
-                    throw new FugenUeberlappungException("lul die fugen ueberlappen sich.");
-                Mauer.FreieFugen[GetRowSum(i) + klotze[i] - 1] = false;
-            }
+            return Kloetze != null;
         }
 
-        public void SetKlotz(int x, int nummer)
-        {
-            Kloetze[x] = nummer;
-            LastKlotzIndex = x;
-            SetNummer(nummer);
-        }
-
-        private void SetNummer(int number)
-        {
-            Nummern[number - 1] = false;
-        }
-
-        public bool GetNummer(int nummer)
-        {
-            return Nummern[nummer - 1];
-        }
-
-        public int GetRowSum(int x)
-        {
-            var rowSum = 0;
-            for (var i = 0; i < x; i++)
-            {
-                rowSum += Kloetze[i];
-            }
-
-            return rowSum;
-        }
-
-        #endregion
-
-        public int CompareTo(object obj)
-        {
-            if (obj == null) return 1;
-            if (obj is Reihe otherReihe)
-            {
-                if (WholeRowSum > otherReihe.WholeRowSum) return 1;
-                return WholeRowSum == otherReihe.WholeRowSum ? 0 : -1;
-            }
-
-            return 1;
-        }
-
+        /// <summary>
+        /// Formatiert die Reihe mit ihren einzelnen Kloetzen zu einem String
+        /// </summary>
+        /// <returns>Die Reihe als String</returns>
         public override string ToString()
         {
             var reihe = new StringBuilder("|");
@@ -122,5 +61,7 @@ namespace Aufgabe01
             }
             return reihe.ToString();
         }
+
+        #endregion
     }
 }

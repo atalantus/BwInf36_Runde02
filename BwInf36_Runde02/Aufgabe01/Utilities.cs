@@ -6,38 +6,36 @@ using static Aufgabe01.WallBuilder;
 namespace Aufgabe01
 {
     /// <summary>
-    /// Extra Methoden fuer Aufgabe 1
+    /// Hilf Methoden fuer Aufgabe 1
     /// </summary>
     public static class Utilities
     {
+        /// <summary>
+        /// Erstellt eine neue Mauer aus der <paramref name="first"/> Mauer und der <paramref name="second"/> Mauer
+        /// </summary>
+        /// <param name="first">Die erste Mauer</param>
+        /// <param name="second">Die zweite Mauer</param>
+        /// <returns></returns>
         public static Mauer MergeMauer(Mauer first, Mauer second)
         {
             Mauer newMauer = new Mauer(first.Reihen.Length, first.FreieFugen.Length);
+            Mauer[] oldMauern = new Mauer[] { first, second };
 
-            for (int i = 0; i < second.FreieFugen.Length - 1; i++)
+            for (int n = 0; n < oldMauern.Length; n++)
             {
-                if (!second.FreieFugen[i] && !first.FreieFugen[i]) throw new FugenUeberlappungException("Die ueberlappen sich :(");
-                else if (!second.FreieFugen[i] || !first.FreieFugen[i]) newMauer.FreieFugen[i] = false;
+                for (int i = 0; i < newMauer.Reihen.Length; i++)
+                {
+                    if (!newMauer.Reihen[i].IsInitialized()) newMauer.Reihen[i] = oldMauern[n].Reihen[i];
+                }
             }
-
-            List<Reihe> reihen = new List<Reihe>();
-            for (int i = 0; i < first.Reihen.Length; i++)
-            {
-                if (first.Reihen[i] != null) reihen.Add(first.Reihen[i]);
-            }
-
-            for (int i = 0; i < second.Reihen.Length; i++)
-            {
-                if (second.Reihen[i] != null) reihen.Add(second.Reihen[i]);
-            }
-            newMauer.Reihen = reihen.ToArray();
+           
             return newMauer;
         }
 
         public static bool ReihenSindKompatibel(Reihe a, int aIndex, Reihe b, int bIndex, int[,] matrix, List<Reihe> reihen, bool[,] bereitsKombiniertMatrix)
         {
             if (bereitsKombiniertMatrix[aIndex, bIndex]) return false; // Reihen Bereits kombiniert
-            if (a == null) return true; // Weil die Mauer ja direkt die maximal Hoehe hat
+            //if (a == null) return true; // Weil die Mauer ja direkt die maximal Hoehe hat
             return matrix[reihen.IndexOf(a), reihen.IndexOf(b)] == 1;
         }
 
