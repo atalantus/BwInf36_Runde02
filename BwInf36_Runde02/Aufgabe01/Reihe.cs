@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Dynamic;
 using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Aufgabe01
 {
     public class Reihe : IComparable
     {
         #region Properties
-
-        public int ReihenIndex { get; private set; }
 
         /// <summary>
         /// Index des zuletzt gesetzten Klotzes
@@ -32,16 +32,43 @@ namespace Aufgabe01
         /// </summary>
         public int WholeRowSum => GetRowSum(Kloetze.Length);
 
+        /// <summary>
+        /// Die Mauer der Reihe
+        /// </summary>
+        public Mauer Mauer { get; private set; }
+
         #endregion
 
         #region Methods
 
-        public Reihe(int n)
+        public Reihe(Mauer mauer, int n)
         {
+            Mauer = mauer;
             Nummern = new bool[n];
             Nummern.FillArray(true);
             Kloetze = new int[n];
-            Kloetze.FillArray(0);
+            //Kloetze.FillArray(0);
+            Kloetze.FillArray(1); // HACK: Fuer BruteForce
+        }
+
+        /// <summary>
+        /// HACK: Konstruktor um eine Reihe zu kopieren
+        /// Fuer BruteForce
+        /// </summary>
+        /// <param name="klotze"></param>
+        public Reihe(Mauer mauer, int[] klotze, int breite)
+        {
+            Mauer = mauer;
+            Nummern = new bool[klotze.Length];
+            Nummern.FillArray(true);
+            Kloetze = new int[klotze.Length];
+            for (int i = 0; i < klotze.Length; i++)
+            {
+                Kloetze[i] = klotze[i];
+                if (!Mauer.FreieFugen[GetRowSum(i) + klotze[i] - 1])
+                    throw new FugenUeberlappungException("lul die fugen ueberlappen sich.");
+                Mauer.FreieFugen[GetRowSum(i) + klotze[i] - 1] = false;
+            }
         }
 
         public void SetKlotz(int x, int nummer)
@@ -84,6 +111,16 @@ namespace Aufgabe01
             }
 
             return 1;
+        }
+
+        public override string ToString()
+        {
+            var reihe = new StringBuilder("|");
+            foreach (var klotz in Kloetze)
+            {
+                reihe.Append($"{klotz}|");
+            }
+            return reihe.ToString();
         }
     }
 }

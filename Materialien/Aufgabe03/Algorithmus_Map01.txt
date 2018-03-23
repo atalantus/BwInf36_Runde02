@@ -11,11 +11,8 @@ class Pathfinder
 	Node Start;
 	
 	public bool FindPath() 
-	{
-		if (Start.SearchPath(QuaxPos)) // Quax gefunden
-			return Start.SearchPath(StadtPos); // Weg zu Ziel finden
-		else // Quax nicht gefunden!!!
-			return false;
+	{			
+		return Start.SearchPath(QuaxPos, StadtPos, false);
 	}
 	
 }
@@ -31,7 +28,7 @@ class Node
 	RechteckTypen rechteckTyp;
 	int Breite;
 	
-	public bool SearchPath(Vector2 targetPos) 
+	public bool SearchPath(Vector2 startPos, Vector2 targetPos, bool hasStart) 
 	{
 		if (rechteckTyp == RechteckTypen.UNBEKANNT) rechteckTyp = GetRechteckTyp(Breite); // ist ein Flug der Drohne
 		
@@ -39,23 +36,27 @@ class Node
 		if (rechteckTyp == PASSIERBAR) return true;
 		if (rechteckTyp == GEMISCHT) 
 		{
-			Unterteile in innere Quadrate
-			bool möglicherWeg = false;
+			innereQuadrate = // Unterteile in innere Quadrate
 			Quadrat[] sortedQuadrate = new Quadrat[4];
 			
-			sortedQuadrate = Innere Quadrate sortiert nach Nähe zu targetPos (Erste ist das mit der geringsten Entfernung)
-			
-			for (int i = 0; i < sortedQuadrate.length; i++) 
+			if (!hasStart) 
 			{
-				Node aktuellesInneresQuadrat = sortedQuadrate[i]
-				bool foundTarget = nächstesQuadrat.SearchPath(targetPos);
+				sortedQuadrate = Innere Quadrate sortiert nach Nähe zu startPos (Erste ist das mit der geringsten Entfernung)
 				
-				if (foundTarget) // Weg zum Ziel wurde gefunden
-					return true;
+				for (int i = 0; i < sortedQuadrate.length; i++) 
+				{
+					Node aktuellesInneresQuadrat = sortedQuadrate[i]
+					bool foundTarget = aktuellesInneresQuadrat.SearchPath(startPos, targetPos, hasStart);
+					
+					if (foundTarget) // Weg zum Start wurde gefunden
+					{ 
+						this.SearchPath(startPos, targetPos, true); // Starte Suche zu Ziel
+					}
+				}
+				
+				// Es wurde kein Weg zum Start gefunden!
+				return false;
 			}
-			
-			// Dieses Quadrat hilft nicht weiter!
-			return false;
 		}
 	}
 	

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
+using System.Text;
 
 namespace Aufgabe01
 {
@@ -35,9 +37,19 @@ namespace Aufgabe01
         }
 
         /// <summary>
+        /// HACK: Alle moeglichen Reihen
+        /// </summary>
+        public List<Reihe> MoeglicheReihen { get; set; }
+
+        /// <summary>
+        /// HACK: Liste der richtigen Mauern fuer BruteForce
+        /// </summary>
+        public List<Mauer> RichtigeMauern { get; private set; }
+
+        /// <summary>
         /// Die aktuelle Mauer
         /// </summary>
-        public Reihe[] Mauer { get; set; }
+        public Mauer AktuelleMauer { get; set; }
 
         /// <summary>
         /// Enthaelt die bisherigen Spalten (Ohne Anfangs- und End-Spalte)
@@ -103,6 +115,11 @@ namespace Aufgabe01
         public void StartAlgorithmus()
         {
             IsWorking = true;
+
+            /**
+             * Ohne Algorithmus
+             * */
+
             //for (int y = 0; y < Mauer.Length; y++)
             //{
             //    Reihe curReihe = Mauer[y];
@@ -116,21 +133,214 @@ namespace Aufgabe01
             //        }
             //    }
             //}
-            Counter = 0;
-            for (int n = 0; n < AnzahlKloetze; n++)
+
+            /**
+             * Algorithmus 01
+             * */
+
+            //Counter = 0;
+            //for (int n = 0; n < AnzahlKloetze; n++)
+            //{
+            //    //Reihe[] sortedMauer = Mauer;
+            //    for (int m = 0; m < Mauer.Length; m++)
+            //    {
+            //        Counter++;
+            //        Array.Sort(Mauer);
+            //        FindNextKlotz(Mauer[0]);
+            //    }
+            //}
+
+            /**
+             * BruteForce
+             * */
+            MoeglicheReihen = new List<Reihe>();
+            RichtigeMauern = new List<Mauer>();
+
+            //var stelle = 0;
+            //var done = false;
+
+            //for (int i = 0; i < Math.Pow(AnzahlKloetze, AnzahlKloetze) - 1; i++)
+            //{
+            //    stelle = 0;
+            //    done = false;
+            //    while (stelle < AnzahlKloetze)
+            //    {
+            //        if (Mauer[0].Kloetze[stelle] < AnzahlKloetze && !done)
+            //        {
+            //            Mauer[0].SetKlotz(stelle, Mauer[0].Kloetze[stelle] + 1);
+            //            done = true;
+            //            stelle++;
+
+            //            string reihe = "";
+            //            foreach (var item in Mauer[0].Kloetze)
+            //            {
+            //                reihe += item.ToString();
+            //            }
+            //            Debug.WriteLine(reihe);
+
+            //            // Filter
+            //            bool[] nummerBenutzt = new bool[AnzahlKloetze];
+            //            bool richtigeMauer = true;
+            //            foreach (var klotz in Mauer[0].Kloetze)
+            //            {
+            //                if (nummerBenutzt[klotz - 1]) richtigeMauer = false;
+            //                else nummerBenutzt[klotz - 1] = true;
+            //            }
+            //            if (richtigeMauer)
+            //            {
+            //                MoeglicheReihen.Add(new Reihe(Mauer[0].Kloetze, MauerBreite));
+            //                //Debug.WriteLine($"====================={reihe}===================");
+            //            }
+            //        }
+            //        else if (done)
+            //        {
+            //            stelle = AnzahlKloetze;
+            //        } else
+            //        {
+            //            Mauer[0].SetKlotz(stelle, 1);
+            //            stelle++;
+            //        }
+            //    }
+            //}
+
+            List<int> values = new List<int>();
+            for (int n = 1; n <= AnzahlKloetze; n++)
             {
-                //Reihe[] sortedMauer = Mauer;
-                for (int m = 0; m < Mauer.Length; m++)
+                values.Add(n);
+            }
+            IEnumerable<int> rowValues = values;
+
+            var passendeReihen = new List<Reihe>();
+            var passendeMauern = new List<Mauer>();
+            
+            try
+            {
+                var rows = Utilities.GetPermutations(rowValues);
+                Debug.WriteLine("Got Permutations!");
+                foreach (var row in rows)
                 {
-                    Counter++;
-                    Array.Sort(Mauer);
-                    FindNextKlotz(Mauer[0]);
+                    Mauer m = new Mauer(MaxMauerHoehe, MauerBreite);
+                    Reihe r = new Reihe(m, row.ToArray(), MauerBreite);
+                    m.Reihen[0] = r;
+                    passendeReihen.Add(r);
+                    passendeMauern.Add(m);
+                }
+            } catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine();
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
+                Console.WriteLine();
+                Console.ResetColor();
+            }
+
+            var passendeReihenMatrix = new int[passendeReihen.Count, passendeReihen.Count]; // 0 = gleiche Reihe / nicht berechnet; -1 = nicht kompatibel; 1 = kompatibel
+
+            for (int n = 0; n < MaxMauerHoehe - 1; n++)
+            {
+                for (int i = 0; i < passendeReihenMatrix.GetLength(0); i++)
+                {
+                    Reihe checkReihe = passendeReihen[i];
+                    for (int e = 0; e < passendeReihenMatrix.GetLength(1); e++)
+                    {
+                        Reihe compareReihe = passendeReihen[e];
+
+                        if (checkReihe != compareReihe && passendeReihenMatrix[i, e] == 0)
+                        {
+                            var kompatibel = true;
+                            for (int x = 0; x < checkReihe.Mauer.FreieFugen.Length - 1; x++)
+                            {
+                                if (!checkReihe.Mauer.FreieFugen[x] && !compareReihe.Mauer.FreieFugen[x])
+                                {
+                                    // Reihen nicht kompatibel
+                                    kompatibel = false;
+                                }
+                            }
+                            if (kompatibel) passendeReihenMatrix[i, e] = 1;
+                            else passendeReihenMatrix[i, e] = -1;
+                        }
+                    }
                 }
             }
 
-            PrintMauer(true);
+
+            //for (int i = 0; i < passendeReihenMatrix.GetLength(0); i++)
+            //{
+            //    for (int e = 0; e < passendeReihenMatrix.GetLength(1); e++)
+            //    {
+            //        Debug.WriteLine("----------");
+            //        Debug.WriteLine($"({i} | {e}): {passendeReihenMatrix[i, e]}");
+            //        Debug.WriteLine(passendeReihen[i].ToString());
+            //        Debug.WriteLine(passendeReihen[e].ToString());
+            //    }
+            //}
+            Debug.WriteLine("Got start matrix!");
+
+            //RichtigeMauern = FindRichtigeMauernRekursion(passendeReihenMatrix, passendeReihen, passendeMauern, 1);
+            //RichtigeMauern = FindRichtigeMauernSchleife(passendeReihenMatrix, passendeReihen, passendeMauern);
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Alle moeglichen Mauer Loesungen:");
+            Console.ResetColor();
+
+            for (int i = 0; i < RichtigeMauern.Count; i++)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine();
+                Console.WriteLine($"------- {i + 1} -------");
+                Console.ResetColor();
+                Console.WriteLine(RichtigeMauern[i].ToString());
+            }
+
+            //PrintMauer(true); // HACK: Nicht bei BruteForce
             IsWorking = false;
         }
+
+        //private List<Mauer> FindRichtigeMauernSchleife(int[,] allPassendeReihenMatrix, List<Reihe> allPassendeReihen, List<Mauer> startMauern)
+        //{
+        //    List<Mauer> aktuelleMauern = startMauern;
+        //    for (int curMauerHoehe = 1; curMauerHoehe < MaxMauerHoehe; curMauerHoehe++)
+        //    {
+        //        var aktuelleMauernKombiniertMatrix = new bool[allPassendeReihen.Count, allPassendeReihen.Count];
+        //        List<Mauer> tempAktuelleMauern = new List<Mauer>();
+        //        for (int i = 0; i < aktuelleMauern.Count; i++)
+        //        {
+        //            List<Mauer> newAktuelleMauern = new List<Mauer>();
+        //            List<Reihe> reihen = aktuelleMauern[i].Reihen.ToList();
+        //            var dazupassendeReihen = allPassendeReihen.Where(r => reihen.All(pr => Utilities.ReihenSindKompatibel(pr, r, allPassendeReihenMatrix, allPassendeReihen))).ToList();
+        //            for (int e = 0; e < dazupassendeReihen.Count; e++)
+        //            {
+        //                //Debug.WriteLine($"aktuelleMauer {i + 1}: dazupassende Reihe {e + 1}");
+        //                newAktuelleMauern.Add(Utilities.MergeMauer(aktuelleMauern[i], dazupassendeReihen.ToList()[e].Mauer));
+        //            }
+        //            tempAktuelleMauern.AddRange(newAktuelleMauern);
+        //        }
+        //        aktuelleMauern = tempAktuelleMauern;
+        //    }
+        //    return aktuelleMauern;
+        //}
+
+        //private List<Mauer> FindRichtigeMauernRekursion(int[,] allPassendeReihenMatrix, List<Reihe> allPassendeReihen, List<Mauer> aktuelleMauern, int curHoehe)
+        //{
+        //    List<Mauer> newAktuelleMauern = new List<Mauer>();
+
+        //    for (int i = 0; i < aktuelleMauern.Count; i++)
+        //    {
+        //        List<Reihe> reihen = aktuelleMauern[i].Reihen.ToList();
+        //        var dazupassendeReihen = allPassendeReihen.Where(r => reihen.All(pr => Utilities.ReihenSindKompatibel(pr, r, allPassendeReihenMatrix, allPassendeReihen))).ToList();
+        //        for (int e = 0; e < dazupassendeReihen.Count; e++)
+        //        {
+        //            Debug.WriteLine($"aktuelleMauer {i + 1}: dazupassende Reihe {e + 1}");
+        //            newAktuelleMauern.Add(Utilities.MergeMauer(aktuelleMauern[i], dazupassendeReihen.ToList()[e].Mauer));
+        //        }
+        //    }
+        //    Debug.WriteLine($"Got Mauern with height {curHoehe}");
+
+        //    curHoehe++;
+        //    if (curHoehe >= MaxMauerHoehe) return newAktuelleMauern;
+        //    else return FindRichtigeMauernRekursion(allPassendeReihenMatrix, allPassendeReihen, newAktuelleMauern, curHoehe);
+        //}
 
         /// <summary>
         /// Berechnet alle von <see cref="AnzahlKloetze"/> abhaengigen Eigenschaften der Mauer
@@ -141,11 +351,11 @@ namespace Aufgabe01
             AnzahlFugenStellen = MauerBreite - 1;
             MaxMauerHoehe = AnzahlFugenStellen / (AnzahlKloetze - 1);
             MaxFugenBenutzt = (AnzahlKloetze - 1) * MaxMauerHoehe;
-            Mauer = new Reihe[MaxMauerHoehe];
+            AktuelleMauer = new Mauer(MaxMauerHoehe, MauerBreite);
 
-            for (var i = 0; i < Mauer.Length; i++)
+            for (var i = 0; i < AktuelleMauer.Reihen.Length; i++)
             {
-                Mauer[i] = new Reihe(AnzahlKloetze);
+                AktuelleMauer.Reihen[i] = new Reihe(AktuelleMauer, AnzahlKloetze);
             }
 
             Spalten = new bool[AnzahlFugenStellen];
@@ -161,6 +371,17 @@ namespace Aufgabe01
 
             IsWorking = false;
             throw new KeinMoeglicherKlotzException("Es gibt keinen passenden Klotz mehr fuer die naechste Reihe!");
+        }
+
+        /// <summary>
+        /// HACK: Fuegt einen Klotz in eine Reihe, ohne ihn vorher zu ueberpruefen
+        /// </summary>
+        /// <param name="reihe"></param>
+        /// <param name="x"></param>
+        /// <param name="value"></param>
+        private void AddKlotzBruteForce(Reihe reihe, int x, int value)
+        {
+            reihe.SetKlotz(x, value);
         }
 
         /// <summary>
@@ -204,7 +425,7 @@ namespace Aufgabe01
             Console.WriteLine($"Anzahl verfuegbarer Stellen fuer Fugen: {AnzahlFugenStellen}");
             Console.WriteLine($"Anzahl benoetigter Fugen fuer Mauer der maximalen Hoehe: {MaxFugenBenutzt}");
 
-            var varianten = BigInteger.Pow(Utilities.FakultaetBerechnen(AnzahlKloetze), 2);
+            var varianten = Utilities.FakultaetBerechnen(AnzahlKloetze) * MaxMauerHoehe;
             try
             {
                 Console.WriteLine($"Anzahl an Mauer Varianten: {varianten.ToString()}");
@@ -229,29 +450,29 @@ namespace Aufgabe01
                 Console.WriteLine();
                 Console.ResetColor();
             }
-            var mauerBuilder = "";
-            for (int y = 0; y < Mauer.Length; y++)
+            var mauerBuilder = new StringBuilder(); // https://blog.goyello.com/2013/01/07/8-most-common-mistakes-c-developers-make/
+            for (int y = 0; y < AktuelleMauer.Reihen.Length; y++)
             {
-                Reihe curReihe = Mauer[y];
-                var reihe = "";
-                var mauerBuilderReihe = "[";
+                Reihe curReihe = AktuelleMauer.Reihen[y];
+                var reihe = new StringBuilder();
+                var mauerBuilderReihe = new StringBuilder("[");
                 for (int x = 0; x < AnzahlKloetze; x++)
                 {
                     var placeholder = "";
                     placeholder = String.Concat(Enumerable.Repeat("0", curReihe.Kloetze[x]));
                     var value = curReihe.Kloetze[x].ToString(placeholder);
-                    reihe += $"|{value}";
+                    reihe.Append($"|{value}");
 
                     if (x != curReihe.Kloetze.Length - 1)
-                        mauerBuilderReihe += $"{curReihe.Kloetze[x]}, ";
+                        mauerBuilderReihe.Append($"{curReihe.Kloetze[x]}, ");
                     else
-                        mauerBuilderReihe += $"{curReihe.Kloetze[x]}],";
+                        mauerBuilderReihe.Append($"{curReihe.Kloetze[x]}],");
                 }
                 Console.WriteLine($"{reihe}|");
-                mauerBuilder += mauerBuilderReihe;
+                mauerBuilder.Append(mauerBuilderReihe);
             }
 
-            mauerBuilder = mauerBuilder.Remove(mauerBuilder.Length - 1);
+            mauerBuilder.Length -= 1;
             Console.WriteLine();
 
             if (fertig)

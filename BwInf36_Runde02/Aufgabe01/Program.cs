@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace Aufgabe01
@@ -7,6 +8,7 @@ namespace Aufgabe01
     {
         static void Main(string[] args)
         {
+          
             /**
              * Variablen
              */
@@ -137,6 +139,7 @@ namespace Aufgabe01
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine();
                     Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
                     Console.WriteLine();
                     Console.ResetColor();
                 }

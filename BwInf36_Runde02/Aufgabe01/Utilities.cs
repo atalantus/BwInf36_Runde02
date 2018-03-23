@@ -1,4 +1,7 @@
-﻿using System.Numerics;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using static Aufgabe01.WallBuilder;
 
 namespace Aufgabe01
 {
@@ -7,6 +10,50 @@ namespace Aufgabe01
     /// </summary>
     public static class Utilities
     {
+        public static Mauer MergeMauer(Mauer first, Mauer second)
+        {
+            Mauer newMauer = new Mauer(first.Reihen.Length, first.FreieFugen.Length);
+
+            for (int i = 0; i < second.FreieFugen.Length - 1; i++)
+            {
+                if (!second.FreieFugen[i] && !first.FreieFugen[i]) throw new FugenUeberlappungException("Die ueberlappen sich :(");
+                else if (!second.FreieFugen[i] || !first.FreieFugen[i]) newMauer.FreieFugen[i] = false;
+            }
+
+            List<Reihe> reihen = new List<Reihe>();
+            for (int i = 0; i < first.Reihen.Length; i++)
+            {
+                if (first.Reihen[i] != null) reihen.Add(first.Reihen[i]);
+            }
+
+            for (int i = 0; i < second.Reihen.Length; i++)
+            {
+                if (second.Reihen[i] != null) reihen.Add(second.Reihen[i]);
+            }
+            newMauer.Reihen = reihen.ToArray();
+            return newMauer;
+        }
+
+        public static bool ReihenSindKompatibel(Reihe a, int aIndex, Reihe b, int bIndex, int[,] matrix, List<Reihe> reihen, bool[,] bereitsKombiniertMatrix)
+        {
+            if (bereitsKombiniertMatrix[aIndex, bIndex]) return false; // Reihen Bereits kombiniert
+            if (a == null) return true; // Weil die Mauer ja direkt die maximal Hoehe hat
+            return matrix[reihen.IndexOf(a), reihen.IndexOf(b)] == 1;
+        }
+
+        public static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> items)
+        {
+            if (items.Count() > 1)
+            {
+                return items.SelectMany(item => GetPermutations(items.Where(i => !i.Equals(item))),
+                                       (item, permutation) => new[] { item }.Concat(permutation));
+            }
+            else
+            {
+                return new[] { items };
+            }
+        }
+
         /// <summary>
         /// Berechnet die Fakultaet einer Zahl
         /// </summary>

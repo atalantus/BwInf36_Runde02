@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aufgabe03.Classes
 {
-    class Node : QuadratNode
+    class Pathfinder
     {
     }
 }

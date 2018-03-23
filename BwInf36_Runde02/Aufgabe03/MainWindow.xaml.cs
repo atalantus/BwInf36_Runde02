@@ -22,8 +22,6 @@ namespace Aufgabe03
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Manager _manager;
-
         private Point? _lastCenterPositionOnTarget;
         private Point? _lastMousePositionOnTarget;
         private Point? _lastDragPoint;
@@ -31,7 +29,6 @@ namespace Aufgabe03
         public MainWindow()
         {
             InitializeComponent();
-            _manager = Manager.Instance;
 
             MapScaleSlider.ValueChanged += MapScaleSlider_OnValueChanged;
         }

@@ -36,6 +36,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -62,8 +64,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\Manager.cs" />
+    <Compile Include="Classes\AbschlussNode.cs" />
+    <Compile Include="Classes\Map.cs" />
     <Compile Include="Classes\Node.cs" />
+    <Compile Include="Classes\NodeElement.cs" />
+    <Compile Include="Classes\Pathfinder.cs" />
+    <Compile Include="Classes\Quadrat.cs" />
+    <Compile Include="Classes\QuadratNode.cs" />
+    <Compile Include="Classes\Utilities.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
