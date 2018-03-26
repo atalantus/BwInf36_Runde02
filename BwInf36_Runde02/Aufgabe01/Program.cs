@@ -50,28 +50,51 @@ namespace Aufgabe01
              * Debug Modus Abfrage und Ausgabe der Werte
              */
             var started = false;
+            var isDebug = false;
             while (!started)
             {
                 Console.WriteLine("Starte den Algorithmus im Debug oder Normalem Modus: (D/N)");
-                var input = Console.ReadLine()?.ToUpper();
-                if (input == "D")
+                var input = Console.ReadLine()?.ToLower();
+                if (input == "d" || input == "debug")
                 {
                     started = true;
-                    wallBuilder.SetUpWallBuilder(anzahlKloetze, true);
-                    //Utilities.DisplayTimerProperties();
+                    isDebug = true;
                 }
-                else if (input == "N")
+                else if (input == "n" || input == "normal")
                 {
                     started = true;
-                    wallBuilder.SetUpWallBuilder(anzahlKloetze, false);
+                    isDebug = false;
                 }
             }
 
 
 
             /**
+             * Algorithmus Typ Abfrage
+             */
+            var gotAlgorithm = false;
+            var isRekursiv = true;
+            while (!gotAlgorithm)
+            {
+                Console.WriteLine("Fuehre den Algorithmus Rekursiv oder in einer Schleife aus: (R/S)");
+                var input = Console.ReadLine()?.ToLower();
+                if (input == "r" || input == "rekursiv")
+                {
+                    gotAlgorithm = true;
+                    isRekursiv = true;
+                }
+                else if (input == "s" || input == "schleife")
+                {
+                    gotAlgorithm = true;
+                    isRekursiv = false;
+                }
+            }
+
+
+            /**
              * Starte Algorithmus
              */
+            wallBuilder.SetUpWallBuilder(anzahlKloetze, isDebug, isRekursiv);
             var end = false;
             while (!end)
             {
@@ -97,7 +120,7 @@ namespace Aufgabe01
                         var input = Console.ReadLine()?.ToUpper();
                         if (input == "Y")
                         {
-                            wallBuilder.SetUpWallBuilder(anzahlKloetze, true);
+                            wallBuilder.SetUpWallBuilder(anzahlKloetze, true, isRekursiv);
                         }
                         else end = true;
                     }
@@ -125,7 +148,7 @@ namespace Aufgabe01
                         var input = Console.ReadLine()?.ToUpper();
                         if (input == "Y")
                         {
-                            wallBuilder.SetUpWallBuilder(anzahlKloetze, true);
+                            wallBuilder.SetUpWallBuilder(anzahlKloetze, true, isRekursiv);
                         }
                         else end = true;
                     }
