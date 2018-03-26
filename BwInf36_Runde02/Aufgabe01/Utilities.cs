@@ -32,24 +32,24 @@ namespace Aufgabe01
         }
 
         /// <summary>
-        /// Erstellt eine neue Mauer aus der <paramref name="first"/> Mauer und der <paramref name="second"/> Mauer
+        /// Baut eine neue Mauer aus <paramref name="mauer"/> und <paramref name="reihe"/>
         /// </summary>
-        /// <param name="first">Die erste Mauer</param>
-        /// <param name="second">Die zweite Mauer</param>
-        /// <returns>Ein neues Mauer Objekt, dass die Reihen der <paramref name="first"/> Mauer und der <paramref name="second"/> Mauer enthaelt</returns>
-        public static Mauer MergeMauer(Mauer first, Mauer second)
+        /// <param name="mauer">Die alte Mauer, die beinhaltet sein soll</param>
+        /// <param name="reihe">Die Reihe, die beinhaltet sein soll</param>
+        /// <returns>Ein NEUES Mauer Objekt</returns>
+        public static Mauer MergeMauerWithRow(Mauer mauer, Reihe reihe)
         {
-            var newMauer = new Mauer(first.Reihen.Length, first.FreieFugen.Length);
-            var oldMauern = new[] { first, second };
+            var newMauer = new Mauer(mauer.Reihen.Length, mauer.FreieFugen.Length);
 
-            for (var n = 0; n < oldMauern.Length; n++)
+            var reihen = new List<Reihe>();
+            reihen.AddRange(mauer.Reihen);
+            reihen.Add(reihe);
+
+            for (int i = 0; i < reihen.Count; i++)
             {
-                for (var i = 0; i < newMauer.Reihen.Length; i++)
-                {
-                    if (!newMauer.Reihen[i].IsInitialized()) newMauer.AddReihe(oldMauern[n].Reihen[i]);
-                }
+                if (reihen[i].IsInitialized()) newMauer.AddReihe(reihen[i]);
             }
-           
+
             return newMauer;
         }
 
@@ -65,6 +65,19 @@ namespace Aufgabe01
         {
             if (!a.IsInitialized()) return true;                        // Weil die Mauer ja direkt die maximal Hoehe hat
             return matrix[reihen.IndexOf(a), reihen.IndexOf(b)] == 2;
+        }
+
+        /// <summary>
+        /// Ueberprueft, ob die Mauer aus <paramref name="mauer"/> und <paramref name="neueReihe"/> bereits existiert.
+        /// </summary>
+        /// <param name="mauer">Die aktuelle Mauer</param>
+        /// <param name="neueReihe">Die Reihe die zur <paramref name="mauer"/> hinzugefuegt werden soll</param>
+        /// <param name="bisherigeMauern">Die Liste von bisher gebauten Mauern</param>
+        /// <returns></returns>
+        public static bool MauerIstNeu(Mauer mauer, Reihe neueReihe, List<Mauer> bisherigeMauern)
+        {
+            var newId = mauer.Id + neueReihe.Id;
+            return !bisherigeMauern.Exists(m => m.Id == newId);
         }
 
         /// <summary>

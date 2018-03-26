@@ -8,9 +8,6 @@ namespace Aufgabe01
     {
         static void Main(string[] args)
         {
-
-
-
             /**
              * Variablen
              */
@@ -61,7 +58,7 @@ namespace Aufgabe01
                 {
                     started = true;
                     wallBuilder.SetUpWallBuilder(anzahlKloetze, true);
-                    Utilities.DisplayTimerProperties();
+                    //Utilities.DisplayTimerProperties();
                 }
                 else if (input == "N")
                 {
