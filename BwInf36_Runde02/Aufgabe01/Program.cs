@@ -105,8 +105,6 @@ namespace Aufgabe01
                 }
                 catch (FugenUeberlappungException e)
                 {
-                    if (wallBuilder.IsDebug) wallBuilder.PrintWallProperties();
-
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine();
                     Console.WriteLine("ERROR:");
@@ -133,8 +131,6 @@ namespace Aufgabe01
                 }
                 catch (KeinMoeglicherKlotzException e)
                 {
-                    if (wallBuilder.IsDebug) wallBuilder.PrintWallProperties();
-
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine();
                     Console.WriteLine("ERROR:");
@@ -159,16 +155,25 @@ namespace Aufgabe01
 
                     Console.WriteLine();
                 }
+                catch (OutOfMemoryException e)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine();
+                    Console.WriteLine("ERROR:");
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine();
+                    Console.ResetColor();
+                    end = true;
+                }
                 catch (Exception e)
                 {
-                    if (wallBuilder.IsDebug) wallBuilder.PrintWallProperties();
-
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine();
                     Console.WriteLine(e.Message);
                     Console.WriteLine(e.StackTrace);
                     Console.WriteLine();
                     Console.ResetColor();
+                    end = true;
                 }
             }
             Console.WriteLine("Druecke ENTER um das Programm zu beenden");

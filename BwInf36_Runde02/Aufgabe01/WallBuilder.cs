@@ -16,6 +16,7 @@ namespace Aufgabe01
         private bool _isDebug;
         private bool _isRekursiv;
         private Stopwatch _stopwatch;
+        private long _algorithmusZeit;
 
         #endregion
 
@@ -117,19 +118,15 @@ namespace Aufgabe01
              * Starte Algorithmus
              */
             IsWorking = true;
-
-            /**
-             * Aktiviere Main Stopwatch
-             */
-            var stopwatchComplete = new Stopwatch();
-            stopwatchComplete.Start();
+            _algorithmusZeit = 0L;
 
             /**
              * Initialisiere Felder
              */
+            _stopwatch = new Stopwatch();
+            _stopwatch.Start();
             MoeglicheReihen = new List<Reihe>();
             RichtigeMauern = new List<Mauer>();
-            _stopwatch = new Stopwatch();
             var moeglicheMauern = new List<Mauer>();
 
             /**
@@ -140,32 +137,42 @@ namespace Aufgabe01
             {
                 values.Add((byte) n);
             }
+            
+            _algorithmusZeit += _stopwatch.ElapsedMilliseconds;
+            _stopwatch.Restart();
 
             /**
              * Erstelle Permutationen
              */
             try
             {
-                _stopwatch.Start();
-                var rows = Utilities.GetPermutations(values).ToList();     
-                for (var i = 0; i < rows.Count; i++)
+                var rows = Utilities.GetPermutations(values).ToArray();
+                using (var progress = new ProgressBar("Sammle Permutationen"))
                 {
-                    var row = rows[i];
-                    var m = new Mauer(MaxMauerHoehe, MauerBreite);
-                    var r = new Reihe(row.ToArray(), MauerBreite, (uint) i);
-                    m.AddReihe(r);
-                    MoeglicheReihen.Add(r);
-                    moeglicheMauern.Add(m);
+                    for (var i = 0; i < rows.Length; i++)
+                    {
+                        progress.Report((double) i / rows.Length);
+                        var row = rows[i];
+                        var m = new Mauer(MaxMauerHoehe, MauerBreite);
+                        var r = new Reihe(row.ToArray(), MauerBreite, (uint)i);
+                        m.AddReihe(r);
+                        MoeglicheReihen.Add(r);
+                        //moeglicheMauern.Add(m);
+                        if (i == 0) moeglicheMauern.Add(m); //HACK: Nur Mauern, die die Reihe [1, 2, 3, ..., n - 2, n - 1, n] enthalten
+                    }
                 }
-
+     
                 _stopwatch.Stop();
                 Debug.WriteLine("Got Permutations!");
-                if (IsDebug) Console.WriteLine($"{rows.Count} Permutationen der Reihe in {_stopwatch.ElapsedMilliseconds}ms gefunden!");
-                _stopwatch.Reset();
+                if (IsDebug)
+                {
+                    Console.WriteLine($"{rows.Length} Permutationen der Reihe in {_stopwatch.ElapsedMilliseconds}ms gefunden!");
+                    Console.WriteLine();
+                }
+                _algorithmusZeit += _stopwatch.ElapsedMilliseconds;      
             } catch (Exception e)
             {
                 _stopwatch.Stop();
-                stopwatchComplete.Stop();
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine();
                 Console.WriteLine(e.Message);
@@ -177,64 +184,75 @@ namespace Aufgabe01
             /**
              * Erstelle Reihen Liste und Matrix
              */
-            _stopwatch.Start();
+            _stopwatch.Restart();
 
-            /**
-             * Matrix zum Vergleichen der einzelnen Reihen
-             *
-             * 0 = gleiche Reihe / nicht berechnet
-             * 1 = nicht kompatibel
-             * 2 = kompatibel
-             */
-            var moeglicheReihenMatrix = new byte[MoeglicheReihen.Count, MoeglicheReihen.Count]; 
+            // Matrix zum Vergleichen der einzelnen Reihen
+            // 0 = gleiche Reihe / nicht berechnet
+            // 1 = nicht kompatibel
+            // 2 = kompatibel
+            var laenge = MoeglicheReihen.Count;
+            var moeglicheReihenMatrix = new byte[laenge][];
+            var step = (double) 1 / (moeglicheReihenMatrix.GetLength(0));
+            var progressValue = 0d;
 
-            for (var n = 0; n < MaxMauerHoehe - 1; n++)
+            using (var progress = new ProgressBar("Erstelle Matrix"))
             {
-                for (var i = 0; i < moeglicheReihenMatrix.GetLength(0); i++)
+                for (var i = 0; i < laenge; i++)
                 {
                     var checkReihe = MoeglicheReihen[i];
-                    for (var e = 0; e < moeglicheReihenMatrix.GetLength(1); e++)
+
+                    for (var e = 0; e < laenge; e++)
                     {
+                        if (moeglicheReihenMatrix[e] == null)
+                            moeglicheReihenMatrix[e] = new byte[laenge];
+
                         var compareReihe = MoeglicheReihen[e];
 
-                        if (checkReihe != compareReihe && moeglicheReihenMatrix[i, e] == 0)
+                        if (checkReihe != compareReihe && moeglicheReihenMatrix[i][e] == 0)
                         {
-                            var kompatibel = true;
-                            for (var x = 0; x < checkReihe.FreieFugen.Length - 1; x++)
+                            if (moeglicheReihenMatrix[e][i] != 0)
                             {
-                                if (!checkReihe.FreieFugen[x] && !compareReihe.FreieFugen[x])
-                                {
-                                    kompatibel = false; // Reihen nicht kompatibel
-                                }
+                                // Umgekehrte Reihen schon untersucht
+                                moeglicheReihenMatrix[i][e] = moeglicheReihenMatrix[e][i];
                             }
-                            if (kompatibel) moeglicheReihenMatrix[i, e] = 2;
-                            else moeglicheReihenMatrix[i, e] = 1;
+                            else
+                            {
+                                var kompatibel = true;
+                                for (var x = 0; x < checkReihe.FreieFugen.Length - 1; x++)
+                                {
+                                    if (!checkReihe.FreieFugen[x] && !compareReihe.FreieFugen[x])
+                                    {
+                                        kompatibel = false; // Reihen nicht kompatibel
+                                        break;
+                                    }
+                                }
+
+                                if (kompatibel) moeglicheReihenMatrix[i][e] = 2;
+                                else moeglicheReihenMatrix[i][e] = 1;
+                            }
                         }
                     }
+                    progressValue += step;
+                    progress.Report(progressValue);
                 }
             }
-
-            Debug.WriteLine("Got start matrix!");
+      
             _stopwatch.Stop();
+            Debug.WriteLine("Got start matrix!");
             if (IsDebug)
-                Console.WriteLine($"\nGesamt Matrix der Reihen in {_stopwatch.ElapsedMilliseconds}ms erstellt!");
+            {
+                Console.WriteLine($"Gesamt Matrix der Reihen in {_stopwatch.ElapsedMilliseconds}ms erstellt!");
+                Console.WriteLine();
+            }
+            _algorithmusZeit += _stopwatch.ElapsedMilliseconds;
             _stopwatch.Reset();
 
             /**
              * Baue Mauern auf
              */
-            var tempStopwatch02 = new Stopwatch();
-            tempStopwatch02.Start();
-
             RichtigeMauern = IsRekursiv
                 ? FindRichtigeMauernRekursion(moeglicheReihenMatrix, MoeglicheReihen, moeglicheMauern, 1)
                 : FindRichtigeMauernSchleife(moeglicheReihenMatrix, MoeglicheReihen, moeglicheMauern);
-
-            tempStopwatch02.Stop();
-            if (IsDebug)
-                Console.WriteLine($"\nDas Bauen der Mauern hat insgesamt {tempStopwatch02.ElapsedMilliseconds}ms gedauert!");
-
-            stopwatchComplete.Stop();
 
             /**
              * Ausgabe der Mauern
@@ -259,12 +277,9 @@ namespace Aufgabe01
             /**
              * Ausgabe der Zeit
              */
-            var completeTs = stopwatchComplete.Elapsed;
-            var elapsedTime =
-                $"{completeTs.Hours:00}:{completeTs.Minutes:00}:{completeTs.Seconds:00}.{completeTs.Milliseconds / 10:00}";
 
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Complete Algorithm Time: {elapsedTime} ({stopwatchComplete.ElapsedMilliseconds}ms)");
+            Console.WriteLine($"Komplette Algorithmus Laufzeit (Ohne Ausgaben): {_algorithmusZeit}ms");
             Console.WriteLine();
             Console.ResetColor();
 
@@ -278,7 +293,7 @@ namespace Aufgabe01
         /// <param name="allMoeglicheReihen">Die Liste aller moeglicher Reihen</param>
         /// <param name="startMauern">Die Liste der Start Mauern</param>
         /// <returns>Alle moeglichen Mauern in einer Liste</returns>
-        private List<Mauer> FindRichtigeMauernSchleife(byte[,] allMoeglicheReihenMatrix, List<Reihe> allMoeglicheReihen, List<Mauer> startMauern)
+        private List<Mauer> FindRichtigeMauernSchleife(byte[][] allMoeglicheReihenMatrix, List<Reihe> allMoeglicheReihen, List<Mauer> startMauern)
         {
             var aktuelleMauern = startMauern;
             for (var curMauerHoehe = 1; curMauerHoehe < MaxMauerHoehe; curMauerHoehe++)
@@ -286,20 +301,31 @@ namespace Aufgabe01
                 _stopwatch.Restart();
                 var newAktuelleMauern = new List<Mauer>();
 
-                for (var i = 0; i < aktuelleMauern.Count; i++)
+                using (var progress = new ProgressBar($"Bilde Mauern der Hoehe {curMauerHoehe + 1}"))
                 {
-                    // Reihen der aktuellen Mauer
-                    var reihen = aktuelleMauern[i].Reihen.ToList();
-                    // Reihen, die zu ALLEN Reihen der aktuellen Mauer passen
-                    var dazuMoeglicheReihen = allMoeglicheReihen.Where(r => reihen.All(pr => Utilities.ReihenSindKompatibel(pr, r, allMoeglicheReihenMatrix, allMoeglicheReihen) && Utilities.MauerIstNeu(aktuelleMauern[i], r, newAktuelleMauern))).ToList();
-                    newAktuelleMauern.AddRange(dazuMoeglicheReihen.Select((t, e) => Utilities.MergeMauerWithRow(aktuelleMauern[i], dazuMoeglicheReihen.ToList()[e])));
+                    for (var i = 0; i < aktuelleMauern.Count; i++)
+                    {
+                        progress.Report((double)i / aktuelleMauern.Count);
+
+                        // Reihen der aktuellen Mauer
+                        var reihen = aktuelleMauern[i].Reihen.ToList();
+                        // Reihen, die zu ALLEN Reihen der aktuellen Mauer passen
+                        var dazuMoeglicheReihen = allMoeglicheReihen.Where(r => reihen.All(pr => Utilities.ReihenSindKompatibel(pr, r, allMoeglicheReihenMatrix, allMoeglicheReihen) && Utilities.MauerIstNeu(aktuelleMauern[i], r, newAktuelleMauern))).ToList();
+                        newAktuelleMauern.AddRange(dazuMoeglicheReihen.Select((t, e) => Utilities.MergeMauerWithRow(aktuelleMauern[i], dazuMoeglicheReihen.ToList()[e])));
+                       
+                    }
                 }
 
                 aktuelleMauern = newAktuelleMauern;
 
                 _stopwatch.Stop();
-                Debug.WriteLine($"Got Mauern with height {curMauerHoehe}");
-                if (IsDebug) Console.WriteLine($"\n{aktuelleMauern.Count} Mauern der Hoehe {curMauerHoehe} in {_stopwatch.ElapsedMilliseconds}ms gebaut!");
+                Debug.WriteLine($"Got Mauern with height {curMauerHoehe + 1}");
+                if (IsDebug)
+                {
+                    Console.WriteLine($"{aktuelleMauern.Count} Mauern der Hoehe {curMauerHoehe + 1} in {_stopwatch.ElapsedMilliseconds}ms gebaut!");
+                    Console.WriteLine();
+                }
+                _algorithmusZeit += _stopwatch.ElapsedMilliseconds;
             }
             return aktuelleMauern;
         }
@@ -310,29 +336,39 @@ namespace Aufgabe01
         /// <param name="allMoeglicheReihenMatrix">Die Matrix von allen moeglichen Reihen</param>
         /// <param name="allMoeglicheReihen">Die Liste aller moeglicher Reihen</param>
         /// <param name="aktuelleMauern">Die zuletzt gebildeten Mauern</param>
-        /// <param name="curHoehe">Die aktuelle Hohe der bisher gebildeten Mauern</param>
+        /// <param name="curMauerHoehe">Die aktuelle Hohe der bisher gebildeten Mauern</param>
         /// <returns>Alle moeglichen Mauern in einer Liste</returns>
-        private List<Mauer> FindRichtigeMauernRekursion(byte[,] allMoeglicheReihenMatrix, List<Reihe> allMoeglicheReihen, List<Mauer> aktuelleMauern, int curHoehe)
+        private List<Mauer> FindRichtigeMauernRekursion(byte[][] allMoeglicheReihenMatrix, List<Reihe> allMoeglicheReihen, List<Mauer> aktuelleMauern, int curMauerHoehe)
         {
             _stopwatch.Restart();
             var newAktuelleMauern = new List<Mauer>();
-            
-            for (var i = 0; i < aktuelleMauern.Count; i++)
+
+            using (var progress = new ProgressBar($"Bilde Mauern der Hoehe {curMauerHoehe + 2}"))
             {
-                // Reihen der aktuellen Mauer
-                var reihen = aktuelleMauern[i].Reihen.ToList();
-                // Reihen, die zu ALLEN Reihen der aktuellen Mauer passen
-                var dazuMoeglicheReihen = allMoeglicheReihen.Where(r => reihen.All(pr => Utilities.ReihenSindKompatibel(pr, r, allMoeglicheReihenMatrix, allMoeglicheReihen) && Utilities.MauerIstNeu(aktuelleMauern[i], r, newAktuelleMauern))).ToList();
-                
-                newAktuelleMauern.AddRange(dazuMoeglicheReihen.Select((t, e) => Utilities.MergeMauerWithRow(aktuelleMauern[i], dazuMoeglicheReihen.ToList()[e])));
+                for (var i = 0; i < aktuelleMauern.Count; i++)
+                {
+                    progress.Report((double)i / aktuelleMauern.Count);
+
+                    // Reihen der aktuellen Mauer
+                    var reihen = aktuelleMauern[i].Reihen.ToList();
+                    // Reihen, die zu ALLEN Reihen der aktuellen Mauer passen
+                    var dazuMoeglicheReihen = allMoeglicheReihen.Where(r => reihen.All(pr => Utilities.ReihenSindKompatibel(pr, r, allMoeglicheReihenMatrix, allMoeglicheReihen) && Utilities.MauerIstNeu(aktuelleMauern[i], r, newAktuelleMauern))).ToList();
+
+                    newAktuelleMauern.AddRange(dazuMoeglicheReihen.Select((t, e) => Utilities.MergeMauerWithRow(aktuelleMauern[i], dazuMoeglicheReihen.ToList()[e])));
+                }
             }
-            curHoehe++;
+            curMauerHoehe++;
 
             _stopwatch.Stop();
-            Debug.WriteLine($"Got Mauern with height {curHoehe}");
-            if (IsDebug) Console.WriteLine($"\n{newAktuelleMauern.Count} Mauern der Hoehe {curHoehe} in {_stopwatch.ElapsedMilliseconds}ms gebaut!");
-            
-            return curHoehe >= MaxMauerHoehe ? newAktuelleMauern : FindRichtigeMauernRekursion(allMoeglicheReihenMatrix, allMoeglicheReihen, newAktuelleMauern, curHoehe);
+            Debug.WriteLine($"Got Mauern with height {curMauerHoehe + 1}");
+            if (IsDebug)
+            {
+                Console.WriteLine($"{newAktuelleMauern.Count} Mauern der Hoehe {curMauerHoehe + 1} in {_stopwatch.ElapsedMilliseconds}ms gebaut!");
+                Console.WriteLine();
+            }
+            _algorithmusZeit += _stopwatch.ElapsedMilliseconds;
+
+            return curMauerHoehe >= MaxMauerHoehe ? newAktuelleMauern : FindRichtigeMauernRekursion(allMoeglicheReihenMatrix, allMoeglicheReihen, newAktuelleMauern, curMauerHoehe);
         }
 
         /// <summary>
@@ -360,7 +396,7 @@ namespace Aufgabe01
             Console.WriteLine($"Anzahl benoetigter Fugen fuer Mauer der maximalen Hoehe: {MaxFugenBenutzt}");
             var algorithmusTyp = IsRekursiv ? "Rekursiv" : "Schleife";
             Console.WriteLine($"Gewaehlter Algorithmus: {algorithmusTyp}");
-
+            Console.WriteLine();
             Console.WriteLine();
         }
 

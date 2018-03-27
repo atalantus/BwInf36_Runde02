@@ -49,7 +49,7 @@ namespace Aufgabe01
 
         public Reihe(byte[] kloetze, int breite, uint id)
         {
-            Kloetze = kloetze; // HACK: so oder anders (referenz)
+            Kloetze = kloetze;
             FreieFugen = new bool[breite];
             FreieFugen.FillArray(true);
             ushort zaehler = 0;

@@ -61,10 +61,10 @@ namespace Aufgabe01
         /// <param name="matrix">Die gesamt Matrix aller einzelnen Reihen</param>
         /// <param name="reihen">Die gesamt Liste aller einzelnen Reihen</param>
         /// <returns>True wenn die Reihen kompatibel sind</returns>
-        public static bool ReihenSindKompatibel(Reihe a, Reihe b, byte[,] matrix, List<Reihe> reihen)
+        public static bool ReihenSindKompatibel(Reihe a, Reihe b, byte[][] matrix, List<Reihe> reihen)
         {
             if (!a.IsInitialized()) return true;                        // Weil die Mauer ja direkt die maximal Hoehe hat
-            return matrix[reihen.IndexOf(a), reihen.IndexOf(b)] == 2;
+            return matrix[reihen.IndexOf(a)][reihen.IndexOf(b)] == 2;
         }
 
         /// <summary>
