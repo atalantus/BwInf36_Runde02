@@ -4,100 +4,54 @@
 		2. Dann Suche nach StadtPos
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Pathfinder 
+public SearchInformation FindPath() 
 {
-	Vector2 QuaxPos;
-	Vector2 StadtPos;
-	Node Start;
+	SearchInformation info = new SearchInformation(QuaxPos, StadtPos);
+	Start.SearchPath(info);
+}
 	
-	public bool FindPath() 
-	{			
-		return Start.SearchPath(QuaxPos, StadtPos, false);
-	}
+public SearchInformation SearchPath(SearchInformation curStatus) 
+{
+	WENN (RechteckTyp unbekannt) DANN GetRechteckTyp();
 	
+	WENN (RechteckTyp WASSER) DANN return curStatus;
+	WENN (RechteckTyp PASSIERBAR) 
+	DANN 
+		WENN (!curStatus.QuaxGefunden) 
+			// Quax ist in diesem Quadrat
+			curStatus.QuaxGefunden = true;
+			// Start Node des Weges
+			curStatus.Weg.add(this);
+		SONST 
+			// Ziel ist in diesem Quadrat
+			curStatus.StadtGefunden = true;
+			// Letzte Node des Weges
+			curStatus.Weg.add(this);
+			
+		return curStatus;
+	WENN (RechteckTyp GEMISCHT)
+	DANN
+		WENN (InnereQuadrate == null) DANN InnereQuadrateAufteilen();
+		Quadrat[] innereQuadrateSortiert = SortierInnereQuadrate(curStatus.QuaxGefunden); // Parameter, damit er weiss nach was er sortieren soll
+		
+		for (int i = 0; i < innereQuadrateSortiert.Length; i++)
+		{
+			Node aktuellesQuadrat = innereQuadrateSortiert[i];
+			SearchInformation info = aktuellesQuadrat.SearchPath(curStatus);
+			
+			WENN (info.StadtGefunden) DANN return info; // Ende gefunden; Fertig
+			SONST WENN (info.QuaxGefunden && !curStatus.QuaxGefunden) // Quax wurde gefunden; Starte hier Suche nach Ziel
+			DANN
+				return this.SearchPath(info);
+			
+		}
 }
 
-class Node 
+public struct SearchInformation
 {
-	enum RechteckTypen 
-	{
-		PASSIERBAR, // Land und gemischt <= 20x20
-		WASSER,
-		GEMISCHT
-	}
-	RechteckTypen rechteckTyp;
-	int Breite;
-	
-	public bool SearchPath(Vector2 startPos, Vector2 targetPos, bool hasStart) 
-	{
-		if (rechteckTyp == RechteckTypen.UNBEKANNT) rechteckTyp = GetRechteckTyp(Breite); // ist ein Flug der Drohne
-		
-		if (rechteckTyp == WASSER) return false;
-		if (rechteckTyp == PASSIERBAR) return true;
-		if (rechteckTyp == GEMISCHT) 
-		{
-			innereQuadrate = // Unterteile in innere Quadrate
-			Quadrat[] sortedQuadrate = new Quadrat[4];
-			
-			if (!hasStart) 
-			{
-				sortedQuadrate = Innere Quadrate sortiert nach Nähe zu startPos (Erste ist das mit der geringsten Entfernung)
-				
-				for (int i = 0; i < sortedQuadrate.length; i++) 
-				{
-					Node aktuellesInneresQuadrat = sortedQuadrate[i]
-					bool foundTarget = aktuellesInneresQuadrat.SearchPath(startPos, targetPos, hasStart);
-					
-					if (foundTarget) // Weg zum Start wurde gefunden
-					{ 
-						this.SearchPath(startPos, targetPos, true); // Starte Suche zu Ziel
-					}
-				}
-				
-				// Es wurde kein Weg zum Start gefunden!
-				return false;
-			}
-		}
-	}
-	
-	///
-	/// REPRAESENTIERT EINEN DROHNEN FLUG !!!
-	///
-	private RechteckTypen GetRechteckTyp(int breite) 
-	{
-		// TODO: Markiere Gebiet auf Karte
-		if (allesWasser) return RechteckTypen.WASSER;
-		else if (allesLand || breite == 2) return RechteckTypen.PASSIERBAR;
-		else return RechteckTypen.GEMISCHT;
-	}
-	
-	/*
-	public bool SearchQuax(Vector2 startPos) 
-	{
-		rechteckTyp = GetRechteckTyp(Breite);
-		
-		if (rechteckTyp == WASSER) return false;
-		if (rechteckTyp == PASSIERBAR) return true;
-		if (rechteckTyp == GEMISCHT) 
-		{
-			Unterteile in innere Quadrate
-			bool möglicherWeg = false;
-			Quadrat[] sortedQuadrate = new Quadrat[4];
-
-			sortedQuadrate = Innere Quadrate sortiert nach Nähe zu startPos (Erste ist das nächste)
-			
-			for (int i = 0; i < sortedQuadrate.length; i++) 
-			{
-				Node aktuellesInneresQuadrat = sortedQuadrate[i]
-				hatQuaxPos = nächstesQuadrat.SearchPath(Vector2 startPos, Vector2 targetPos, hatQuaxPos);
-				
-				if (hatQuaxPos) // Quax gefunden
-					return true;
-			}
-			
-			// Quax wurde nicht gefunden!
-			return false;
-		}
-	}
-	*/
+	QuaxPos;
+	QuaxGefunden;
+	StadtPos;
+	StadtGefunden;
+	Weg
 }

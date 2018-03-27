@@ -185,8 +185,8 @@ StartNode(int linksUntenPos, int rechtsObenPos)</panel_attributes>
 --
 Quadrat Quadrat
 int Checked
-int GCost // distance to QuaxPos
-int HCost // distance to StadtPos</panel_attributes>
+int startDist // distance to QuaxPos
+int zielDist // distance to StadtPos</panel_attributes>
     <additional_attributes/>
   </element>
   <element>

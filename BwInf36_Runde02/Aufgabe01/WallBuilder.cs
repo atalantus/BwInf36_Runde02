@@ -343,7 +343,7 @@ namespace Aufgabe01
             _stopwatch.Restart();
             var newAktuelleMauern = new List<Mauer>();
 
-            using (var progress = new ProgressBar($"Bilde Mauern der Hoehe {curMauerHoehe + 2}"))
+            using (var progress = new ProgressBar($"Bilde Mauern der Hoehe {curMauerHoehe + 1}"))
             {
                 for (var i = 0; i < aktuelleMauern.Count; i++)
                 {
@@ -360,10 +360,10 @@ namespace Aufgabe01
             curMauerHoehe++;
 
             _stopwatch.Stop();
-            Debug.WriteLine($"Got Mauern with height {curMauerHoehe + 1}");
+            Debug.WriteLine($"Got Mauern with height {curMauerHoehe}");
             if (IsDebug)
             {
-                Console.WriteLine($"{newAktuelleMauern.Count} Mauern der Hoehe {curMauerHoehe + 1} in {_stopwatch.ElapsedMilliseconds}ms gebaut!");
+                Console.WriteLine($"{newAktuelleMauern.Count} Mauern der Hoehe {curMauerHoehe} in {_stopwatch.ElapsedMilliseconds}ms gebaut!");
                 Console.WriteLine();
             }
             _algorithmusZeit += _stopwatch.ElapsedMilliseconds;

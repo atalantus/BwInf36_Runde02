@@ -33,10 +33,11 @@ bool FindPath() // Später am besten der Weg</panel_attributes>
 --
 Quadrat Quadrat
 int Checked
-int GCost // distance to QuaxPos
-int HCost // distance to StadtPos
+int startDist // distance to QuaxPos
+int zielDist // distance to StadtPos
 --
-bool SearchPath(Vector2 targetPos)</panel_attributes>
+bool SearchPath(Vector2 targetPos)
+Rechteck</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -83,6 +84,9 @@ RechteckTypen rechteckTyp
 int LinksUntenPos
 int RechtsObenPos
 int Breite
+--
+RechteckTypen GetRechteckTyp(int breite)
+bool HatPunkt(Vector2 Punkt)
 </panel_attributes>
     <additional_attributes/>
   </element>
@@ -152,5 +156,22 @@ Node(int linksUntenPos, int rechtsObenPos)</panel_attributes>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>130.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>60</x>
+      <y>540</y>
+      <w>170</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>SearchInformation
+--
+Vector2 QuaxPos
+bool QuaxGefunden
+Vector2 StadtPos
+bool StadtGefunden
+List&lt;NodeElement&gt; Weg</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
