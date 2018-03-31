@@ -37,6 +37,9 @@ public SearchInformation SearchPath(SearchInformation curStatus)
 		for (int i = 0; i < innereQuadrateSortiert.Length; i++)
 		{
 			Node aktuellesQuadrat = innereQuadrateSortiert[i];
+			
+			WENN (Node nicht angrenzend an letzte curStatus.Weg Node) DANN continue;
+			
 			SearchInformation info = aktuellesQuadrat.SearchPath(curStatus);
 			
 			WENN (info.StadtGefunden) DANN return info; // Ende gefunden; Fertig

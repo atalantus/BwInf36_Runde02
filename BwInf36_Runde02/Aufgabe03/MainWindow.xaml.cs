@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Aufgabe03.Classes;
+using Aufgabe03.Classes.Pathfinding;
 using Microsoft.Win32;
 
 namespace Aufgabe03
@@ -35,10 +37,10 @@ namespace Aufgabe03
 
         private void OpenFileBtn_OnClick(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog
+            var openFileDialog = new OpenFileDialog
             {
                 Multiselect = false,
-                Filter = "Image files (*.png)|*.png|Netpbm files (*.ppm)|*.ppm",
+                Filter = "Image files (*.png)|*.png",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             };
             bool? result = openFileDialog.ShowDialog();
@@ -47,10 +49,11 @@ namespace Aufgabe03
             if (result == true)
             {
                 BitmapImage image = new BitmapImage(new Uri(openFileDialog.FileName));
+                MapDaten.Instance.Map = new WriteableBitmap(image);
                 ImageSource source = image;
                 MapScaleSlider.Value = MapScaleSlider.Minimum;
                 MapImage.Source = source;
-                ConsoleFlowDocument.Blocks.Add(new Paragraph(new Run("Loaded file!")));
+                ConsoleFlowDocument.Blocks.Add(new Paragraph(new Run("Loaded image!")));
             }
         }
 

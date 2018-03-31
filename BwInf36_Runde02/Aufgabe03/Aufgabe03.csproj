@@ -50,6 +50,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WriteableBitmapEx.Wpf, Version=1.5.0.0, Culture=neutral, PublicKeyToken=50375ca6144f1c69, processorArchitecture=MSIL">
+      <HintPath>..\packages\WriteableBitmapEx.1.5.1.0\lib\net40\WriteableBitmapEx.Wpf.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -64,14 +67,19 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classes\AbschlussNode.cs" />
-    <Compile Include="Classes\Map.cs" />
-    <Compile Include="Classes\Node.cs" />
-    <Compile Include="Classes\NodeElement.cs" />
-    <Compile Include="Classes\Pathfinder.cs" />
-    <Compile Include="Classes\Quadrat.cs" />
-    <Compile Include="Classes\QuadratNode.cs" />
-    <Compile Include="Classes\Utilities.cs" />
+    <Compile Include="Classes\Pathfinding\AbschlussNode.cs" />
+    <Compile Include="Classes\Pathfinding\ChildNodes.cs" />
+    <Compile Include="Classes\Pathfinding\ISearchPath.cs" />
+    <Compile Include="Classes\Pathfinding\Map.cs" />
+    <Compile Include="Classes\Pathfinding\MapDaten.cs" />
+    <Compile Include="Classes\Pathfinding\MapQuadrat.cs" />
+    <Compile Include="Classes\Pathfinding\Node.cs" />
+    <Compile Include="Classes\Pathfinding\NodeElement.cs" />
+    <Compile Include="Classes\Pathfinding\Pathfinder.cs" />
+    <Compile Include="Classes\Pathfinding\Quadrat.cs" />
+    <Compile Include="Classes\Pathfinding\QuadratNode.cs" />
+    <Compile Include="Classes\Pathfinding\SearchInformation.cs" />
+    <Compile Include="Classes\Pathfinding\Utilities.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -99,6 +107,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

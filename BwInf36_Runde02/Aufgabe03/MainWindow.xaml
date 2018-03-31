@@ -64,7 +64,7 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <Button Grid.Row="0" Name="OpenFileBtn" Click="OpenFileBtn_OnClick" Height="40px" Width="225px" FontWeight="DemiBold" Margin="0,0,0,10">Select .png or .ppm file</Button>
+                    <Button Grid.Row="0" Name="OpenFileBtn" Click="OpenFileBtn_OnClick" Height="40px" Width="225px" FontWeight="DemiBold" Margin="0,0,0,10">Select .png file</Button>
                     <Label Grid.Row="1" Style="{StaticResource H1}">Settings</Label>
                     <ScrollViewer Grid.Row="2">
                         <Grid>

@@ -1,0 +1,4 @@
+Nicht bestuembares Gebiet (Gemischt und > 20x20): Fuellfarbe c68617
+Land: Fuellfarbe 77e74e
+Wasser: Fuellfarbe e74e6e
+Gemischt (= 20x20): Fuellfarbe 306600
