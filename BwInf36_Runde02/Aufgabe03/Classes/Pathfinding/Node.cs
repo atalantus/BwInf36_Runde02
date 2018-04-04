@@ -4,23 +4,71 @@ using System.Windows;
 
 namespace Aufgabe03.Classes.Pathfinding
 {
-    public class Node : QuadratNode, ISearchPath
+    public class Node : QuadratNode
     {
         #region Properties
 
         /// <summary>
         /// Die Child Nodes dieser Node
         /// </summary>
-        private ChildNodes ChildNodes { get; set; }
+        public ChildNodes ChildNodes { get; set; }
 
         #endregion
 
         #region Methods
 
-        public Node(Point luEckpunkt, int breite) : base(luEckpunkt, breite) { }
-
-        public new SearchInformation SearchPath(SearchInformation curStatus)
+        public Node(Point loEckpunkt, int breite)
         {
+            MapQuadrat = new MapQuadrat(loEckpunkt, breite);
+            CalculateChildNodes();
+        }
+
+        public override QuaxInfo SearchQuax(QuaxInfo curStatus)
+        {
+            Debug.Write($"Node: ({MapQuadrat.LO_Eckpunkt.X}|{MapQuadrat.LO_Eckpunkt.Y}) -> ({MapQuadrat.RU_Eckpunkt.X}|{MapQuadrat.RU_Eckpunkt.Y}) - ");
+
+            if (MapQuadrat.MapTyp == MapQuadrat.MapTypen.Unbekannt) MapQuadrat.GetMapTyp();
+
+            switch (MapQuadrat.MapTyp)
+            {
+                case MapQuadrat.MapTypen.Wasser:
+                    Debug.WriteLine("Wasser");
+                    throw new Exception("Quax ist in Wasser Node");
+
+                case MapQuadrat.MapTypen.Passierbar:
+                    Debug.WriteLine("Passierbar");
+                    Debug.WriteLine($"Quax gefunden: ({MapQuadrat.LO_Eckpunkt.X} | {MapQuadrat.LO_Eckpunkt.Y}) {MapQuadrat.Breite}");
+                    curStatus.QuaxNode = this;
+                    return curStatus;
+
+                case MapQuadrat.MapTypen.Gemischt:
+                    Debug.WriteLine("Gemischt");
+
+                    QuadratNode nodeMitQuax = null;
+
+                    for (var i = 0; i < ChildNodes.Nodes.Length; i++)
+                    {
+                        if (ChildNodes.Nodes[i].BeruehrtPoint(curStatus.QuaxPos))
+                            nodeMitQuax = ChildNodes.Nodes[i];
+                    }
+
+                    if (nodeMitQuax == null)
+                        throw new Exception("Quax ist in keinem inneren Quadrat");
+
+                    return nodeMitQuax.SearchQuax(curStatus);
+
+                case MapQuadrat.MapTypen.Unbekannt:
+                    throw new Exception("Unbekannter Map Typ");
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public override PathInfo SearchPath(PathInfo curStatus)
+        {
+            Debug.Write($"Node: ({MapQuadrat.LO_Eckpunkt.X}|{MapQuadrat.LO_Eckpunkt.Y}) -> ({MapQuadrat.RU_Eckpunkt.X}|{MapQuadrat.RU_Eckpunkt.Y}) - ");
+
             if (MapQuadrat.MapTyp == MapQuadrat.MapTypen.Unbekannt) MapQuadrat.GetMapTyp();
 
             switch (MapQuadrat.MapTyp)
@@ -28,75 +76,72 @@ namespace Aufgabe03.Classes.Pathfinding
                 case MapQuadrat.MapTypen.Wasser:
                     Debug.WriteLine("Wasser");
                     return curStatus;
+
                 case MapQuadrat.MapTypen.Passierbar:
-                    Debug.Write("Passierbar | ");
-                    if (!curStatus.QuaxGefunden)
+                    Debug.WriteLine("Passierbar");
+                    if (BeruehrtPoint(curStatus.StadtPos))
                     {
-                        if (BeruehrtPoint(curStatus.QuaxPos))
-                        {
-                            // Quax ist in diesem Abschnitt
-                            Debug.WriteLine("QUAX GEFUNDEN");
-                            curStatus.QuaxGefunden = true;
-                            curStatus.Weg.Add(this);
-                        }
-                        else
-                        {
-                            throw new Exception("Quax ist nicht in erwarteter Node");
-                        }
+                        curStatus.StadtGefunden = true;
+                        Debug.Write("STADT GEFUNDEN - ");
                     }
-                    else
+                    Debug.WriteLine("Weg hinzugefuegt!");
+                    curStatus.Weg.Add(this);
+                    return curStatus;
+
+                case MapQuadrat.MapTypen.Gemischt:
+                    Debug.WriteLine("Gemischt");
+
+                    ChildNodes.SortierChildNodes(curStatus.LetzterWeg, curStatus.StadtPos);
+
+                    var fertig = false;
+                    var counter = 0;
+                    var isStartNodeParent = false;
+                    for (int i = 0; i < ChildNodes.Nodes.Length; i++)
                     {
-                        if (BeruehrtPoint(curStatus.StadtPos))
+                        if (ChildNodes.Nodes[i] == curStatus.StartNode)
+                            isStartNodeParent = true;
+                    }
+                    if (curStatus.Weg.Count == 1 && isStartNodeParent) counter = 1;
+                    //var vorherigeWegLaenge = curStatus.Weg.Count;
+
+                    while (counter < 2)
+                    {
+                        for (var i = 0; i < ChildNodes.ChildNodesSortiert.Length; i++)
                         {
-                            // Stadt ist in diesem Abschnitt
-                            Debug.WriteLine("STADT GEFUNDEN");
-                            curStatus.StadtGefunden = true;
-                            curStatus.Weg.Add(this);
-                        }
-                        else
-                        {
-                            // Weg fuehrt durch diese Node
-                            Debug.WriteLine("Weg hinzugefuegt");
-                            curStatus.Weg.Add(this);
+                            var aktuelleNode = ChildNodes.ChildNodesSortiert[i].Node;
+                            var aktuelleWegLaenge = curStatus.Weg.Count;
+
+                            if (!aktuelleNode.BeruehrtQuadratNode(curStatus.LetzterWeg))
+                                throw new Exception("Ueberpruefte node beruehrt nicht den Weg");
+
+                            Debug.WriteLine($"Node: ({MapQuadrat.LO_Eckpunkt.X}|{MapQuadrat.LO_Eckpunkt.Y}) -> ({MapQuadrat.RU_Eckpunkt.X}|{MapQuadrat.RU_Eckpunkt.Y}) - CHILD NODE UEBERPRUEFEN");
+                            var info = aktuelleNode.SearchPath(curStatus);
+
+                            if (info.StadtGefunden) // FERTIG
+                                return info;
+
+                            if (info.Weg.Count > aktuelleWegLaenge) // child node ist passierbar und wurde zu Weg hinzugefuegt
+                            {
+                                if (ChildNodes.ChildNodesSortiert[i].KuerzesteTargetEntfernung/* || info.Weg.Count > vorherigeWegLaenge + 1*/) // Durchquerbare child node gefunden --> node ist fertig
+                                    return info;
+
+                                // Weg hinzugefuegt
+                                ChildNodes.SortierChildNodes(info.LetzterWeg, info.StadtPos);
+                                counter++;
+
+                                // Nochmal neu
+                                break;
+                            }
+
+                            curStatus = info;
                         }
                     }
 
                     return curStatus;
-                case MapQuadrat.MapTypen.Gemischt:
-                    Debug.WriteLine("Gemischt");
-                    // Aktuelles Such Ziel
-                    var target = !curStatus.QuaxGefunden ? curStatus.QuaxPos : curStatus.StadtPos;
-                    var letzterWeg = curStatus.Weg[curStatus.Weg.Count - 1];
 
-                    if (ChildNodes == null || (ChildNodes.SortiertFuerQuax && curStatus.QuaxGefunden))
-                        CalculateChildNodes(curStatus.Weg[curStatus.Weg.Count - 1], target);
-
-                    var aktuelleWegLaenge = curStatus.Weg.Count;
-
-                    for (var i = 0; i < ChildNodes.ChildNodesSortiert.Length; i++)
-                    {
-                        var aktuelleNode = ChildNodes.ChildNodesSortiert[i].Node;
-
-                        if (!aktuelleNode.BeruehrtQuadratNode(letzterWeg)) continue; // Node beruehrt nicht den Weg
-
-                        var info = aktuelleNode.SearchPath(curStatus);
-
-                        if (info.StadtGefunden) // Stadt gefunden => Fertig
-                            return info;
-                        if (info.QuaxGefunden && !curStatus.QuaxGefunden) // Quax gefunden
-                            return SearchPath(info); // Starte Suche nach Stadt
-                        if (info.Weg.Count > aktuelleWegLaenge)
-                        {
-                            // Weg hinzugefuegt
-                            if (ChildNodes.ChildNodesSortiert[i].KuerzesteTargetEntfernung)
-                            {
-                                // Beste child node ist passierbar
-                            }
-                        }
-                    }
-                    throw new Exception("Sollte nicht passieren");
                 case MapQuadrat.MapTypen.Unbekannt:
-                    throw new Exception("Unerwarteter Map Typ");
+                    throw new Exception("Unbekannter Map Typ");
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -105,21 +150,41 @@ namespace Aufgabe03.Classes.Pathfinding
         /// <summary>
         /// Berechnet die child nodes dieser Node
         /// </summary>
-        /// <param name="letzterWeg">Die zuletzt zum Weg hinzugefuegte <see cref="QuadratNode"/></param>
-        /// <param name="target">Das aktuelle Ziel der Suche</param>
-        private void CalculateChildNodes(QuadratNode letzterWeg, Point target)
+        private void CalculateChildNodes()
         {
             var neueBreite = (int)Math.Ceiling(MapQuadrat.Breite / 2d);
+            QuadratNode[] nodes;
 
-            var nodes = new[]
+            if (neueBreite > 2)
             {
-                new QuadratNode(new Point(MapQuadrat.RO_Eckpunkt.X - neueBreite, MapQuadrat.RO_Eckpunkt.Y - neueBreite), neueBreite),
-                new QuadratNode(new Point(MapQuadrat.LU_Eckpunkt.X + neueBreite, MapQuadrat.LU_Eckpunkt.Y), neueBreite),
-                new QuadratNode(new Point(MapQuadrat.LU_Eckpunkt.X, MapQuadrat.LU_Eckpunkt.Y), neueBreite),
-                new QuadratNode(new Point(MapQuadrat.LU_Eckpunkt.X, MapQuadrat.LU_Eckpunkt.Y + neueBreite), neueBreite)
-            };
+                nodes = new QuadratNode[]
+                {
+                    new Node(
+                        new Point(MapQuadrat.RU_Eckpunkt.X - neueBreite, MapQuadrat.LO_Eckpunkt.Y),
+                        neueBreite),
+                    new Node(new Point(MapQuadrat.RU_Eckpunkt.X - neueBreite, MapQuadrat.RU_Eckpunkt.Y - neueBreite),
+                        neueBreite),
+                    new Node(new Point(MapQuadrat.LO_Eckpunkt.X, MapQuadrat.RU_Eckpunkt.Y - neueBreite), neueBreite),
+                    new Node(new Point(MapQuadrat.LO_Eckpunkt.X, MapQuadrat.LO_Eckpunkt.Y),
+                        neueBreite)
+                };
+            }
+            else
+            {
+                nodes = new QuadratNode[]
+                {
+                    new AbschlussNode(
+                        new Point(MapQuadrat.RU_Eckpunkt.X - neueBreite, MapQuadrat.LO_Eckpunkt.Y),
+                        neueBreite), 
+                    new AbschlussNode(new Point(MapQuadrat.RU_Eckpunkt.X - neueBreite, MapQuadrat.RU_Eckpunkt.Y - neueBreite),
+                        neueBreite),
+                    new AbschlussNode(new Point(MapQuadrat.LO_Eckpunkt.X, MapQuadrat.RU_Eckpunkt.Y - neueBreite), neueBreite),
+                    new AbschlussNode(new Point(MapQuadrat.LO_Eckpunkt.X, MapQuadrat.LO_Eckpunkt.Y),
+                        neueBreite)
+                };
+            }
 
-            ChildNodes = new ChildNodes(nodes, letzterWeg, target);
+            ChildNodes = new ChildNodes(nodes);
         }
 
         #endregion

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 
 namespace Aufgabe03.Classes.Pathfinding
 {
-    public class QuadratNode : NodeElement, ISearchPath
+    public abstract class QuadratNode : NodeElement
     {
 
         #region Properties
@@ -12,16 +13,11 @@ namespace Aufgabe03.Classes.Pathfinding
         /// <summary>
         /// Der Ausschnitt der Map, den die Node einschliesst
         /// </summary>
-        public MapQuadrat MapQuadrat { get; private set; }
+        public MapQuadrat MapQuadrat { get; set; }
 
         #endregion
 
         #region Methods
-
-        public QuadratNode(Point luEckpunkt, int breite)
-        {
-            MapQuadrat = new MapQuadrat(luEckpunkt, breite);
-        }
 
         /// <summary>
         /// Ueberprueft, ob eine <see cref="QuadratNode"/> eine andere <see cref="QuadratNode"/> beruehrt
@@ -41,11 +37,6 @@ namespace Aufgabe03.Classes.Pathfinding
         public bool BeruehrtPoint(Point other)
         {
             return MapQuadrat.BeruehrtPoint(other);
-        }
-
-        public virtual SearchInformation SearchPath(SearchInformation curStatus)
-        {
-            throw new Exception("SearchPath Methode nicht ueberschrieben");
         }
 
         #endregion

@@ -18,17 +18,25 @@ namespace Aufgabe03.Classes.Pathfinding
         #region Properties
 
         /// <summary>
+        /// Alle child nodes im Uhrzeigersinn beginnend oben rechts
+        /// </summary>
+        public QuadratNode[] Nodes => _nodes;
+
+        /// <summary>
         /// Die child node oben rechts
         /// </summary>
         public QuadratNode NO_Node => _nodes[0];
+
         /// <summary>
         /// Die child node unten rechts
         /// </summary>
         public QuadratNode SO_Node => _nodes[1];
+
         /// <summary>
         /// Die child node unten links
         /// </summary>
         public QuadratNode SW_Node => _nodes[2];
+
         /// <summary>
         /// Die child node oben links
         /// </summary>
@@ -52,12 +60,9 @@ namespace Aufgabe03.Classes.Pathfinding
         /// Erstellt eine neue <see cref="ChildNodes"/> Struktur
         /// </summary>
         /// <param name="childNodes">Die child nodes im Uhrzeigersinn. Beginnend oben rechts</param>
-        /// <param name="letzterWeg">Die zuletzt gesetzte Weg Node</param>
-        /// <param name="target">Das aktuelle Such Target</param>
-        public ChildNodes(QuadratNode[] childNodes, QuadratNode letzterWeg, Point target)
+        public ChildNodes(QuadratNode[] childNodes)
         {
             _nodes = childNodes;
-            SortierChildNodes(letzterWeg, target);
         }
 
         /// <summary>
@@ -65,7 +70,7 @@ namespace Aufgabe03.Classes.Pathfinding
         /// </summary>
         /// <param name="letzterWeg">Die zuletzt gesetzte Weg Node</param>
         /// <param name="target">Das aktuelle Such Target</param>
-        private void SortierChildNodes(QuadratNode letzterWeg, Point target)
+        public void SortierChildNodes(QuadratNode letzterWeg, Point target)
         {
             ChildNodesSortiert = new ChildNodeSortiert[_nodes.Length];        
             for (var i = 0; i < _nodes.Length; i++)
@@ -97,17 +102,17 @@ namespace Aufgabe03.Classes.Pathfinding
         /// <summary>
         /// Node der child node
         /// </summary>
-        public QuadratNode Node { get; private set; }
-
-        /// <summary>
-        /// Entfernung zum Ziel
-        /// </summary>
-        public double EntfernungTarget { get; private set; }
+        public QuadratNode Node { get; }
 
         /// <summary>
         /// Geringste Entfernung zum Ziel im Vergleich mit anderen child nodes
         /// </summary>
         public bool KuerzesteTargetEntfernung { get; set; }
+
+        /// <summary>
+        /// Entfernung zum Ziel
+        /// </summary>
+        public double EntfernungTarget { get; }
 
         /// <summary>
         /// Die zuletzt gesetzte Node fuer den Weg

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Aufgabe01
 {
@@ -147,20 +148,31 @@ namespace Aufgabe01
             try
             {
                 var rows = Utilities.GetPermutations(values).ToArray();
+
                 using (var progress = new ProgressBar("Sammle Permutationen"))
                 {
                     for (var i = 0; i < rows.Length; i++)
                     {
-                        progress.Report((double) i / rows.Length);
+                        progress.Report((double)i / rows.Length);
                         var row = rows[i];
                         var m = new Mauer(MaxMauerHoehe, MauerBreite);
                         var r = new Reihe(row.ToArray(), MauerBreite, (uint)i);
                         m.AddReihe(r);
                         MoeglicheReihen.Add(r);
-                        //moeglicheMauern.Add(m);
-                        if (i == 0) moeglicheMauern.Add(m); //HACK: Nur Mauern, die die Reihe [1, 2, 3, ..., n - 2, n - 1, n] enthalten
+                        moeglicheMauern.Add(m);
+                        //if (i == 0) moeglicheMauern.Add(m); //HACK: Nur Mauern, die die Reihe [1, 2, 3, ..., n - 2, n - 1, n] enthalten
                     }
                 }
+
+                //Parallel.For(0, rows.Length, i =>
+                //{
+                //    var row = rows[i];
+                //    var m = new Mauer(MaxMauerHoehe, MauerBreite);
+                //    var r = new Reihe(row.ToArray(), MauerBreite, (uint) i);
+                //    m.AddReihe(r);
+                //    MoeglicheReihen.Add(r);
+                //    moeglicheMauern.Add(m);
+                //});
      
                 _stopwatch.Stop();
                 Debug.WriteLine("Got Permutations!");
@@ -311,9 +323,7 @@ namespace Aufgabe01
                         var reihen = aktuelleMauern[i].Reihen.ToList();
                         // Reihen, die zu ALLEN Reihen der aktuellen Mauer passen
                         var dazuMoeglicheReihen = allMoeglicheReihen.Where(r => reihen.All(pr => Utilities.ReihenSindKompatibel(pr, r, allMoeglicheReihenMatrix, allMoeglicheReihen) && Utilities.MauerIstNeu(aktuelleMauern[i], r, newAktuelleMauern))).ToList();
-                        newAktuelleMauern.AddRange(dazuMoeglicheReihen.Select((t, e) => Utilities.MergeMauerWithRow(aktuelleMauern[i], dazuMoeglicheReihen.ToList()[e])));
-                       
-                    }
+                        newAktuelleMauern.AddRange(dazuMoeglicheReihen.Select((t, e) => Utilities.MergeMauerWithRow(aktuelleMauern[i], dazuMoeglicheReihen.ToList()[e])));}
                 }
 
                 aktuelleMauern = newAktuelleMauern;

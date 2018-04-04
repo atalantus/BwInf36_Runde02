@@ -67,9 +67,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\GUI\DrohnenFlug.cs" />
+    <Compile Include="Classes\GUI\PositionTab.cs" />
     <Compile Include="Classes\Pathfinding\AbschlussNode.cs" />
     <Compile Include="Classes\Pathfinding\ChildNodes.cs" />
-    <Compile Include="Classes\Pathfinding\ISearchPath.cs" />
     <Compile Include="Classes\Pathfinding\Map.cs" />
     <Compile Include="Classes\Pathfinding\MapDaten.cs" />
     <Compile Include="Classes\Pathfinding\MapQuadrat.cs" />
@@ -78,8 +79,10 @@
     <Compile Include="Classes\Pathfinding\Pathfinder.cs" />
     <Compile Include="Classes\Pathfinding\Quadrat.cs" />
     <Compile Include="Classes\Pathfinding\QuadratNode.cs" />
-    <Compile Include="Classes\Pathfinding\SearchInformation.cs" />
+    <Compile Include="Classes\Pathfinding\PathInfo.cs" />
+    <Compile Include="Classes\Pathfinding\QuaxInfo.cs" />
     <Compile Include="Classes\Pathfinding\Utilities.cs" />
+    <Compile Include="Classes\Utilities.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

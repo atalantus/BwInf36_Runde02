@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Aufgabe03.Classes;
+using Aufgabe03.Classes.GUI;
 using Aufgabe03.Classes.Pathfinding;
 using Microsoft.Win32;
 
@@ -27,6 +29,10 @@ namespace Aufgabe03
         private Point? _lastCenterPositionOnTarget;
         private Point? _lastMousePositionOnTarget;
         private Point? _lastDragPoint;
+
+        private List<PositionTab> QuaxPositionen;
+        private int _quaxPosIndex;
+        private Pathfinder _pathfinder;
 
         public MainWindow()
         {
@@ -43,17 +49,41 @@ namespace Aufgabe03
                 Filter = "Image files (*.png)|*.png",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             };
-            bool? result = openFileDialog.ShowDialog();
+            var result = openFileDialog.ShowDialog();
             ProgressBar.Value = 0d;
 
             if (result == true)
             {
-                BitmapImage image = new BitmapImage(new Uri(openFileDialog.FileName));
-                MapDaten.Instance.Map = new WriteableBitmap(image);
+                var image = new BitmapImage(new Uri(openFileDialog.FileName));
+
+                MapDaten.Instance.LoadMapData(image);
+
+                for (int i = 0; i < MapDaten.Instance.QuaxPositionen.Count; i++)
+                {
+                    var quaxPos = new PositionTab(i);
+                }
                 ImageSource source = image;
                 MapScaleSlider.Value = MapScaleSlider.Minimum;
                 MapImage.Source = source;
+                PosPreviewImg.Source = source;
                 ConsoleFlowDocument.Blocks.Add(new Paragraph(new Run("Loaded image!")));
+            }
+        }
+
+        private void StartAlgorithm_OnClick(object sender, RoutedEventArgs e)
+        {
+            _pathfinder = new Pathfinder(_quaxPosIndex);
+            try
+            {
+                var timer = new Stopwatch();
+                timer.Start();
+                var pathInfo = _pathfinder.FindPath();
+                timer.Stop();
+                MessageBox.Show($"Weg Laenge: {pathInfo.Weg.Count}\nIn {timer.ElapsedMilliseconds}ms");
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.StackTrace, exception.Message);
             }
         }
 

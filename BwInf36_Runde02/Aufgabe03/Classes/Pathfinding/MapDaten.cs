@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Aufgabe03.Classes.Pathfinding
@@ -9,36 +12,71 @@ namespace Aufgabe03.Classes.Pathfinding
     /// </summary>
     public class MapDaten
     {
-        #region Singleton
-
-        private static MapDaten _instance = null;
-        public static MapDaten Instance => _instance ?? (_instance = new MapDaten());
-        private MapDaten() { }
-
-        #endregion
-
         #region Fields
 
-        private WriteableBitmap _map;
+        private static MapDaten _instance = null;
 
         #endregion
 
         #region Properties
 
-        public WriteableBitmap Map
-        {
-            get => _map;
-            set => SetMap(value);
-        }
+        public static MapDaten Instance => _instance ?? (_instance = new MapDaten());
+
+        /// <summary>
+        /// Die Map
+        /// </summary>
+        public WriteableBitmap Map { get; set; }
+
+        /// <summary>
+        /// Enthaelt alle Pixel der Map.
+        /// True wenn ein Pixel Wasser ist.
+        /// Beginnend oben links
+        /// </summary>
+        public bool[][] WasserPixel { get; private set; }
+
+        /// <summary>
+        /// Die Quax Positionen
+        /// </summary>
+        public List<Point> QuaxPositionen { get; set; }
+
+        /// <summary>
+        /// Die Stadt Position
+        /// </summary>
+        public Point StadtPosition { get; set; }
 
         #endregion
 
         #region Methods
 
-        public void SetMap(WriteableBitmap map)
+        private MapDaten() { }
+
+        public void LoadMapData(BitmapSource image)
         {
-            Debug.WriteLine(map.PixelWidth + "x" + map.PixelHeight);
-            _map = map;
+            Map = null;
+            QuaxPositionen = new List<Point>();
+            WasserPixel = new bool[image.PixelWidth][];
+
+            Map = new WriteableBitmap(image);
+            var curReihe = -1;
+            var height = Map.PixelHeight;
+
+            Map.ForEach((x, y, color) =>
+            {
+                if (x > curReihe)
+                {
+                    curReihe++;
+                    WasserPixel[x] = new bool[height];
+                }
+
+                if (color.Equals(Colors.White))
+                    WasserPixel[x][y] = true;
+                else if (color.Equals(Colors.Red))
+                    QuaxPositionen.Add(new Point(x, y));
+                else if (color.Equals(Colors.Lime))
+                    StadtPosition = new Point(x, y);
+
+                return color;
+            });
         }
 
         #endregion

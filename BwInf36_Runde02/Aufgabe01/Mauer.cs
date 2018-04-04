@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Aufgabe01
 {
@@ -26,7 +28,12 @@ namespace Aufgabe01
         /// <summary>
         /// Die Id der Mauer. Mauern mit den gleichen Reihen haben auch die gleiche ID
         /// </summary>
-        public uint Id { get; private set; }
+        public string Id => ReihenIds.Print();
+
+        /// <summary>
+        /// Die Ids der Reihen 
+        /// </summary>
+        public List<uint> ReihenIds { get; private set; }
 
         #endregion
 
@@ -42,7 +49,7 @@ namespace Aufgabe01
             FreieFugen = new bool[maxBreite];
             FreieFugen.FillArray(true);
             Reihen = new Reihe[maxHoehe];
-            Id = 0;
+            ReihenIds = new List<uint>();
         }
 
         /// <summary>
@@ -62,7 +69,8 @@ namespace Aufgabe01
                         if (!newReihe.FreieFugen[j]) FreieFugen[j] = false;
                     }
 
-                    Id += newReihe.Id;
+                    ReihenIds.Add(newReihe.Id);
+                    ReihenIds.Sort();
                     return this;
                 }
             }

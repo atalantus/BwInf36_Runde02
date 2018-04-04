@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 
 namespace Aufgabe01
 {
@@ -45,7 +46,7 @@ namespace Aufgabe01
             reihen.AddRange(mauer.Reihen);
             reihen.Add(reihe);
 
-            for (int i = 0; i < reihen.Count; i++)
+            for (var i = 0; i < reihen.Count; i++)
             {
                 if (reihen[i].IsInitialized()) newMauer.AddReihe(reihen[i]);
             }
@@ -76,8 +77,11 @@ namespace Aufgabe01
         /// <returns></returns>
         public static bool MauerIstNeu(Mauer mauer, Reihe neueReihe, List<Mauer> bisherigeMauern)
         {
-            var newId = mauer.Id + neueReihe.Id;
-            return !bisherigeMauern.Exists(m => m.Id == newId);
+            var rowIds = mauer.ReihenIds.Copy();
+            rowIds.Add(neueReihe.Id);
+            rowIds.Sort();
+
+            return !bisherigeMauern.Exists(m => m.Id == rowIds.Print());
         }
 
         /// <summary>
@@ -145,6 +149,40 @@ namespace Aufgabe01
                     array[x, y] = value;
                 }
             }
+        }
+
+        /// <summary>
+        /// Copies a list
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <returns>The copied list</returns>
+        public static List<T> Copy<T>(this List<T> list)
+        {
+            var copied = new List<T>();
+            for (int i = 0; i < list.Count; i++)
+            {
+                copied.Add(list[i]);
+            }
+
+            return copied;
+        }
+
+        /// <summary>
+        /// Returns a string with all the elements of the list
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <returns>All the elements in the list in one string</returns>
+        public static string Print<T>(this List<T> list)
+        {
+            var output = new StringBuilder();
+            for (int i = 0; i < list.Count; i++)
+            {
+                output.Append(list[i].ToString());
+            }
+
+            return output.ToString();
         }
     }
 }

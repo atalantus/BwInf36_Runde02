@@ -12,74 +12,26 @@ namespace Aufgabe03_Tests
         [TestMethod]
         public void Properties_Test()
         {
-            var childNodes = new ChildNodes(
-                new[]
-                {
-                    new QuadratNode(new Point(2, 2), 2),    // Nord Ost 
-                    new QuadratNode(new Point(2, 0), 2),    // Sued Ost
-                    new QuadratNode(new Point(0, 0), 2),    // Sued West
-                    new QuadratNode(new Point(0, 2), 2)     // Nord West
-                },
-                new QuadratNode(new Point(4, 3), 3),        // Letzter Weg
-                new Point(0, 0)                             // Ziel
+            var node = new Node(new Point(2, 6), 6);
+            node.ChildNodes.SortierChildNodes(
+                new Node(new Point(0, 11), 2),                      // Letzter Weg
+                new Point(11, 11)                                   // Ziel
             );
 
-            Assert.AreEqual(new Point(1, 1), childNodes.SW_Node.MapQuadrat.Mittelpunkt);
-            Assert.AreEqual(new Point(3, 1), childNodes.SO_Node.MapQuadrat.Mittelpunkt);
-            Assert.AreEqual(new Point(1, 3), childNodes.NW_Node.MapQuadrat.Mittelpunkt);
-            Assert.AreEqual(new Point(3, 3), childNodes.NO_Node.MapQuadrat.Mittelpunkt);
-            
-            // Erste Node weil einzigste die Weg beruehrt
-            Assert.AreEqual(childNodes.NO_Node, childNodes.ChildNodesSortiert[0].Node);
-            // Zweite Node weil am nächsten zum Ziel
-            Assert.AreEqual(childNodes.SW_Node, childNodes.ChildNodesSortiert[1].Node);
-            // Kuerzeste Entfernung
-            Assert.AreEqual(true, childNodes.ChildNodesSortiert[1].KuerzesteTargetEntfernung);
+            Assert.AreEqual(new Point(8, 12), node.MapQuadrat.RU_Eckpunkt);
 
-
-
-            var childNodes02 = new ChildNodes(
-                new[]
-                {
-                    new QuadratNode(new Point(2, 2), 2),    // Nord Ost 
-                    new QuadratNode(new Point(2, 0), 2),    // Sued Ost
-                    new QuadratNode(new Point(0, 0), 2),    // Sued West
-                    new QuadratNode(new Point(0, 2), 2)     // Nord West
-                },
-                new QuadratNode(new Point(4, 3), 3),        // Letzter Weg
-                new Point(3, 0)                             // Ziel
-            );
+            Assert.AreEqual(new Point(8, 9), node.ChildNodes.NO_Node.MapQuadrat.RU_Eckpunkt);
+            Assert.AreEqual(new Point(5, 9), node.ChildNodes.SO_Node.MapQuadrat.LO_Eckpunkt);
+            Assert.AreEqual(new Point(8, 12), node.ChildNodes.SO_Node.MapQuadrat.RU_Eckpunkt);
+            Assert.AreEqual(new Point(5, 12), node.ChildNodes.SW_Node.MapQuadrat.RU_Eckpunkt);
+            Assert.AreEqual(new Point(5, 9), node.ChildNodes.NW_Node.MapQuadrat.RU_Eckpunkt);
 
             // Erste Node weil einzigste die Weg beruehrt
-            Assert.AreEqual(childNodes02.NO_Node, childNodes02.ChildNodesSortiert[0].Node);
+            Assert.AreEqual(node.ChildNodes.SW_Node, node.ChildNodes.ChildNodesSortiert[0].Node);
             // Zweite Node weil am nächsten zum Ziel
-            Assert.AreEqual(childNodes02.SO_Node, childNodes02.ChildNodesSortiert[1].Node);
+            Assert.AreEqual(node.ChildNodes.SO_Node, node.ChildNodes.ChildNodesSortiert[1].Node);
             // Kuerzeste Entfernung
-            Assert.AreEqual(true, childNodes02.ChildNodesSortiert[1].KuerzesteTargetEntfernung);
-
-
-            var childNodes03 = new ChildNodes(
-                new[]
-                {
-                    new QuadratNode(new Point(2, 2), 2),    // Nord Ost 
-                    new QuadratNode(new Point(2, 0), 2),    // Sued Ost
-                    new QuadratNode(new Point(0, 0), 2),    // Sued West
-                    new QuadratNode(new Point(0, 2), 2)     // Nord West
-                },
-                new QuadratNode(new Point(-4, 0), 4),       // Letzter Weg
-                new Point(7, 5)                             // Ziel
-            );
-
-            // Erste Node weil Weg beruehrt und am kuerzesten zu Ziel
-            Assert.AreEqual(childNodes03.NW_Node, childNodes03.ChildNodesSortiert[0].Node);
-            // Zweite Node weil Weg beruehrt
-            Assert.AreEqual(childNodes03.SW_Node, childNodes03.ChildNodesSortiert[1].Node);
-            // Dritte Node weil am nächsten zum Ziel
-            Assert.AreEqual(childNodes03.NO_Node, childNodes03.ChildNodesSortiert[2].Node);
-            // NICHT Kuerzeste Entfernung
-            Assert.AreEqual(false, childNodes03.ChildNodesSortiert[1].KuerzesteTargetEntfernung);
-            // Kuerzeste Entfernung
-            Assert.AreEqual(true, childNodes03.ChildNodesSortiert[2].KuerzesteTargetEntfernung);
+            Assert.AreEqual(true, node.ChildNodes.ChildNodesSortiert[1].KuerzesteTargetEntfernung);
         }
     }
 }

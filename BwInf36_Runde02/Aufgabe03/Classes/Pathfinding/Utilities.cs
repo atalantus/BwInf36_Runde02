@@ -4,6 +4,9 @@ using System.Windows;
 
 namespace Aufgabe03.Classes.Pathfinding
 {
+    /// <summary>
+    /// Extra Methoden fuers Pathfinding
+    /// </summary>
     public class Utilities
     {
         /// <summary>

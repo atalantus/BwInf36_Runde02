@@ -57,75 +57,39 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <Grid Grid.Row="0" Margin="0,0,0,10">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                    </Grid.RowDefinitions>
-
-                    <Button Grid.Row="0" Name="OpenFileBtn" Click="OpenFileBtn_OnClick" Height="40px" Width="225px" FontWeight="DemiBold" Margin="0,0,0,10">Select .png file</Button>
-                    <Label Grid.Row="1" Style="{StaticResource H1}">Settings</Label>
-                    <ScrollViewer Grid.Row="2">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-
-                            <Label Grid.Row="0" Grid.Column="0">Setting01</Label>
-                            <CheckBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"></CheckBox>
-                            <Label Grid.Row="1" Grid.Column="0">Setting02</Label>
-                            <CheckBox Grid.Row="1" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"></CheckBox>
-                        </Grid>
-                    </ScrollViewer>
-                </Grid>
+                <Button Name="OpenFileBtn" Click="OpenFileBtn_OnClick" Height="40px" Width="225px" FontWeight="DemiBold" Margin="0,15,0,50">Select .png file</Button>
 
                 <TabControl Grid.Row="1" Name="QuaxPosTabControl" Style="{StaticResource QuaxPosTabControl}" Margin="0,0,5,0">
-                    <TabItem Header="Position 1">
+                    <TabItem Header="Quax 1">
                         <TabItem.Content>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"></RowDefinition>
-                                    <RowDefinition Height="*"></RowDefinition>
-                                </Grid.RowDefinitions>
+                            <ScrollViewer>
+                                <Grid Name="PosGrid">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="Auto"></RowDefinition>
+                                    </Grid.RowDefinitions>
 
-                                <Button Grid.Row="0" Content="Start Algorithm"></Button>
-                                <ScrollViewer Grid.Row="1">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                            <RowDefinition Height="Auto"></RowDefinition>
-                                        </Grid.RowDefinitions>
-                                        <Label Grid.Row="0">Step 01</Label>
-                                        <Label Grid.Row="1">Step 02</Label>
-                                        <Label Grid.Row="2">Step 03</Label>
-                                        <Label Grid.Row="3">Step 04</Label>
-                                        <Label Grid.Row="4">Step 05</Label>
-                                        <Label Grid.Row="5">Step 06</Label>
-                                        <Label Grid.Row="6">Step 07</Label>
-                                        <Label Grid.Row="7">Step 08</Label>
-                                        <Label Grid.Row="8">Step 09</Label>
-                                        <Label Grid.Row="9">Step 10</Label>
-                                        <Label Grid.Row="10">Step 11</Label>
-                                        <Label Grid.Row="11">Step 12</Label>
-                                    </Grid>
-                                </ScrollViewer>
-                            </Grid>
+                                    <Image Grid.Row="0" Width="{Binding ActualWidth, ElementName=PosGrid}" MaxHeight="100" Name="PosPreviewImg" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" Margin="0,10,0,0"></Image>
+                                    <Button Margin="0,10,0,25" Height="50" MaxWidth="200" Grid.Row="1" Content="Start Algorithm" Name="StartAlgorithm" Click="StartAlgorithm_OnClick"></Button>
+
+                                    <Label Grid.Row="2">Step 01</Label>
+                                    <Label Grid.Row="3">Step 02</Label>
+                                    <Label Grid.Row="4">Step 03</Label>
+                                    <Label Grid.Row="5">Step 04</Label>
+                                    <Label Grid.Row="6">Step 05</Label>
+                                    <Label Grid.Row="7">Step 06</Label>
+                                    <Label Grid.Row="8">Step 07</Label>
+                                    <Label Grid.Row="9">Step 08</Label>
+                                </Grid>
+                            </ScrollViewer>
                         </TabItem.Content>
                     </TabItem>
                 </TabControl>

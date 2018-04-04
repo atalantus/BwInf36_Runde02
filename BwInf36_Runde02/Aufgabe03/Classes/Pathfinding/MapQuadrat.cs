@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Aufgabe03.Classes.Pathfinding
 {
@@ -33,23 +34,42 @@ namespace Aufgabe03.Classes.Pathfinding
         /// <summary>
         /// Erzeugt ein neues <see cref="MapQuadrat"/> Objekt
         /// </summary>
-        /// <param name="luEckpunkt">Eckpunkt links unten des Quadrats</param>
+        /// <param name="loEckpunkt">Eckpunkt links unten des Quadrats</param>
         /// <param name="breite">Breite/Hoehe des Quadrats</param>
-        public MapQuadrat(Point luEckpunkt, int breite) : base(luEckpunkt, breite)
+        public MapQuadrat(Point loEckpunkt, int breite) : base(loEckpunkt, breite)
         {
 
         }
 
         /// <summary>
         /// Findet den Map Typ fuer den Ausschnitt von <see cref="MapQuadrat"/>
-        /// HACK: REPRAESENTIERT EINEN DROHNEN FLUG
         /// TODO: REPRAESENTIERT EINEN DROHNEN FLUG
         /// </summary>
         public void GetMapTyp()
         {
             var mapDaten = MapDaten.Instance;
+            var enthaeltWasser = false;
+            var enthaeltLand = false;
 
-            //var pixel = mapDaten.Map.CopyPixels(new Int32Rect(LU_Eckpunkt.X, LU_Eckpunkt.Y + Hoehe, Breite, Hoehe), pixel, )
+            for (var i = 0; i < Breite; i++)
+            {
+                for (var j = 0; j < Hoehe; j++)
+                {
+                    var wasserPixel = mapDaten.WasserPixel[(int) LO_Eckpunkt.X + i][(int) LO_Eckpunkt.Y + j];
+
+                    if (wasserPixel && !enthaeltWasser)
+                        enthaeltWasser = true;
+                    else if (!wasserPixel && !enthaeltLand)
+                        enthaeltLand = true;
+                }
+            }
+
+            if (enthaeltWasser && enthaeltLand && Breite > 2)
+                MapTyp = MapTypen.Gemischt;
+            else if (enthaeltWasser && enthaeltLand && Breite <= 2 || !enthaeltWasser)
+                MapTyp = MapTypen.Passierbar;
+            else
+                MapTyp = MapTypen.Wasser;
         }
 
         #endregion

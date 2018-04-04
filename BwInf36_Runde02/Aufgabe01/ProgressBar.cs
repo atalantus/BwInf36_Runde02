@@ -49,8 +49,8 @@ namespace Aufgabe01
                 if (_disposed) return;
 
                 var progressBlockCount = (int)(_currentProgress * BlockCount);
-                int percent = (int)(_currentProgress * 100);
-                //var percent = Math.Round(_currentProgress * 100, 2);
+                //int percent = (int)(_currentProgress * 100);
+                var percent = Math.Round(_currentProgress * 100, 2);
                 var text =
                     $"{_message}    [{new string('#', progressBlockCount)}{new string('-', BlockCount - progressBlockCount)}] {percent,3}% {Animation[_animationIndex++ % Animation.Length]}";
                 UpdateText(text);

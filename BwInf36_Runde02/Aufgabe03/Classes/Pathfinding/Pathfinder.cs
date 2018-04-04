@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows;
+using Aufgabe03.Classes.GUI;
 
 namespace Aufgabe03.Classes.Pathfinding
 {
@@ -16,7 +17,12 @@ namespace Aufgabe03.Classes.Pathfinding
         /// <summary>
         /// Die Start "Node" / Map
         /// </summary>
-        public Map StartNode { get; private set; }
+        public Map Map { get; private set; }
+
+        /// <summary>
+        /// Der aktuelle GUI Tab
+        /// </summary>
+        public PositionTab AktuellerTab { get; set; }
 
         /// <summary>
         /// Die aktuelle Quax Position
@@ -42,16 +48,29 @@ namespace Aufgabe03.Classes.Pathfinding
 
         #region Methods
 
+        public Pathfinder(int quaxIndex)
+        {
+            Map = new Map();
+            QuaxPos = MapDaten.Instance.QuaxPositionen[quaxIndex];
+            StadtPos = MapDaten.Instance.StadtPosition;
+        }
+
         /// <summary>
         /// Sucht einen Weg von <see cref="QuaxPos"/> zu <see cref="StadtPos"/>
         /// </summary>
-        public void FindPath()
+        public PathInfo FindPath()
         {
-            var info = new SearchInformation(QuaxPos, StadtPos);
-            var endInfo = StartNode.SearchPath(info);
-            Debug.WriteLine($"Quax gefunden: {endInfo.QuaxGefunden}");
-            Debug.WriteLine($"Stadt gefunden: {endInfo.StadtGefunden}");
-            Debug.WriteLine($"Weg Laenge: {endInfo.Weg.Count}");
+            IsSearching = true;
+            Debug.WriteLine("-------------------------");
+            Debug.WriteLine("Quax Search");
+            Debug.WriteLine("-------------------------");
+            var quaxInfo = Map.SearchQuax(new QuaxInfo(QuaxPos));
+            Debug.WriteLine("-------------------------");
+            Debug.WriteLine("Path Search");
+            Debug.WriteLine("-------------------------");
+            var pathInfo = Map.SearchPath(new PathInfo(StadtPos, quaxInfo.QuaxNode));
+            IsSearching = false;
+            return pathInfo;
         }
 
         #endregion
