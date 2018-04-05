@@ -114,7 +114,10 @@ namespace Aufgabe01
                     MoeglicheReihen[i] = r;
                 }
             }
-     
+
+            var generation = GC.GetGeneration(rows);
+            GC.Collect(generation);
+
             _stopwatch.Stop();
 
             Console.WriteLine($"{rows.Length} Permutationen der Reihe in {_stopwatch.ElapsedMilliseconds}ms gefunden!");

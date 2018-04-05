@@ -17,7 +17,7 @@ namespace Aufgabe03.Classes.Pathfinding
         /// <summary>
         /// Die Start "Node" / Map
         /// </summary>
-        public Map Map { get; private set; }
+        public Map Map { get; }
 
         /// <summary>
         /// Der aktuelle GUI Tab
@@ -27,12 +27,12 @@ namespace Aufgabe03.Classes.Pathfinding
         /// <summary>
         /// Die aktuelle Quax Position
         /// </summary>
-        public Point QuaxPos { get; private set; }
+        public Point QuaxPos { get; }
 
         /// <summary>
         /// Die aktuelle Stadt Position
         /// </summary>
-        public Point StadtPos { get; private set; }
+        public Point StadtPos { get; }
 
         /// <summary>
         /// Wurde ein Weg zur Stadt gefunden

@@ -56,12 +56,12 @@ namespace Aufgabe01
         {
             if (items.Count() > 1)
             {
-                return items.SelectMany(item => GetPermutations(items.Where(i => !i.Equals(item))),
-                                       (item, permutation) => new[] { item }.Concat(permutation));
+                return items.SelectMany(item => GetPermutations(items.Where(i => !i.Equals(item)).ToArray()).ToArray(),
+                                       (item, permutation) => new[] { item }.Concat(permutation).ToArray()).ToArray();
             }
             else
             {
-                return new[] { items };
+                return new[] { items }.ToArray();
             }
         }
     }
