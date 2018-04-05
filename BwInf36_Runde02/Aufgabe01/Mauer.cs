@@ -14,26 +14,17 @@ namespace Aufgabe01
         /// <summary>
         /// Einzelnen Reihen der Mauer
         /// </summary>
-        public Reihe[] Reihen { get; private set; }
+        public Reihe[] Reihen { get; }
 
         /// <summary>
-        /// Enthaelt die Freien Fugen in der Mauer
-        ///
-        /// Beim durchiterieren immer 'Length - 1', 
-        /// da das Ende der Mauer die letzte Fuge ist, 
-        /// obwohl es eigentlich keine Fuge ist
+        /// Enthaelt die Indizes der besetzten Fugen
         /// </summary>
-        public bool[] FreieFugen { get; private set; }
+        public HashSet<byte> BesetzteFugen { get; }
 
         /// <summary>
-        /// Die Id der Mauer. Mauern mit den gleichen Reihen haben auch die gleiche ID
+        /// Ist die Mauer fertig/voll (Sind alle Reihen gesetzt)
         /// </summary>
-        public string Id => ReihenIds.Print();
-
-        /// <summary>
-        /// Die Ids der Reihen 
-        /// </summary>
-        public List<uint> ReihenIds { get; private set; }
+        public bool Fertig { get; private set; }
 
         #endregion
 
@@ -43,13 +34,27 @@ namespace Aufgabe01
         /// Erzeugt ein neues <see cref="Mauer"/> Objekt
         /// </summary>
         /// <param name="maxHoehe">Die maximale Hoehe der Mauer</param>
-        /// <param name="maxBreite">Die maximale Breite der Mauer</param>
-        public Mauer(int maxHoehe, int maxBreite)
+        public Mauer(int maxHoehe)
         {
-            FreieFugen = new bool[maxBreite];
-            FreieFugen.FillArray(true);
+            BesetzteFugen = new HashSet<byte>();
             Reihen = new Reihe[maxHoehe];
-            ReihenIds = new List<uint>();
+            Fertig = false;
+        }
+
+        /// <summary>
+        /// Erzeugt eine neues <see cref="Mauer"/> Objekt
+        /// </summary>
+        /// <param name="mauer">Die Mauer, die "geklont" wird</param>
+        public Mauer(Mauer mauer)
+        {
+            BesetzteFugen = new HashSet<byte>();
+            Reihen = new Reihe[mauer.Reihen.Length];
+            Fertig = false;
+
+            for (var i = 0; i < mauer.Reihen.Length; i++)
+            {
+                if (mauer.Reihen[i].IsInitialized()) AddReihe(mauer.Reihen[i]);
+            }
         }
 
         /// <summary>
@@ -64,13 +69,12 @@ namespace Aufgabe01
                 if (!Reihen[i].IsInitialized())
                 {
                     Reihen[i] = newReihe;
-                    for (var j = 0; j < newReihe.FreieFugen.Length - 1; j++)
-                    {
-                        if (!newReihe.FreieFugen[j]) FreieFugen[j] = false;
-                    }
 
-                    ReihenIds.Add(newReihe.Id);
-                    ReihenIds.Sort();
+                    BesetzteFugen.UnionWith(newReihe.BesetzteFugen);
+
+                    if (i == Reihen.Length - 1) // Letzte Reihe wurde gesetzt. Mauer ist voll
+                        Fertig = true;
+
                     return this;
                 }
             }

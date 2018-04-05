@@ -30,16 +30,14 @@ namespace Aufgabe01
              * Eingabe: Anzahl Kloetzchen
              */
             Console.Write("Anzahl der Kloetzchen in einer Reihe: ");
-            int.TryParse(Console.ReadLine(), out var anzahlKloetze);
+            byte.TryParse(Console.ReadLine(), out var anzahlKloetze);
             Console.ForegroundColor = ConsoleColor.Red;
-            while (anzahlKloetze <= 1)
+            while (anzahlKloetze <= 1 || anzahlKloetze > 22)
             {
                 Console.WriteLine();
-                Console.WriteLine(anzahlKloetze == 1
-                    ? "Fuer die maximale Anzahl von 1 Klotz, kann eine unendlich hohe Mauer gebaut werden!"
-                    : "Die von Ihnen angegebene Anzahl Kloetzchen kann nicht verarbeitet werden!");
+                Console.WriteLine("Die Anzahl der Kloetze muss zwischen 2 (eingeschlossen) und 22 (eingeschlossen) liegen!");
                 Console.Write("Bitte waehlen Sie eine andere Anzahl von Kloetzchen in einer Reihe: ");
-                int.TryParse(Console.ReadLine(), out anzahlKloetze);
+                byte.TryParse(Console.ReadLine(), out anzahlKloetze);
             }
             Console.ResetColor();
             Console.WriteLine();
@@ -47,54 +45,9 @@ namespace Aufgabe01
 
 
             /**
-             * Debug Modus Abfrage und Ausgabe der Werte
-             */
-            var started = false;
-            var isDebug = false;
-            while (!started)
-            {
-                Console.WriteLine("Starte den Algorithmus im Debug oder Normalem Modus: (D/N)");
-                var input = Console.ReadLine()?.ToLower();
-                if (input == "d" || input == "debug")
-                {
-                    started = true;
-                    isDebug = true;
-                }
-                else if (input == "n" || input == "normal")
-                {
-                    started = true;
-                    isDebug = false;
-                }
-            }
-
-
-
-            /**
-             * Algorithmus Typ Abfrage
-             */
-            var gotAlgorithm = false;
-            var isRekursiv = true;
-            while (!gotAlgorithm)
-            {
-                Console.WriteLine("Fuehre den Algorithmus Rekursiv oder in einer Schleife aus: (R/S)");
-                var input = Console.ReadLine()?.ToLower();
-                if (input == "r" || input == "rekursiv")
-                {
-                    gotAlgorithm = true;
-                    isRekursiv = true;
-                }
-                else if (input == "s" || input == "schleife")
-                {
-                    gotAlgorithm = true;
-                    isRekursiv = false;
-                }
-            }
-
-
-            /**
              * Starte Algorithmus
              */
-            wallBuilder.SetUpWallBuilder(anzahlKloetze, isDebug, isRekursiv);
+            wallBuilder.SetUpWallBuilder(anzahlKloetze);
             var end = false;
             while (!end)
             {
@@ -103,76 +56,16 @@ namespace Aufgabe01
                     wallBuilder.StartAlgorithmus();
                     end = true;
                 }
-                catch (FugenUeberlappungException e)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine();
-                    Console.WriteLine("ERROR:");
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine();
-                    Console.ResetColor();
-
-                    if (!wallBuilder.IsDebug)
-                    {
-                        Console.WriteLine("Schreibe [Y] um den Algorithmus nochmal im Debug Modus zu starten");
-                        var input = Console.ReadLine()?.ToUpper();
-                        if (input == "Y")
-                        {
-                            wallBuilder.SetUpWallBuilder(anzahlKloetze, true, isRekursiv);
-                        }
-                        else end = true;
-                    }
-                    else
-                    {
-                        end = true;
-                    }
-
-                    Console.WriteLine();
-                }
-                catch (KeinMoeglicherKlotzException e)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine();
-                    Console.WriteLine("ERROR:");
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine();
-                    Console.ResetColor();
-
-                    if (!wallBuilder.IsDebug)
-                    {
-                        Console.WriteLine("Schreibe [Y] um den Algorithmus nochmal im Debug Modus zu starten");
-                        var input = Console.ReadLine()?.ToUpper();
-                        if (input == "Y")
-                        {
-                            wallBuilder.SetUpWallBuilder(anzahlKloetze, true, isRekursiv);
-                        }
-                        else end = true;
-                    }
-                    else
-                    {
-                        end = true;
-                    }
-
-                    Console.WriteLine();
-                }
-                catch (OutOfMemoryException e)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine();
-                    Console.WriteLine("ERROR:");
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine();
-                    Console.ResetColor();
-                    end = true;
-                }
                 catch (Exception e)
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine();
+                    Console.WriteLine("ERROR:");
                     Console.WriteLine(e.Message);
                     Console.WriteLine(e.StackTrace);
                     Console.WriteLine();
                     Console.ResetColor();
+
                     end = true;
                 }
             }

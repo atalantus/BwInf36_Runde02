@@ -45,8 +45,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FugenUeberlappungException.cs" />
-    <Compile Include="KeinMoeglicherKlotzException.cs" />
     <Compile Include="Mauer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgressBar.cs" />
