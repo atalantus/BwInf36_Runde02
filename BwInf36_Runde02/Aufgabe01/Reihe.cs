@@ -6,7 +6,7 @@ namespace Aufgabe01
     /// <summary>
     /// Repraesentiert eine Reihe von Klotzen
     /// </summary>
-    public struct Reihe
+    public class Reihe
     {
         #region Properties
 
@@ -45,15 +45,6 @@ namespace Aufgabe01
                 BesetzteFugen.Add(zaehler);
             }
             Id = id;
-        }
-
-        /// <summary>
-        /// Checks if this struct has already been initialized
-        /// </summary>
-        /// <returns>True if the struct has been initialized</returns>
-        public bool IsInitialized()
-        {
-            return Kloetze != null && BesetzteFugen != null;
         }
 
         /// <summary>

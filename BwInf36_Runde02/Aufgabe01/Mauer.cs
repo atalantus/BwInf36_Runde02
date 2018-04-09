@@ -7,7 +7,7 @@ namespace Aufgabe01
     /// <summary>
     /// Repraesentiert eine Mauer mit mehreren <see cref="Reihe"/>n
     /// </summary>
-    public struct Mauer
+    public class Mauer
     {
         #region Properties
 
@@ -53,7 +53,7 @@ namespace Aufgabe01
 
             for (var i = 0; i < mauer.Reihen.Length; i++)
             {
-                if (mauer.Reihen[i].IsInitialized()) AddReihe(mauer.Reihen[i]);
+                if (mauer.Reihen[i] != null) AddReihe(mauer.Reihen[i]);
             }
         }
 
@@ -63,10 +63,10 @@ namespace Aufgabe01
         /// <param name="newReihe">Die Reihe, die hinzugefuegt werden soll</param>
         public Mauer AddReihe(Reihe newReihe)
         {
-            if (!newReihe.IsInitialized()) return this;
+            if (newReihe == null) return this;
             for (var i = 0; i < Reihen.Length; i++)
             {
-                if (!Reihen[i].IsInitialized())
+                if (Reihen[i] == null)
                 {
                     Reihen[i] = newReihe;
 

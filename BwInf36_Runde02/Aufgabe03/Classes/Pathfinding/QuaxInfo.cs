@@ -7,12 +7,12 @@ namespace Aufgabe03.Classes.Pathfinding
         #region Properties
 
         /// <summary>
-        /// Quax Position
+        ///     Quax Position
         /// </summary>
-        public Point QuaxPos { get; private set; }
-        
+        public Point QuaxPos { get; }
+
         /// <summary>
-        /// Die node die Quax enthaelt
+        ///     Die node die Quax enthaelt
         /// </summary>
         public QuadratNode QuaxNode { get; set; }
 

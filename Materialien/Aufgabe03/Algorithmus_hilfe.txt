@@ -1,0 +1,31 @@
+var alleQuadrateDieLetztenWegBeruehren;									// Array mit allen child nodes die den letzten Weg beruhren
+alleQuadrateDieLetztenWegBeruehren.SortierenNachEntfernungZiel();		// Array nach entfernung zum Ziel sortieren
+var quadrat01 = null													// Erste Quadrat
+for (quadrat in alleQuadrateDieLetztenWegBeruehren) 
+{
+	if (quadrat.Istpassierbar())										// Quadrat ist Passierbar	
+		quadrat01 = quadrat;											// Erstes Quadrat setzen
+}
+if (quadrat01 == null)
+	Dieses Quadrat ist nicht passierbar
+	return;
+	
+var alleQuadrate;
+alleQuadrate.SortierenNachEntfernungZiel();
+alleQuadrate.ohne(quadrat01);
+
+if (alleQuadrate.Count == 0)
+	Das beste Quadrat ist quadrat01
+	Dieses Quadrat ist Passierbar
+	return;
+
+var quadrat02 = null;
+for (quadrat in alleQuadrate)
+{
+	if (quadrat.Istpassierbar())
+		quadrat02 = quadrat;
+}
+
+
+
+Dieses Quadrat ist Passierbar

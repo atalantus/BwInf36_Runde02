@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Aufgabe03"
+        xmlns:gui="clr-namespace:Aufgabe03.Classes.GUI"
         mc:Ignorable="d"
         Title="Quo vadis, Quax?" Height="850" Width="1100" MinHeight="700" MinWidth="750">
     <Window.Resources>
@@ -13,14 +14,13 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="10*"></ColumnDefinition>
+                <ColumnDefinition Width="4*" MaxWidth="300"></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" Width="30px">
@@ -32,7 +32,7 @@
 
                 <Label Grid.Row="0" HorizontalAlignment="Center" Style="{StaticResource H2}" FontWeight="Bold" FontSize="25">+</Label>
 
-                <Slider Grid.Row="1" Name="MapScaleSlider" Minimum="1" Maximum="100" VerticalContentAlignment="Stretch" HorizontalAlignment="Center" Orientation="Vertical"></Slider>
+                <Slider Grid.Row="1" Name="MapScaleSlider" Minimum="1" Maximum="50" VerticalContentAlignment="Stretch" HorizontalAlignment="Center" Orientation="Vertical"></Slider>
 
                 <Label Grid.Row="2" HorizontalAlignment="Center" Style="{StaticResource H2}" FontWeight="Bold" FontSize="25">-</Label>
             </Grid>
@@ -44,8 +44,11 @@
                             <ScaleTransform x:Name="MapGridScaleTransform"></ScaleTransform>
                         </TransformGroup>
                     </Grid.LayoutTransform>
-                    <Viewbox Grid.Column="0" Grid.Row="0">
+                    <Viewbox>
                         <Image Name="MapImage" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"></Image>
+                    </Viewbox>
+                    <Viewbox>
+                        <Image Name="MapImageOverlay" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"></Image>
                     </Viewbox>
                 </Grid>
             </ScrollViewer>
@@ -57,41 +60,59 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <Button Name="OpenFileBtn" Click="OpenFileBtn_OnClick" Height="40px" Width="225px" FontWeight="DemiBold" Margin="0,15,0,50">Select .png file</Button>
+                <Grid Grid.Row="0" Margin="0,15,0,50">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Button Grid.Row="0" Name="OpenFileBtn" Click="OpenFileBtn_OnClick" Height="40px" Width="225px" FontWeight="DemiBold">Öffne .png Datei</Button>
+                    <Button Grid.Row="1" Name="OpenConsoleBtn" Click="OpenConsoleBtn_OnClick" Height="30px" Width="225px" FontWeight="DemiBold" Margin="0,10,0,0">Öffne Konsole</Button>
+                </Grid>
 
-                <TabControl Grid.Row="1" Name="QuaxPosTabControl" Style="{StaticResource QuaxPosTabControl}" Margin="0,0,5,0">
-                    <TabItem Header="Quax 1">
-                        <TabItem.Content>
+
+                <TabControl ItemsSource="{Binding Path=PositionTabs, Mode=OneWay}" Grid.Row="1" Name="QuaxPosTabControl" Style="{StaticResource QuaxPosTabControl}" Margin="0,0,5,0" SelectionChanged="QuaxPosTabControl_OnSelectionChanged">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Header, Mode=OneTime}"></TextBlock>
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
                             <ScrollViewer>
-                                <Grid Name="PosGrid">
+                                <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"></RowDefinition>
                                         <RowDefinition Height="Auto"></RowDefinition>
                                         <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
-                                        <RowDefinition Height="Auto"></RowDefinition>
+                                        <RowDefinition Height="*"></RowDefinition>
                                     </Grid.RowDefinitions>
 
-                                    <Image Grid.Row="0" Width="{Binding ActualWidth, ElementName=PosGrid}" MaxHeight="100" Name="PosPreviewImg" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased" Margin="0,10,0,0"></Image>
+                                    <Grid Grid.Row="0" MaxHeight="100" Margin="0,10,0,0">
+                                        <Image Source="{Binding PosPreview, Mode=OneWay}" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"></Image>
+                                        <Image Source="{Binding PosPreviewOverlay, Mode=OneWay}" RenderOptions.BitmapScalingMode="NearestNeighbor" RenderOptions.EdgeMode="Aliased"></Image>
+                                    </Grid>
+
                                     <Button Margin="0,10,0,25" Height="50" MaxWidth="200" Grid.Row="1" Content="Start Algorithm" Name="StartAlgorithm" Click="StartAlgorithm_OnClick"></Button>
 
-                                    <Label Grid.Row="2">Step 01</Label>
-                                    <Label Grid.Row="3">Step 02</Label>
-                                    <Label Grid.Row="4">Step 03</Label>
-                                    <Label Grid.Row="5">Step 04</Label>
-                                    <Label Grid.Row="6">Step 05</Label>
-                                    <Label Grid.Row="7">Step 06</Label>
-                                    <Label Grid.Row="8">Step 07</Label>
-                                    <Label Grid.Row="9">Step 08</Label>
+                                    <Label Grid.Row="2" Style="{StaticResource H2}">Drohnen Flüge:</Label>
+                                    <ListBox Grid.Row="3" ItemsSource="{Binding DrohnenFluege, Mode=OneTime}" Name="DrohnenFluegeListe" SelectionChanged="Selector_OnSelectionChanged">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                                        <ColumnDefinition Width="*"></ColumnDefinition>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label Grid.Column="0" Content="{Binding FlugId}"></Label>
+                                                    <Label Grid.Column="1" Content="{Binding MapTyp}"></Label>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
                                 </Grid>
                             </ScrollViewer>
-                        </TabItem.Content>
-                    </TabItem>
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
                 </TabControl>
 
                 <Grid Grid.Row="2">
@@ -99,57 +120,33 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Style="{StaticResource H2}">Result</Label>
+                    <Label Grid.Row="0" Style="{StaticResource H2}" Name="Result_Header">Ergebnis</Label>
                     <Grid Grid.Row="1">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"></RowDefinition>
-                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
                             <ColumnDefinition Width="*"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Row="0" Grid.Column="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" HorizontalAlignment="Left">FOUND PATH:</Label>
-                            <Label Grid.Column="1" HorizontalAlignment="Right">YES</Label>
-                        </Grid>
-                        <Grid Grid.Row="1" Grid.Column="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" HorizontalAlignment="Left">ALGORITHM TIME:</Label>
-                            <Label Grid.Column="1" HorizontalAlignment="Right">05m37s36ms</Label>
-                        </Grid>
-                        <Grid Grid.Row="0" Grid.Column="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" HorizontalAlignment="Left">DRONE FLIGHTS:</Label>
-                            <Label Grid.Column="1" HorizontalAlignment="Right">12</Label>
-                        </Grid>
-                        <Grid Grid.Row="1" Grid.Column="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" HorizontalAlignment="Left">YO THO:</Label>
-                            <Label Grid.Column="1" HorizontalAlignment="Right">KA LOL</Label>
-                        </Grid>
+
+                        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" FontWeight="Bold">WEG GEFUNDEN:</Label>
+                        <Label Grid.Row="0" Grid.Column="1" HorizontalAlignment="Right" Name="Result_FoundPath"></Label>
+
+                        <Label Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" FontWeight="Bold">LAUFZEIT:</Label>
+                        <Label Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Name="Result_AlgorithmTime"></Label>
+
+                        <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" FontWeight="Bold">DROHNEN FLÜGE:</Label>
+                        <Label Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Name="Result_DroneFlights"></Label>
                     </Grid>
+                    </Grid>
+
                 </Grid>
-
             </Grid>
-        </Grid>
 
-        <ProgressBar Name="ProgressBar" Grid.Row="1" Height="10px" Margin="0,3,0,10"></ProgressBar>
-
-        <Grid Grid.Row="2" Height="125px">
+            <!--<Grid Grid.Row="2" Height="125px" Margin="0,15,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
@@ -160,7 +157,7 @@
                 <FlowDocument Name="ConsoleFlowDocument" Background="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}">
                 </FlowDocument>
             </FlowDocumentScrollViewer>
-        </Grid>
+        </Grid>-->
 
-    </Grid>
+        </Grid>
 </Window>

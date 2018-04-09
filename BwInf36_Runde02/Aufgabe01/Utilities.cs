@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace Aufgabe01
@@ -21,7 +22,7 @@ namespace Aufgabe01
         /// <returns>True wenn die Reihen kompatibel sind</returns>
         public static bool ReihenSindKompatibel(Reihe a, Reihe b, ref byte[][] matrix)
         {
-            if (!a.IsInitialized()) return true;                        // Weil die Mauer ja direkt die maximal Hoehe hat
+            if (a == null) return true;                        // Weil die Mauer ja direkt die maximal Hoehe hat
 
             var indexA = a.Id;
             var indexB = b.Id;
@@ -47,22 +48,71 @@ namespace Aufgabe01
         }
 
         /// <summary>
-        /// Berechnet alle Permutationen der Elemente in einer Collection
+        /// Heaps Algorithmus zur Findung aller Permutationen
         /// </summary>
-        /// <typeparam name="T">Der Typ der Collection</typeparam>
-        /// <param name="items">Die Collection, deren Elemente permutiert werden sollen</param>
-        /// <returns></returns>
-        public static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> items)
+        /// <param name="items">Elemente deren Permutationen gefunden werden sollen</param>
+        /// <param name="naechstePermutation">Returned true wenn die naechste Permutation gefunden werden soll</param>
+        /// <returns>Returned false wenn nicht alle Permutationen gefunden wurden</returns> 
+        public static bool SammlePermutationen(byte[] items, Func<byte[], bool> naechstePermutation)
         {
-            if (items.Count() > 1)
+            var countOfItem = items.Length;
+
+            if (countOfItem <= 1)
             {
-                return items.SelectMany(item => GetPermutations(items.Where(i => !i.Equals(item)).ToArray()).ToArray(),
-                                       (item, permutation) => new[] { item }.Concat(permutation).ToArray()).ToArray();
+                return naechstePermutation(items);
             }
-            else
+
+            var indexes = new int[countOfItem];
+            for (var i = 0; i < countOfItem; i++)
             {
-                return new[] { items }.ToArray();
+                indexes[i] = 0;
             }
+
+            if (!naechstePermutation(items))
+            {
+                return false;
+            }
+
+            for (var i = 1; i < countOfItem;)
+            {
+                if (indexes[i] < i)
+                {
+                    if ((i & 1) == 1)
+                    {
+                        Tausch(ref items[i], ref items[indexes[i]]);
+                    }
+                    else
+                    {
+                        Tausch(ref items[i], ref items[0]);
+                    }
+
+                    if (!naechstePermutation(items))
+                    {
+                        return false;
+                    }
+
+                    indexes[i]++;
+                    i = 1;
+                }
+                else
+                {
+                    indexes[i++] = 0;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Tauscht 2 Elemente des selben Typs
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        private static void Tausch(ref byte a, ref byte b)
+        {
+            var temp = a;
+            a = b;
+            b = temp;
         }
     }
 }

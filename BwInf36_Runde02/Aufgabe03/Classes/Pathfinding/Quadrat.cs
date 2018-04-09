@@ -1,47 +1,43 @@
 ﻿using System;
-using System.Numerics;
 using System.Windows;
 
 namespace Aufgabe03.Classes.Pathfinding
 {
     /// <summary>
-    /// Repraesentiert ein Quadrat
+    ///     Repraesentiert ein Quadrat
     /// </summary>
     public class Quadrat
     {
         #region Fields
-
-        private Point _loEckpunkt;
-        private Point _ruEckpunkt;
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Eckpunkt links oben des Quadrats
+        ///     Eckpunkt links oben des Quadrats
         /// </summary>
-        public Point LO_Eckpunkt => _loEckpunkt;
+        public Point LO_Eckpunkt { get; }
 
         /// <summary>
-        /// Eckpunkt rechts unten des Quadrats
+        ///     Eckpunkt rechts unten des Quadrats
         /// </summary>
-        public Point RU_Eckpunkt => _ruEckpunkt;
+        public Point RU_Eckpunkt { get; }
 
         /// <summary>
-        /// Die Breite des Quadrats
+        ///     Die Breite des Quadrats
         /// </summary>
-        public int Breite { get; private set; }
+        public int Breite { get; }
 
         /// <summary>
-        /// Die Hoehe des Quadrats
+        ///     Die Hoehe des Quadrats
         /// </summary>
         public int Hoehe => Breite;
 
         /// <summary>
-        /// Der Mittelpunkt des Quadrats
+        ///     Der Mittelpunkt des Quadrats
         /// </summary>
-        public Point Mittelpunkt { get; private set; }
+        public Point Mittelpunkt { get; }
 
         #endregion
 
@@ -49,22 +45,22 @@ namespace Aufgabe03.Classes.Pathfinding
 
         public Quadrat(Point loEckpunkt, Point ruEckpunkt)
         {
-            _loEckpunkt = loEckpunkt;
-            _ruEckpunkt = ruEckpunkt;
-            Breite = (int) (_ruEckpunkt.X - _loEckpunkt.X);
+            LO_Eckpunkt = loEckpunkt;
+            RU_Eckpunkt = ruEckpunkt;
+            Breite = (int) (RU_Eckpunkt.X - LO_Eckpunkt.X);
             Mittelpunkt = new Point(LO_Eckpunkt.X + Breite / 2f, LO_Eckpunkt.Y + Hoehe / 2f);
         }
 
         public Quadrat(Point loEckpunkt, int breite)
         {
-            _loEckpunkt = loEckpunkt;
+            LO_Eckpunkt = loEckpunkt;
             Breite = breite;
-            _ruEckpunkt = new Point(_loEckpunkt.X + Breite, Math.Abs(_loEckpunkt.Y + Hoehe));
+            RU_Eckpunkt = new Point(LO_Eckpunkt.X + Breite, Math.Abs(LO_Eckpunkt.Y + Hoehe));
             Mittelpunkt = new Point(LO_Eckpunkt.X + Breite / 2f, LO_Eckpunkt.Y + Hoehe / 2f);
         }
 
         /// <summary>
-        /// Ueberprueft ob sich zwei Quadrate beruehren oder ueberschneiden
+        ///     Ueberprueft ob sich zwei Quadrate beruehren oder ueberschneiden
         /// </summary>
         /// <param name="other">Das zweite Quadrat</param>
         /// <returns>True wenn sich beide Quadrate beruehren bzw. ueberschneiden</returns>
@@ -75,7 +71,7 @@ namespace Aufgabe03.Classes.Pathfinding
         }
 
         /// <summary>
-        /// Ueberprueft ob sich ein Quadrate und ein Punkt beruehren oder ueberschneiden
+        ///     Ueberprueft ob sich ein Quadrate und ein Punkt beruehren oder ueberschneiden
         /// </summary>
         /// <param name="other">Der Punkt</param>
         /// <returns>True wenn sich das Quadrat und der Punkt beruehren bzw. ueberschneiden</returns>

@@ -1,19 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Aufgabe03.Classes;
 using Aufgabe03.Classes.GUI;
 using Aufgabe03.Classes.Pathfinding;
@@ -30,19 +23,29 @@ namespace Aufgabe03
         private Point? _lastMousePositionOnTarget;
         private Point? _lastDragPoint;
 
-        private List<PositionTab> QuaxPositionen;
-        private int _quaxPosIndex;
+        public double OverlayZoomLevel = 8;
+        private int StrokeThickness = 10;
+        public readonly ViewModel Vm;
+        public int QuaxPosIndex;
         private Pathfinder _pathfinder;
+        private WriteableBitmap _mapImg;
+        private WriteableBitmap _mapImgOverlay;
+        private Konsole _konsole;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            Vm = new ViewModel();
+            DataContext = Vm;
+            Manager.Instance.MainWindow = this;
 
             MapScaleSlider.ValueChanged += MapScaleSlider_OnValueChanged;
         }
 
         private void OpenFileBtn_OnClick(object sender, RoutedEventArgs e)
         {
+            e.Handled = true;
             var openFileDialog = new OpenFileDialog
             {
                 Multiselect = false,
@@ -50,42 +53,134 @@ namespace Aufgabe03
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
             };
             var result = openFileDialog.ShowDialog();
-            ProgressBar.Value = 0d;
 
             if (result == true)
             {
-                var image = new BitmapImage(new Uri(openFileDialog.FileName));
+                Vm.PositionTabs.Clear();
+                QuaxPosIndex = 0;
+                _mapImg = new WriteableBitmap(new BitmapImage(new Uri(openFileDialog.FileName)));
+                _mapImgOverlay = new WriteableBitmap(Convert.ToInt32(_mapImg.PixelWidth * OverlayZoomLevel), Convert.ToInt32(_mapImg.PixelHeight * OverlayZoomLevel), _mapImg.DpiX,
+                    _mapImg.DpiY, PixelFormats.Bgra32, null);
 
-                MapDaten.Instance.LoadMapData(image);
+                MapDaten.Instance.LoadMapData(_mapImg);
 
                 for (int i = 0; i < MapDaten.Instance.QuaxPositionen.Count; i++)
                 {
-                    var quaxPos = new PositionTab(i);
+                    var quaxPos = new PositionTab(i, _mapImg.Clone());
+                    Vm.PositionTabs.Add(quaxPos);
                 }
-                ImageSource source = image;
+
+                QuaxPosTabControl.SelectedIndex = 0;
+
                 MapScaleSlider.Value = MapScaleSlider.Minimum;
-                MapImage.Source = source;
-                PosPreviewImg.Source = source;
-                ConsoleFlowDocument.Blocks.Add(new Paragraph(new Run("Loaded image!")));
+                MapImage.Source = _mapImg;
+                MapImageOverlay.Source = _mapImgOverlay;
+
+                Manager.Instance.MapOverlay = _mapImgOverlay;
             }
         }
 
         private void StartAlgorithm_OnClick(object sender, RoutedEventArgs e)
         {
-            _pathfinder = new Pathfinder(_quaxPosIndex);
+            e.Handled = true;
+            _pathfinder = new Pathfinder(QuaxPosIndex);
+            //_mapImgOverlay = new WriteableBitmap(Convert.ToInt32(_mapImg.PixelWidth * OverlayZoomLevel), Convert.ToInt32(_mapImg.PixelHeight * OverlayZoomLevel), _mapImg.DpiX,
+            //    _mapImg.DpiY, PixelFormats.Bgra32, null);
+            //MapImageOverlay.Source = _mapImgOverlay; //TODO: WTF Clear die Quadtree Sachen wenn er fertig is und tab wechselt
+
             try
             {
                 var timer = new Stopwatch();
                 timer.Start();
                 var pathInfo = _pathfinder.FindPath();
                 timer.Stop();
-                MessageBox.Show($"Weg Laenge: {pathInfo.Weg.Count}\nIn {timer.ElapsedMilliseconds}ms");
+                Result_Header.Content = $"Ergebnis für {Manager.Instance.CurPositionTab.Header}";
+                Result_AlgorithmTime.Content = $"{timer.ElapsedMilliseconds}ms";
+                Result_DroneFlights.Content = $"{Manager.Instance.CurPositionTab.AnzahlFluege}";
+
+                if (pathInfo.StadtGefunden)
+                {
+                    Result_FoundPath.Content = "JA";
+                    for (int i = 0; i < pathInfo.Weg.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            _mapImgOverlay.DrawLineAa(Convert.ToInt32(MapDaten.Instance.QuaxPositionen[QuaxPosIndex].X * OverlayZoomLevel),
+                                Convert.ToInt32(MapDaten.Instance.QuaxPositionen[QuaxPosIndex].Y * OverlayZoomLevel),
+                                Convert.ToInt32(pathInfo.Weg[i].MapQuadrat.Mittelpunkt.X * OverlayZoomLevel),
+                                Convert.ToInt32(pathInfo.Weg[i].MapQuadrat.Mittelpunkt.Y * OverlayZoomLevel), Colors.Cyan, StrokeThickness);
+                        }
+
+                        if (i < pathInfo.Weg.Count - 1)
+                        {
+                            _mapImgOverlay.DrawLineAa(Convert.ToInt32(pathInfo.Weg[i].MapQuadrat.Mittelpunkt.X * OverlayZoomLevel),
+                                Convert.ToInt32(pathInfo.Weg[i].MapQuadrat.Mittelpunkt.Y * OverlayZoomLevel),
+                                Convert.ToInt32(pathInfo.Weg[i + 1].MapQuadrat.Mittelpunkt.X * OverlayZoomLevel),
+                                Convert.ToInt32(pathInfo.Weg[i + 1].MapQuadrat.Mittelpunkt.Y * OverlayZoomLevel), Colors.Cyan, StrokeThickness);
+                        }
+                        else if (i == pathInfo.Weg.Count - 1)
+                        {
+                            _mapImgOverlay.DrawLineAa(Convert.ToInt32(pathInfo.Weg[i].MapQuadrat.Mittelpunkt.X * OverlayZoomLevel),
+                                Convert.ToInt32(pathInfo.Weg[i].MapQuadrat.Mittelpunkt.Y * OverlayZoomLevel),
+                                Convert.ToInt32(pathInfo.StadtPos.X * OverlayZoomLevel),
+                                Convert.ToInt32(pathInfo.StadtPos.Y * OverlayZoomLevel), Colors.Cyan, StrokeThickness);
+                        }
+                    }
+
+                    MessageBox.Show($"Weg Laenge: {pathInfo.Weg.Count}\nIn {timer.ElapsedMilliseconds}ms");
+                }
+                else
+                {
+                    Result_FoundPath.Content = "NEIN";
+                    MessageBox.Show("Es konnte kein Weg gefunden werden!");
+                }
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.StackTrace, exception.Message);
             }
+
+            _pathfinder = null;
         }
+
+        public void ZeichneWeg() { }
+
+
+        private void QuaxPosTabControl_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is TabControl)
+            {
+                QuaxPosIndex = QuaxPosTabControl.SelectedIndex;
+                e.Handled = true;
+            }
+        }
+
+        private void OpenConsoleBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_konsole == null)
+            {
+                _konsole = new Konsole();
+                Manager.Instance.Konsole = _konsole;
+                Console.WriteLine("Konsole gestarted");
+            }
+
+            _konsole.Show();
+            e.Handled = true;
+        }
+
+        private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.Source is ListBox)
+            {
+                var listBox = (ListBox) sender;
+                if (listBox.SelectedIndex < 0) return;
+                Manager.Instance.CurPositionTab.HighlightedDrohnenFlug =
+                    Manager.Instance.CurPositionTab.DrohnenFluege[listBox.SelectedIndex];
+                e.Handled = true;
+            }
+        }
+
+        #region Map Scrolling
 
         private void MapScrollViewer_OnScrollChanged(object sender, ScrollChangedEventArgs e)
         {
@@ -155,11 +250,11 @@ namespace Aufgabe03
 
             if (e.Delta > 0)
             {
-                MapScaleSlider.Value += 5;
+                MapScaleSlider.Value += .5d;
             }
             if (e.Delta < 0)
             {
-                MapScaleSlider.Value -= 5;
+                MapScaleSlider.Value -= .5d;
             }
 
             e.Handled = true;
@@ -200,5 +295,7 @@ namespace Aufgabe03
             var centerOfViewport = new Point(MapScrollViewer.ViewportWidth / 2, MapScrollViewer.ViewportHeight / 2);
             _lastCenterPositionOnTarget = MapScrollViewer.TranslatePoint(centerOfViewport, MapGrid);
         }
+
+        #endregion
     }
 }

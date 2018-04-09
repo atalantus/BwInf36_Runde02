@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 
 namespace Aufgabe03.Classes.Pathfinding
@@ -15,24 +14,30 @@ namespace Aufgabe03.Classes.Pathfinding
 
         public override QuaxInfo SearchQuax(QuaxInfo curStatus)
         {
-            Debug.Write($"Abschluss Node: ({MapQuadrat.LO_Eckpunkt.X}|{MapQuadrat.LO_Eckpunkt.Y}) -> ({MapQuadrat.RU_Eckpunkt.X}|{MapQuadrat.RU_Eckpunkt.Y}) - ");
+            if (MapQuadrat.MapTyp == MapQuadrat.MapTypen.Unbekannt)
+                if (NodeID == 0)
+                    NodeID = MapQuadrat.GetMapTyp();
+                else
+                    MapQuadrat.GetMapTyp();
 
-            if (MapQuadrat.MapTyp == MapQuadrat.MapTypen.Unbekannt) MapQuadrat.GetMapTyp();
+            Console.Write(
+                $"[{NodeID}] Abschluss Node: ({MapQuadrat.LO_Eckpunkt.X}|{MapQuadrat.LO_Eckpunkt.Y}) -> ({MapQuadrat.RU_Eckpunkt.X}|{MapQuadrat.RU_Eckpunkt.Y}) - ");
 
             switch (MapQuadrat.MapTyp)
             {
                 case MapQuadrat.MapTypen.Wasser:
-                    Debug.WriteLine("Wasser");
+                    Console.WriteLine("Wasser");
                     throw new Exception("Quax ist in Wasser Node");
 
                 case MapQuadrat.MapTypen.Passierbar:
-                    Debug.WriteLine("Passierbar");
-                    Debug.WriteLine($"Quax gefunden: ({MapQuadrat.LO_Eckpunkt.X} | {MapQuadrat.LO_Eckpunkt.Y}) {MapQuadrat.Breite}");
+                    Console.WriteLine("Passierbar");
+                    Console.WriteLine(
+                        $"Quax gefunden: ({MapQuadrat.LO_Eckpunkt.X} | {MapQuadrat.LO_Eckpunkt.Y}) {MapQuadrat.Breite}");
                     curStatus.QuaxNode = this;
                     return curStatus;
 
                 case MapQuadrat.MapTypen.Gemischt:
-                    Debug.WriteLine("Gemischt");
+                    Console.WriteLine("Gemischt");
                     throw new Exception("Abschluss Node ist gemischt");
 
                 case MapQuadrat.MapTypen.Unbekannt:
@@ -45,29 +50,39 @@ namespace Aufgabe03.Classes.Pathfinding
 
         public override PathInfo SearchPath(PathInfo curStatus)
         {
-            Debug.Write($"Abschluss Node: ({MapQuadrat.LO_Eckpunkt.X}|{MapQuadrat.LO_Eckpunkt.Y}) -> ({MapQuadrat.RU_Eckpunkt.X}|{MapQuadrat.RU_Eckpunkt.Y}) - ");
+            if (MapQuadrat.MapTyp == MapQuadrat.MapTypen.Unbekannt)
+                if (NodeID == 0)
+                    NodeID = MapQuadrat.GetMapTyp();
+                else
+                    MapQuadrat.GetMapTyp();
 
-            if (MapQuadrat.MapTyp == MapQuadrat.MapTypen.Unbekannt) MapQuadrat.GetMapTyp();
+            Console.Write(
+                $"[{NodeID}] Abschluss Node: ({MapQuadrat.LO_Eckpunkt.X}|{MapQuadrat.LO_Eckpunkt.Y}) -> ({MapQuadrat.RU_Eckpunkt.X}|{MapQuadrat.RU_Eckpunkt.Y}) - ");
 
             switch (MapQuadrat.MapTyp)
             {
                 case MapQuadrat.MapTypen.Wasser:
-                    Debug.WriteLine("Wasser");
+                    Console.WriteLine("Wasser");
                     return curStatus;
 
                 case MapQuadrat.MapTypen.Passierbar:
-                    Debug.WriteLine("Passierbar");
-                    if (BeruehrtPoint(curStatus.StadtPos))
+                    Console.WriteLine("Passierbar");
+                    if (curStatus.LetzterWeg != this)
                     {
-                        curStatus.StadtGefunden = true;
-                        Debug.Write("STADT GEFUNDEN - ");
+                        if (BeruehrtPoint(curStatus.StadtPos))
+                        {
+                            curStatus.StadtGefunden = true;
+                            Console.Write("STADT GEFUNDEN - ");
+                        }
+
+                        Console.WriteLine("Weg hinzugefuegt!");
+                        curStatus.Weg.Add(this);
                     }
-                    Debug.WriteLine("Weg hinzugefuegt!");
-                    curStatus.Weg.Add(this);
+
                     return curStatus;
 
                 case MapQuadrat.MapTypen.Gemischt:
-                    Debug.WriteLine("Gemischt");
+                    Console.WriteLine("Gemischt");
                     throw new Exception("Abschluss Node ist gemischt");
 
                 case MapQuadrat.MapTypen.Unbekannt:

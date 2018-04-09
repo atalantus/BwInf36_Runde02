@@ -1,13 +1,10 @@
-﻿using System;
-using System.Numerics;
-using System.Windows;
-using System.Windows.Media.Imaging;
+﻿using System.Windows;
 
 namespace Aufgabe03.Classes.Pathfinding
 {
     /// <inheritdoc />
     /// <summary>
-    /// Repraesentiert einen quadratischen Ausschnitt der Map
+    ///     Repraesentiert einen quadratischen Ausschnitt der Map
     /// </summary>
     public class MapQuadrat : Quadrat
     {
@@ -32,36 +29,33 @@ namespace Aufgabe03.Classes.Pathfinding
         #region Methods
 
         /// <summary>
-        /// Erzeugt ein neues <see cref="MapQuadrat"/> Objekt
+        ///     Erzeugt ein neues <see cref="MapQuadrat" /> Objekt
         /// </summary>
         /// <param name="loEckpunkt">Eckpunkt links unten des Quadrats</param>
         /// <param name="breite">Breite/Hoehe des Quadrats</param>
         public MapQuadrat(Point loEckpunkt, int breite) : base(loEckpunkt, breite)
         {
-
         }
 
         /// <summary>
-        /// Findet den Map Typ fuer den Ausschnitt von <see cref="MapQuadrat"/>
-        /// TODO: REPRAESENTIERT EINEN DROHNEN FLUG
+        ///     Findet den Map Typ fuer den Ausschnitt von <see cref="MapQuadrat" />
+        ///     <returns>Node ID</returns>
         /// </summary>
-        public void GetMapTyp()
+        public int GetMapTyp()
         {
             var mapDaten = MapDaten.Instance;
             var enthaeltWasser = false;
             var enthaeltLand = false;
 
             for (var i = 0; i < Breite; i++)
+            for (var j = 0; j < Hoehe; j++)
             {
-                for (var j = 0; j < Hoehe; j++)
-                {
-                    var wasserPixel = mapDaten.WasserPixel[(int) LO_Eckpunkt.X + i][(int) LO_Eckpunkt.Y + j];
+                var wasserPixel = mapDaten.WasserPixel[(int) LO_Eckpunkt.X + i][(int) LO_Eckpunkt.Y + j];
 
-                    if (wasserPixel && !enthaeltWasser)
-                        enthaeltWasser = true;
-                    else if (!wasserPixel && !enthaeltLand)
-                        enthaeltLand = true;
-                }
+                if (wasserPixel && !enthaeltWasser)
+                    enthaeltWasser = true;
+                else if (!wasserPixel && !enthaeltLand)
+                    enthaeltLand = true;
             }
 
             if (enthaeltWasser && enthaeltLand && Breite > 2)
@@ -70,6 +64,8 @@ namespace Aufgabe03.Classes.Pathfinding
                 MapTyp = MapTypen.Passierbar;
             else
                 MapTyp = MapTypen.Wasser;
+
+            return Manager.Instance.CurPositionTab.AddDrohnenFlug(this);
         }
 
         #endregion

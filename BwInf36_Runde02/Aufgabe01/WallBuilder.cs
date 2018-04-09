@@ -39,7 +39,7 @@ namespace Aufgabe01
             private set
             {
                 _anzahlKloetze = value;
-                SetUpWallProperties();
+                BerechneEigenschaften();
             }
         }
 
@@ -101,7 +101,26 @@ namespace Aufgabe01
             /**
              * Erstelle Permutationen
              */
-            var rows = Utilities.GetPermutations(values).ToArray();
+            var anzahl = 1;
+            for (var i = 1; i <= AnzahlKloetze; i++)
+            {
+                anzahl *= i;
+            }
+            var rows = new byte[anzahl][];
+            var index = 0;
+            Utilities.SammlePermutationen(values.ToArray(), vals =>
+            {
+                var value = new byte[vals.Length];
+                for (var i = 0; i < vals.Length; i++)
+                {
+                    value[i] = vals[i];
+                }
+                rows[index] = value;
+                index++;    
+                
+                return true;
+            });
+
             MoeglicheReihen = new Reihe[rows.Length];
 
             using (var progress = new ProgressBar("Sammle Permutationen"))
@@ -110,7 +129,7 @@ namespace Aufgabe01
                 {
                     progress.Report((double)i / rows.Length);
                     var row = rows[i];
-                    var r = new Reihe(row.ToArray(), (uint)i);
+                    var r = new Reihe(row, (uint)i);
                     MoeglicheReihen[i] = r;
                 }
             }
@@ -129,7 +148,7 @@ namespace Aufgabe01
              * Baue Mauern auf
              */
             _stopwatch.Restart();
-            RichtigeMauer = FindMauerRekursion(MoeglicheReihen);
+            RichtigeMauer = FindMauer(MoeglicheReihen);
             _stopwatch.Stop();
             _algorithmusZeit += _stopwatch.ElapsedMilliseconds;
 
@@ -159,7 +178,7 @@ namespace Aufgabe01
         /// </summary>
         /// <param name="allMoeglicheReihen">Die Liste aller moeglicher Reihen</param>
         /// <returns>Die zuerst gefundene moegliche Mauer</returns>
-        private Mauer FindMauerRekursion(Reihe[] allMoeglicheReihen)
+        private Mauer FindMauer(Reihe[] allMoeglicheReihen)
         {
             var reihenMatrix = new byte[MoeglicheReihen.Length][];
 
@@ -168,7 +187,7 @@ namespace Aufgabe01
                 var startMauer = new Mauer(MaxMauerHoehe);
                 startMauer.AddReihe(allMoeglicheReihen[i]);
 
-                var mauer = BaueMauerRekursiv(reihenMatrix, allMoeglicheReihen, startMauer);
+                var mauer = BaueMauer(reihenMatrix, allMoeglicheReihen, startMauer);
                 if (mauer.Fertig)
                 {
                     // Mauer gefunden
@@ -178,15 +197,22 @@ namespace Aufgabe01
             throw new Exception("Es wurde keine Mauer gefunden");
         }
 
-        private Mauer BaueMauerRekursiv(byte[][] reihenMatrix, Reihe[] allMoeglicheReihen, Mauer aktuelleMauer)
+        /// <summary>
+        /// Erhoeht die Mauerhoehe um 1
+        /// </summary>
+        /// <param name="reihenMatrix">Die Matrix der Reihen</param>
+        /// <param name="allMoeglicheReihen">Die Liste aller moeglicher Reihen</param>
+        /// <param name="aktuelleMauer">Die aktuelle Mauer</param>
+        /// <returns>Die gebaute Mauer</returns>
+        private Mauer BaueMauer(byte[][] reihenMatrix, Reihe[] allMoeglicheReihen, Mauer aktuelleMauer)
         {
             // Reihen der aktuellen Mauer
-            var reihen = aktuelleMauer.Reihen.ToList();
+            var reihen = aktuelleMauer.Reihen.ToArray();
             // Reihen, die zu ALLEN Reihen der aktuellen Mauer passen
             var dazuMoeglicheReihen = allMoeglicheReihen.Where(r => reihen.All(pr =>
-                Utilities.ReihenSindKompatibel(pr, r, ref reihenMatrix))).ToList();
+                Utilities.ReihenSindKompatibel(pr, r, ref reihenMatrix))).ToArray();
 
-            for (var i = 0; i < dazuMoeglicheReihen.Count; i++)
+            for (var i = 0; i < dazuMoeglicheReihen.Length; i++)
             {
                 // Es gibt noch moegliche Mauern
                 var mauer = new Mauer(aktuelleMauer);
@@ -195,7 +221,7 @@ namespace Aufgabe01
                 if (mauer.Fertig)
                     return mauer;
 
-                var neueMauer = BaueMauerRekursiv(reihenMatrix, allMoeglicheReihen, mauer);
+                var neueMauer = BaueMauer(reihenMatrix, allMoeglicheReihen, mauer);
                 if (neueMauer.Fertig)
                     return neueMauer;
             }
@@ -207,7 +233,7 @@ namespace Aufgabe01
         /// <summary>
         /// Berechnet alle von <see cref="AnzahlKloetze"/> abhaengigen Eigenschaften der Mauer
         /// </summary>
-        private void SetUpWallProperties()
+        private void BerechneEigenschaften()
         {
             MauerBreite = (byte) ((Math.Pow(AnzahlKloetze, 2) + AnzahlKloetze) / 2); // Gausssche Summenformel
             AnzahlFugenStellen = (byte) (MauerBreite - 1);

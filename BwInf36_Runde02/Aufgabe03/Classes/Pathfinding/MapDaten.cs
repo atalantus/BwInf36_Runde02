@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -8,13 +6,13 @@ using System.Windows.Media.Imaging;
 namespace Aufgabe03.Classes.Pathfinding
 {
     /// <summary>
-    /// SINGLETON | Beinhaltet alle Daten ueber die Map
+    ///     SINGLETON | Beinhaltet alle Daten ueber die Map
     /// </summary>
     public class MapDaten
     {
         #region Fields
 
-        private static MapDaten _instance = null;
+        private static MapDaten _instance;
 
         #endregion
 
@@ -23,24 +21,24 @@ namespace Aufgabe03.Classes.Pathfinding
         public static MapDaten Instance => _instance ?? (_instance = new MapDaten());
 
         /// <summary>
-        /// Die Map
+        ///     Die Map
         /// </summary>
         public WriteableBitmap Map { get; set; }
 
         /// <summary>
-        /// Enthaelt alle Pixel der Map.
-        /// True wenn ein Pixel Wasser ist.
-        /// Beginnend oben links
+        ///     Enthaelt alle Pixel der Map.
+        ///     True wenn ein Pixel Wasser ist.
+        ///     Beginnend oben links
         /// </summary>
         public bool[][] WasserPixel { get; private set; }
 
         /// <summary>
-        /// Die Quax Positionen
+        ///     Die Quax Positionen
         /// </summary>
         public List<Point> QuaxPositionen { get; set; }
 
         /// <summary>
-        /// Die Stadt Position
+        ///     Die Stadt Position
         /// </summary>
         public Point StadtPosition { get; set; }
 
@@ -48,7 +46,9 @@ namespace Aufgabe03.Classes.Pathfinding
 
         #region Methods
 
-        private MapDaten() { }
+        private MapDaten()
+        {
+        }
 
         public void LoadMapData(BitmapSource image)
         {

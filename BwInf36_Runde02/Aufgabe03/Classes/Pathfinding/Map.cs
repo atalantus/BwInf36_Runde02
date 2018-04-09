@@ -7,18 +7,16 @@ namespace Aufgabe03.Classes.Pathfinding
 {
     public class Map : NodeElement
     {
-        #region Fields
-
-
-
-        #endregion
-
         #region Properties
 
         /// <summary>
-        /// Die groesst moeglichen Quadrate auf der Map
+        ///     Die groesst moeglichen Quadrate auf der Map
         /// </summary>
         public List<QuadratNode> StartQuadrate { get; private set; }
+
+        #endregion
+
+        #region Fields
 
         #endregion
 
@@ -33,10 +31,8 @@ namespace Aufgabe03.Classes.Pathfinding
         {
             QuadratNode quaxStartNode = null;
             for (var i = 0; i < StartQuadrate.Count; i++)
-            {
                 if (StartQuadrate[i].BeruehrtPoint(curStatus.QuaxPos))
                     quaxStartNode = StartQuadrate[i];
-            }
 
             if (quaxStartNode != null)
             {
@@ -55,16 +51,13 @@ namespace Aufgabe03.Classes.Pathfinding
             // Suche Start QuadratNode
             QuadratNode startQuadrat = null;
             for (var i = 0; i < StartQuadrate.Count; i++)
-            {
                 if (StartQuadrate[i].BeruehrtQuadratNode(curStatus.LetzterWeg))
                     startQuadrat = StartQuadrate[i];
-            }
 
             var status = curStatus;
             var aktuellesQuadrat = startQuadrat;
 
             if (startQuadrat != null)
-            {
                 while (!status.StadtGefunden)
                 {
                     Debug.Write("START QUADRAT:    ");
@@ -78,25 +71,26 @@ namespace Aufgabe03.Classes.Pathfinding
 
                     var tempQuadrate01 = new List<QuadratNode>(); // Quadrate die den letzten Weg beruehren
                     for (var i = 0; i < StartQuadrate.Count; i++)
-                    {
                         if (StartQuadrate[i].BeruehrtQuadratNode(status.LetzterWeg))
                             tempQuadrate01.Add(StartQuadrate[i]);
-                    }
 
+                    var neuesQuadratGefunden = false;
                     for (var i = 0; i < tempQuadrate01.Count; i++)
-                    {
                         if (Utilities.EntfernungBerechnen(tempQuadrate01[i].MapQuadrat, status.StadtPos) <
                             Utilities.EntfernungBerechnen(aktuellesQuadrat.MapQuadrat, status.StadtPos))
+                        {
                             aktuellesQuadrat = tempQuadrate01[i];
-                    }
+                            neuesQuadratGefunden = true;
+                        }
+
+                    if (!neuesQuadratGefunden) return status;
                 }
-            }
 
             throw new Exception("Start Node ist in keinem der Start Quadrate");
         }
 
         /// <summary>
-        /// Fuellt eine rechteckige Map mit gleichen, moeglichst grossen Quadraten
+        ///     Fuellt eine rechteckige Map mit gleichen, moeglichst grossen Quadraten
         /// </summary>
         public void GetStartQuadrate()
         {
@@ -110,12 +104,13 @@ namespace Aufgabe03.Classes.Pathfinding
             {
                 anzahlNodes = (int) Math.Ceiling((double) mapBreite / mapHoehe);
                 nodeBreite = mapHoehe;
-            } else if (mapBreite < mapHoehe)
+            }
+            else if (mapBreite < mapHoehe)
             {
                 //TODO: Map um 90° drehen
                 throw new Exception("Map Hoehe ist groesser als Map Breite");
-                anzahlNodes = (int) Math.Ceiling((double) mapHoehe / mapBreite);
-                nodeBreite = mapBreite;
+                //anzahlNodes = (int) Math.Ceiling((double) mapHoehe / mapBreite);
+                //nodeBreite = mapBreite;
             }
             else
             {
@@ -126,7 +121,6 @@ namespace Aufgabe03.Classes.Pathfinding
             var offsetL = 0;
             var offsetR = nodeBreite;
             for (var i = 0; i < anzahlNodes; i++)
-            {
                 if (i % 2 == 0)
                 {
                     if (nodeBreite > 2)
@@ -138,12 +132,11 @@ namespace Aufgabe03.Classes.Pathfinding
                 else
                 {
                     if (nodeBreite > 2)
-                        StartQuadrate.Add(new Node(new Point(mapBreite - offsetR , 0), nodeBreite));
+                        StartQuadrate.Add(new Node(new Point(mapBreite - offsetR, 0), nodeBreite));
                     else
                         StartQuadrate.Add(new AbschlussNode(new Point(mapBreite - offsetR, 0), nodeBreite));
                     offsetR += nodeBreite;
                 }
-            }
         }
 
         #endregion
