@@ -38,6 +38,9 @@ namespace Aufgabe03.Classes.Pathfinding
         /// </summary>
         public PathInfo FindPath()
         {
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
             Console.WriteLine("-------------------------");
             Console.WriteLine("Quax Search");
             Console.WriteLine("-------------------------");

@@ -124,8 +124,8 @@ namespace Aufgabe03.Classes.Pathfinding
                                 return
                                     curStatus; // Weil es keinen Weg gibt (Zur Sicherheit andere nodes auch noch checken)
 
-                            Console.WriteLine(
-                                $"[{NodeID}] Node: ({MapQuadrat.LO_Eckpunkt.X}|{MapQuadrat.LO_Eckpunkt.Y}) -> ({MapQuadrat.RU_Eckpunkt.X}|{MapQuadrat.RU_Eckpunkt.Y}) - CHILD NODE UEBERPRUEFEN");
+                            //Console.WriteLine(
+                            //    $"[{NodeID}] Node: ({MapQuadrat.LO_Eckpunkt.X}|{MapQuadrat.LO_Eckpunkt.Y}) -> ({MapQuadrat.RU_Eckpunkt.X}|{MapQuadrat.RU_Eckpunkt.Y}) - CHILD NODE UEBERPRUEFEN");
                             var info = aktuelleNode.SearchPath(curStatus);
 
                             if (info.StadtGefunden) // FERTIG
