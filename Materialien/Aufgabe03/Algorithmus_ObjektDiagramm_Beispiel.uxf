@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.2">
-  <zoom_level>7</zoom_level>
+  <zoom_level>9</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>952</x>
-      <y>42</y>
-      <w>105</w>
-      <h>21</h>
+      <x>2106</x>
+      <y>9</y>
+      <w>144</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>_pathfinder: Pathfinder_
 bg=red</panel_attributes>
@@ -16,10 +16,10 @@ bg=red</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>938</x>
-      <y>98</y>
-      <w>140</w>
-      <h>21</h>
+      <x>2097</x>
+      <y>81</y>
+      <w>180</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>_rechteckMap: Map_
 bg=green</panel_attributes>
@@ -28,22 +28,22 @@ bg=green</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>994</x>
-      <y>56</y>
-      <w>21</w>
-      <h>56</h>
+      <x>2169</x>
+      <y>45</y>
+      <w>27</w>
+      <h>54</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 fg=green</panel_attributes>
-    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>707</x>
-      <y>315</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1800</x>
+      <y>378</y>
+      <w>135</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>_nLinks: Node_
 bg=yellow</panel_attributes>
@@ -52,10 +52,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>532</x>
-      <y>385</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1503</x>
+      <y>468</y>
+      <w>162</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>_nLinks_00: Node_
 bg=yellow</panel_attributes>
@@ -64,10 +64,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>644</x>
-      <y>385</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1683</x>
+      <y>468</y>
+      <w>162</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>_nLinks_01: Node_
 bg=yellow</panel_attributes>
@@ -76,10 +76,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>756</x>
-      <y>385</y>
-      <w>105</w>
-      <h>21</h>
+      <x>1863</x>
+      <y>468</y>
+      <w>162</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>_nLinks_02: Node_
 bg=yellow</panel_attributes>
@@ -88,10 +88,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>868</x>
-      <y>385</y>
-      <w>105</w>
-      <h>21</h>
+      <x>2043</x>
+      <y>468</y>
+      <w>162</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>_nLinks_03: Node_
 bg=yellow</panel_attributes>
@@ -100,10 +100,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>749</x>
-      <y>112</y>
-      <w>266</w>
-      <h>217</h>
+      <x>1854</x>
+      <y>117</y>
+      <w>342</w>
+      <h>279</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 fg=green</panel_attributes>
@@ -112,10 +112,10 @@ fg=green</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>994</x>
-      <y>112</y>
-      <w>231</w>
-      <h>210</h>
+      <x>2169</x>
+      <y>117</y>
+      <w>297</w>
+      <h>270</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>310.0;280.0;310.0;80.0;10.0;80.0;10.0;10.0</additional_attributes>
@@ -123,10 +123,10 @@ fg=green</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1162</x>
-      <y>308</y>
-      <w>105</w>
-      <h>21</h>
+      <x>2376</x>
+      <y>369</y>
+      <w>144</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>_nRechts: Node_
 bg=yellow</panel_attributes>
@@ -135,25 +135,25 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>441</x>
-      <y>161</y>
-      <w>147</w>
-      <h>49</h>
+      <x>1458</x>
+      <y>180</y>
+      <w>189</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>_qLinks: Quadrat_
+    <panel_attributes>_qLinks: MapQuadrat_
 --
-rechteckTyp = GEMISCHT
-breite = 8
+MapTyp = Gemischt
+Breite = 8
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>581</x>
-      <y>182</y>
-      <w>140</w>
-      <h>154</h>
+      <x>1638</x>
+      <y>207</y>
+      <w>180</w>
+      <h>198</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;150.0;10.0;150.0;200.0;180.0;200.0</additional_attributes>
@@ -161,33 +161,33 @@ bg=orange</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>581</x>
-      <y>329</y>
-      <w>189</w>
-      <h>70</h>
+      <x>1593</x>
+      <y>396</y>
+      <w>288</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 fg=green</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;40.0;250.0;40.0;250.0;10.0</additional_attributes>
+    <additional_attributes>10.0;80.0;10.0;40.0;300.0;40.0;300.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>686</x>
-      <y>329</y>
-      <w>84</w>
-      <h>70</h>
+      <x>1764</x>
+      <y>396</y>
+      <w>117</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;40.0;100.0;40.0;100.0;10.0</additional_attributes>
+    <additional_attributes>10.0;80.0;10.0;40.0;110.0;40.0;110.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>749</x>
-      <y>329</y>
-      <w>77</w>
-      <h>70</h>
+      <x>1854</x>
+      <y>396</y>
+      <w>99</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>90.0;80.0;90.0;40.0;10.0;40.0;10.0;10.0</additional_attributes>
@@ -195,36 +195,36 @@ fg=green</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>749</x>
-      <y>329</y>
-      <w>182</w>
-      <h>70</h>
+      <x>1854</x>
+      <y>396</y>
+      <w>270</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>240.0;80.0;240.0;40.0;10.0;40.0;10.0;10.0</additional_attributes>
+    <additional_attributes>280.0;80.0;280.0;40.0;10.0;40.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>308</x>
-      <y>371</y>
-      <w>147</w>
-      <h>49</h>
+      <x>1224</x>
+      <y>387</y>
+      <w>189</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>_qLinks_00: Quadrat_
+    <panel_attributes>_qLinks_00: MapQuadrat_
 --
-rechteckTyp = GEMISCHT
-breite = 4
+MapTyp = Gemischt
+Breite = 4
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>7</x>
-      <y>497</y>
-      <w>147</w>
-      <h>21</h>
+      <x>900</x>
+      <y>612</y>
+      <w>189</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>_nLinks_00_00: AbschlussNode_
 bg=yellow</panel_attributes>
@@ -233,21 +233,21 @@ bg=yellow</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>448</x>
-      <y>385</y>
-      <w>98</w>
-      <h>21</h>
+      <x>1404</x>
+      <y>405</y>
+      <w>117</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;120.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0;70.0;80.0;110.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>161</x>
-      <y>497</y>
-      <w>147</w>
-      <h>21</h>
+      <x>1098</x>
+      <y>612</y>
+      <w>189</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>_nLinks_00_01: AbschlussNode_
 bg=yellow</panel_attributes>
@@ -256,10 +256,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>315</x>
-      <y>497</y>
-      <w>147</w>
-      <h>21</h>
+      <x>1296</x>
+      <y>612</y>
+      <w>189</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>_nLinks_00_02: AbschlussNode_
 bg=yellow</panel_attributes>
@@ -268,10 +268,10 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>469</x>
-      <y>497</y>
-      <w>147</w>
-      <h>21</h>
+      <x>1494</x>
+      <y>612</y>
+      <w>189</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>_nLinks_01_03: AbschlussNode_
 bg=yellow</panel_attributes>
@@ -280,253 +280,253 @@ bg=yellow</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>623</x>
-      <y>581</y>
-      <w>147</w>
-      <h>49</h>
+      <x>1683</x>
+      <y>666</y>
+      <w>189</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>_qLinks_01: Quadrat_
+    <panel_attributes>_qLinks_01: MapQuadrat_
 --
-rechteckTyp = WASSER
-breite = 4
+MapTyp = Wasser
+Breite = 4
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>777</x>
-      <y>581</y>
-      <w>147</w>
-      <h>49</h>
+      <x>1890</x>
+      <y>666</y>
+      <w>189</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>_qLinks_02: Quadrat_
+    <panel_attributes>_qLinks_02: MapQuadrat_
 --
-rechteckTyp = WASSER
-breite = 4
+MapTyp = Wasser
+Breite = 4
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>931</x>
-      <y>581</y>
-      <w>147</w>
-      <h>49</h>
+      <x>2124</x>
+      <y>666</y>
+      <w>189</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>_qLinks_03: Quadrat_
+    <panel_attributes>_qLinks_03: MapQuadrat_
 --
-rechteckTyp = WASSER
-breite = 4
+MapTyp = Wasser
+Breite = 4
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>686</x>
-      <y>399</y>
-      <w>21</w>
-      <h>196</h>
+      <x>1764</x>
+      <y>486</y>
+      <w>27</w>
+      <h>198</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;260.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;200.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>812</x>
-      <y>399</y>
-      <w>21</w>
-      <h>196</h>
+      <x>1935</x>
+      <y>486</y>
+      <w>27</w>
+      <h>198</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;260.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;200.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>952</x>
-      <y>399</y>
-      <w>21</w>
-      <h>196</h>
+      <x>2151</x>
+      <y>486</y>
+      <w>27</w>
+      <h>198</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;260.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;200.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>77</x>
-      <y>399</y>
-      <w>525</w>
-      <h>112</h>
+      <x>990</x>
+      <y>486</y>
+      <w>630</w>
+      <h>144</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;140.0;10.0;70.0;730.0;70.0;730.0;10.0</additional_attributes>
+    <additional_attributes>10.0;140.0;10.0;70.0;680.0;70.0;680.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>231</x>
-      <y>399</y>
-      <w>371</w>
-      <h>112</h>
+      <x>1188</x>
+      <y>486</y>
+      <w>432</w>
+      <h>144</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;140.0;10.0;70.0;510.0;70.0;510.0;10.0</additional_attributes>
+    <additional_attributes>10.0;140.0;10.0;70.0;460.0;70.0;460.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>392</x>
-      <y>399</y>
-      <w>210</w>
-      <h>112</h>
+      <x>1395</x>
+      <y>486</y>
+      <w>225</w>
+      <h>144</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;140.0;10.0;70.0;280.0;70.0;280.0;10.0</additional_attributes>
+    <additional_attributes>10.0;140.0;10.0;70.0;230.0;70.0;230.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>525</x>
-      <y>399</y>
-      <w>84</w>
-      <h>112</h>
+      <x>1566</x>
+      <y>486</y>
+      <w>63</w>
+      <h>144</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 fg=green</panel_attributes>
-    <additional_attributes>10.0;140.0;10.0;80.0;100.0;80.0;100.0;10.0</additional_attributes>
+    <additional_attributes>10.0;140.0;10.0;80.0;50.0;80.0;50.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>161</x>
-      <y>658</y>
-      <w>147</w>
-      <h>49</h>
+      <x>1098</x>
+      <y>747</y>
+      <w>189</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>_qLinks_00_01: Quadrat_
+    <panel_attributes>_qLinks_00_01: MapQuadrat_
 --
-rechteckTyp = LAND
-breite = 2
+MapTyp = Passierbar
+Breite = 2
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>0</x>
-      <y>658</y>
-      <w>147</w>
-      <h>49</h>
+      <x>900</x>
+      <y>747</y>
+      <w>189</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>_qLinks_00_00: Quadrat_
+    <panel_attributes>_qLinks_00_00: MapQuadrat_
 --
-rechteckTyp = WASSER
-breite = 2
+MapTyp = Wasser
+Breite = 2
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>315</x>
-      <y>658</y>
-      <w>147</w>
-      <h>49</h>
+      <x>1296</x>
+      <y>747</y>
+      <w>189</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>_qLinks_00_02: Quadrat_
+    <panel_attributes>_qLinks_00_02: MapQuadrat_
 --
-rechteckTyp = WASSER
-breite = 2
+MapTyp = Wasser
+Breite = 2
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>469</x>
-      <y>658</y>
-      <w>147</w>
-      <h>49</h>
+      <x>1494</x>
+      <y>747</y>
+      <w>189</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>_qLinks_00_02: Quadrat_
+    <panel_attributes>_qLinks_00_02: MapQuadrat_
 --
-rechteckTyp = LAND
-breite = 2
+MapTyp = Passierbar
+Breite = 2
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>70</x>
-      <y>511</y>
-      <w>21</w>
-      <h>161</h>
+      <x>981</x>
+      <y>630</y>
+      <w>27</w>
+      <h>135</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;210.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>231</x>
-      <y>511</y>
-      <w>21</w>
-      <h>161</h>
+      <x>1188</x>
+      <y>630</y>
+      <w>27</w>
+      <h>135</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;210.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>392</x>
-      <y>511</y>
-      <w>21</w>
-      <h>161</h>
+      <x>1395</x>
+      <y>630</y>
+      <w>27</w>
+      <h>135</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;210.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>525</x>
-      <y>511</y>
-      <w>21</w>
-      <h>161</h>
+      <x>1566</x>
+      <y>630</y>
+      <w>27</w>
+      <h>135</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 fg=green</panel_attributes>
-    <additional_attributes>10.0;210.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1141</x>
-      <y>399</y>
-      <w>147</w>
-      <h>49</h>
+      <x>2358</x>
+      <y>486</y>
+      <w>189</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>_qRechts: Quadrat_
+    <panel_attributes>_qRechts: MapQuadrat_
 --
-rechteckTyp = WASSER
-breite = 8
+MapTyp = Wasser
+Breite = 8
 bg=orange</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1204</x>
-      <y>322</y>
-      <w>21</w>
-      <h>91</h>
+      <x>2439</x>
+      <y>387</y>
+      <w>27</w>
+      <h>117</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
@@ -534,10 +534,10 @@ bg=orange</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>497</x>
-      <y>770</y>
-      <w>91</w>
-      <h>21</h>
+      <x>1521</x>
+      <y>864</y>
+      <w>126</w>
+      <h>45</h>
     </coordinates>
     <panel_attributes>*Hier ist das Ziel!*
 bg=blue</panel_attributes>
@@ -546,12 +546,12 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>532</x>
-      <y>700</y>
-      <w>21</w>
-      <h>84</h>
+      <x>1575</x>
+      <y>801</y>
+      <w>27</w>
+      <h>81</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
 </diagram>
