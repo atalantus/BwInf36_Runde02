@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Aufgabe01_LR
 {
+    /// <inheritdoc />
     /// <summary>
     /// Represents a row
     /// </summary>
@@ -17,14 +20,29 @@ namespace Aufgabe01_LR
         public bool[] Bricks { get; set; }
 
         /// <summary>
+        /// The placed bricks in this row (ordered)
+        /// </summary>
+        public int[] PlacedBricks { get; set; }
+
+        /// <summary>
+        /// The current index of <see cref="PlacedBricks"/>
+        /// </summary>
+        public int PlacedBricksIndex { get; private set; }
+
+        /// <summary>
         /// The current length of this row
         /// </summary>
         public int RowSum { get; set; }
 
         /// <summary>
-        /// The RowSum if the lowest available brick is used next
+        /// Contains all the possible RowSums after placing another brick
         /// </summary>
-        public int NextLowestRowSum { get; set; }
+        public List<NextPossibleRowSum> NextPossibleRowSums { get; set; }
+
+        /// <summary>
+        /// The index of the next brick to place to fill the currend searched gap
+        /// </summary>
+        public int NextBrickToPlace { get; set; }
 
         #endregion
 
@@ -43,34 +61,34 @@ namespace Aufgabe01_LR
         {
             Bricks = new bool[bricksPerRow];
             Bricks.FillArray(true);
+            PlacedBricks = new int[bricksPerRow];
+            PlacedBricksIndex = 0;
             RowSum = 0;
-            NextLowestRowSum = 1;
+            NextPossibleRowSums = new List<NextPossibleRowSum>(bricksPerRow);
+            for (var i = 0; i < bricksPerRow; i++)
+            {
+                NextPossibleRowSums.Add(new NextPossibleRowSum(i + 1, i));
+            }
         }
 
         /// <summary>
-        /// Places the shortest available brick in the row
+        /// Places the <see cref="NextBrickToPlace"/> brick in the row
         /// </summary>
-        public void PlaceShortestBrick()
+        public void PlaceNextBrick()
         {
-            int i;
-            for (i = 0; i < Bricks.Length; i++)
-            {
-                if (Bricks[i])
-                {
-                    Bricks[i] = false;
-                    RowSum += i + 1;
-                    NextLowestRowSum = RowSum;
-                    break;
-                }
-            }
+            Bricks[NextBrickToPlace] = false;
+            RowSum += NextBrickToPlace + 1;
+            PlacedBricks[PlacedBricksIndex] = NextBrickToPlace + 1;
+            PlacedBricksIndex++;
 
-            // Find NextLowestRowSum
-            for (var j = i + 1; j < Bricks.Length; j++)
+            // Find NextPossibleRowSums
+            // TODO: Improve performance
+            NextPossibleRowSums.Clear();
+            for (var j = 0; j < Bricks.Length; j++)
             {
                 if (Bricks[j])
                 {
-                    NextLowestRowSum += j + 1;
-                    break;
+                    NextPossibleRowSums.Add(new NextPossibleRowSum(RowSum + j + 1, j));
                 }
             }
         }
@@ -83,37 +101,54 @@ namespace Aufgabe01_LR
         {
             var rowClone = new Row { Bricks = new bool[Bricks.Length] };
             Bricks.CopyTo(rowClone.Bricks, 0);
+            rowClone.PlacedBricks = new int[Bricks.Length];
+            PlacedBricks.CopyTo(rowClone.PlacedBricks, 0);
+            rowClone.PlacedBricksIndex = PlacedBricksIndex;
             rowClone.RowSum = RowSum;
+            rowClone.NextPossibleRowSums = new List<NextPossibleRowSum>(NextPossibleRowSums);
+            rowClone.NextBrickToPlace = NextBrickToPlace;
             return rowClone;
-        }
-
-        /// <summary>
-        /// Calculates <see cref="NextLowestRowSum"/>
-        /// </summary>
-        public void CalcNextLowestRowSum()
-        {
-            for (var i = 0; i < Bricks.Length; i++)
-            {
-                if (Bricks[i])
-                {
-                    NextLowestRowSum += i + 1;
-                    return;
-                }
-            }
         }
 
         public int CompareTo(Row other)
         {
             if (ReferenceEquals(this, other)) return 0;
-            if (ReferenceEquals(null, other)) return 1;
-            return RowSum.CompareTo(other.RowSum);
+            return other is null ? 1 : RowSum.CompareTo(other.RowSum);
         }
 
         public override string ToString()
         {
+            var sb = new StringBuilder("|");
+            for (var i = 0; i < PlacedBricks.Length; i++)
+            {
+                sb.Append($" {PlacedBricks[i]} |");
+            }
 
+            return sb.ToString();
         }
 
         #endregion
+
+        /// <summary>
+        /// Represents a NextPossibleRowSum type
+        /// </summary>
+        public struct NextPossibleRowSum
+        {
+            /// <summary>
+            /// The next possible row sum
+            /// </summary>
+            public int PossibleRowSum { get; set; }
+
+            /// <summary>
+            /// The block that needs to be placed next for this <see cref="PossibleRowSum"/>
+            /// </summary>
+            public int UsedBrickIndex { get; set; }
+
+            public NextPossibleRowSum(int possibleRowSum, int usedBrickIndex)
+            {
+                PossibleRowSum = possibleRowSum;
+                UsedBrickIndex = usedBrickIndex;
+            }
+        }
     }
 }

@@ -62,6 +62,8 @@ namespace Aufgabe01_LR
             var buildWall = FillNextGap(0, wall, FreeGaps);
 
             if (buildWall == null) throw new Exception("Build wall is NULL");
+
+            PrintWall(buildWall);
         }
 
         public Wall FillNextGap(int nextGap, Wall curWall, int freeGaps)
@@ -70,7 +72,7 @@ namespace Aufgabe01_LR
 
             // Get all rows that can reach the next gap
             var nextGapPos = nextGap + 1;
-            var possibleRows = wall.Rows.Where(r => r.NextLowestRowSum == nextGapPos).ToArray();
+            var possibleRows = wall.Rows.Where(r => r.NextPossibleRowSums.Any(nrs => ContainsPossibleRowSum(r, nrs, nextGapPos))).ToArray();
 
             // If no row can reach next gap and FreeGaps > 0 continue to next gap
             if (possibleRows.Length == 0)
@@ -93,7 +95,7 @@ namespace Aufgabe01_LR
             // Backtracking
             for (var i = 0; i < possibleRows.Length; i++)
             {
-                possibleRows[i].PlaceShortestBrick();
+                possibleRows[i].PlaceNextBrick();
                 var result = FillNextGap(nextGap + 1, wall, freeGaps);
                 if (result != null) return result;
                 
@@ -105,9 +107,27 @@ namespace Aufgabe01_LR
         }
 
         /// <summary>
+        /// Checks whetever a <see cref="Row.NextPossibleRowSum"/> fits the next open gap
+        /// </summary>
+        /// <param name="row">The row that contains the <param name="nprs"></param></param>
+        /// <param name="nprs">The current <see cref="Row.NextPossibleRowSum"/> to check</param>
+        /// <param name="nextGapPos">The required gap position</param>
+        /// <returns>True if the <param name="nprs"></param> and <param name="nextGapPos"></param> matches</returns>
+        private bool ContainsPossibleRowSum(Row row, Row.NextPossibleRowSum nprs, int nextGapPos)
+        {
+            if (nprs.PossibleRowSum == nextGapPos)
+            {
+                row.NextBrickToPlace = nprs.UsedBrickIndex;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Calculates the properties of the wall
         /// </summary>
-        private void CalculateWallProperties()
+        public void CalculateWallProperties()
         {
             WallLength = (int)((Math.Pow(BricksPerRow, 2) + BricksPerRow) / 2); // Gausssche Summenformel
             GapCount = WallLength - 1;
