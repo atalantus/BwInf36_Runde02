@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -68,10 +69,20 @@ namespace Aufgabe01_LR
 
         public Wall FillNextGap(int nextGap, Wall curWall, int freeGaps)
         {
+            // Check if wall is finished
+            if (curWall.Rows.All(r => r.RowSum == WallLength))
+                return curWall;
+
             var wall = curWall.Clone();
 
+            // Check if there is a next gap
+            int nextGapPos;
+            if (nextGap < GapCount + 1)
+                nextGapPos = nextGap + 1;
+            else
+                nextGapPos = nextGap;
+
             // Get all rows that can reach the next gap
-            var nextGapPos = nextGap + 1;
             var possibleRows = wall.Rows.Where(r => r.NextPossibleRowSums.Any(nrs => ContainsPossibleRowSum(r, nrs, nextGapPos))).ToArray();
 
             // If no row can reach next gap and FreeGaps > 0 continue to next gap
@@ -79,7 +90,7 @@ namespace Aufgabe01_LR
             {
                 if (freeGaps > 0)
                 {
-                    var result = FillNextGap(nextGap + 1, wall, freeGaps - 1);
+                    var result = FillNextGap(nextGapPos, wall, freeGaps - 1);
                     if (result != null) return result;
                 }
                 else
@@ -96,14 +107,18 @@ namespace Aufgabe01_LR
             for (var i = 0; i < possibleRows.Length; i++)
             {
                 possibleRows[i].PlaceNextBrick();
-                var result = FillNextGap(nextGap + 1, wall, freeGaps);
+                var result = FillNextGap(nextGapPos, wall, freeGaps);
                 if (result != null) return result;
-                
+
                 // try next branch
+
+                // remove wrong placed brick
+                possibleRows[i].RemoveLastBrick();
             }
 
             // This should never happen
-            throw new Exception("Couldn't find a solution");
+            //throw new Exception("Couldn't find a solution");
+            return null;
         }
 
         /// <summary>
@@ -157,14 +172,13 @@ namespace Aufgabe01_LR
         /// <param name="wall">The wall to print</param>
         private void PrintWall(Wall wall)
         {
+            Console.ForegroundColor = ConsoleColor.Cyan;
             for (var i = 0; i < wall.Rows.Length; i++)
             {
-                var stringBuilder = new StringBuilder();
-                for (int j = 0; j < wall.Rows[i].Bricks.Length; j++)
-                {
-                    
-                }
+                Console.WriteLine($"    {wall.Rows[i]}");
             }
+            Console.WriteLine();
+            Console.ResetColor();
         }
 
         #endregion

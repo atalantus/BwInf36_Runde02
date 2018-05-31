@@ -70,6 +70,7 @@ namespace Aufgabe01_LR
                     end = true;
                 }
             }
+            Console.WriteLine();
             Console.WriteLine("Druecke ENTER um das Programm zu beenden");
             Console.ReadLine();
         }

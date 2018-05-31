@@ -44,6 +44,8 @@ namespace Aufgabe01_LR
         /// </summary>
         public int NextBrickToPlace { get; set; }
 
+        private List<NextPossibleRowSum> _lastPossibleRowSums;
+
         #endregion
 
         #region Methods
@@ -83,6 +85,7 @@ namespace Aufgabe01_LR
 
             // Find NextPossibleRowSums
             // TODO: Improve performance
+            _lastPossibleRowSums = new List<NextPossibleRowSum>(NextPossibleRowSums);
             NextPossibleRowSums.Clear();
             for (var j = 0; j < Bricks.Length; j++)
             {
@@ -91,6 +94,17 @@ namespace Aufgabe01_LR
                     NextPossibleRowSums.Add(new NextPossibleRowSum(RowSum + j + 1, j));
                 }
             }
+        }
+
+        public void RemoveLastBrick()
+        {
+            PlacedBricksIndex--;
+            PlacedBricks[PlacedBricksIndex] = 0;
+
+            Bricks[NextBrickToPlace] = true;
+            RowSum -= NextBrickToPlace + 1;
+
+            NextPossibleRowSums = _lastPossibleRowSums;
         }
 
         /// <summary>
