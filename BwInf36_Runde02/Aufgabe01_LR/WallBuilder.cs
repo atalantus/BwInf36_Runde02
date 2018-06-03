@@ -48,12 +48,20 @@ namespace Aufgabe01_LR
         /// </summary>
         public int FreeGaps { get; set; }
 
+        /// <summary>
+        /// Stopwatch for messuring the algorithm execution time
+        /// </summary>
+        public Stopwatch AlgorithmStopwatch { get; set; }
+
         #endregion
 
         #region Methods
 
         public void BuildWall(int n)
         {
+            AlgorithmStopwatch = new Stopwatch();
+            AlgorithmStopwatch.Start();
+
             BricksPerRow = n;
             CalculateWallProperties();
             PrintWallProperties();
@@ -62,7 +70,10 @@ namespace Aufgabe01_LR
 
             var buildWall = FillNextGap(0, wall, FreeGaps);
 
-            if (buildWall == null) throw new Exception("Build wall is NULL");
+            AlgorithmStopwatch.Stop();
+            PrintAlgorithmTime();
+
+            if (buildWall == null) throw new Exception("Failed to build a wall");
 
             PrintWall(buildWall);
         }
@@ -177,6 +188,17 @@ namespace Aufgabe01_LR
             {
                 Console.WriteLine($"    {wall.Rows[i]}");
             }
+            Console.WriteLine();
+            Console.ResetColor();
+        }
+
+        /// <summary>
+        /// Prints the execution time of the algorithm
+        /// </summary>
+        private void PrintAlgorithmTime()
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"    The algorithm took {AlgorithmStopwatch.ElapsedMilliseconds}ms to complete.");
             Console.WriteLine();
             Console.ResetColor();
         }
