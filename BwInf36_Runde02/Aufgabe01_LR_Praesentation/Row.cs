@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Aufgabe01_LR
+namespace Aufgabe01_LR_Praesentation
 {
     /// <inheritdoc />
     /// <summary>
@@ -52,7 +52,7 @@ namespace Aufgabe01_LR
 
         private Row()
         {
-        
+
         }
 
         /// <summary>

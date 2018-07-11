@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 
-namespace Aufgabe01_LR
+namespace Aufgabe01_LR_Praesentation
 {
     /// <summary>
     /// Builds the Wall.

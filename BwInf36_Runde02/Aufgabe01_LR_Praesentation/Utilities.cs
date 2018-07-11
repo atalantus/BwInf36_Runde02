@@ -1,4 +1,4 @@
-﻿namespace Aufgabe01_LR
+﻿namespace Aufgabe01_LR_Praesentation
 {
     /// <summary>
     /// Helper methods for Aufgabe01_LR
