@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.2">
-  <zoom_level>9</zoom_level>
+  <zoom_level>10</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>315</x>
-      <y>333</y>
-      <w>144</w>
-      <h>54</h>
+      <x>330</x>
+      <y>360</y>
+      <w>160</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>Program
 --
@@ -17,10 +17,10 @@ void Main()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>99</x>
-      <y>333</y>
-      <w>126</w>
-      <h>45</h>
+      <x>90</x>
+      <y>360</y>
+      <w>140</w>
+      <h>50</h>
     </coordinates>
     <panel_attributes>Utilities
 --
@@ -30,10 +30,10 @@ public void FillArray()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>81</x>
-      <y>117</y>
-      <w>234</w>
-      <h>90</h>
+      <x>70</x>
+      <y>120</y>
+      <w>260</w>
+      <h>100</h>
     </coordinates>
     <panel_attributes>Wall
 --
@@ -47,10 +47,10 @@ public Wall Clone()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>666</x>
+      <x>720</x>
       <y>90</y>
-      <w>360</w>
-      <h>207</h>
+      <w>400</w>
+      <h>230</h>
     </coordinates>
     <panel_attributes>Row : IComparable&lt;Row&gt;
 --
@@ -72,10 +72,10 @@ public Row Clone()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>648</x>
-      <y>684</y>
-      <w>414</w>
-      <h>90</h>
+      <x>700</x>
+      <y>750</y>
+      <w>460</w>
+      <h>100</h>
     </coordinates>
     <panel_attributes>&lt;&lt;struct&gt;&gt;
 NextPossibleRowSum
@@ -89,10 +89,10 @@ public NextPossibleRowSum(int possibleRowSum, int usedBrickIndex)</panel_attribu
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>45</x>
-      <y>504</y>
-      <w>540</w>
-      <h>189</h>
+      <x>30</x>
+      <y>550</y>
+      <w>600</w>
+      <h>210</h>
     </coordinates>
     <panel_attributes>WallBuilder
 --
@@ -113,10 +113,10 @@ public void CalculateWallProperties()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>306</x>
-      <y>162</y>
-      <w>378</w>
-      <h>45</h>
+      <x>320</x>
+      <y>170</y>
+      <w>420</w>
+      <h>50</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0,n
@@ -127,10 +127,10 @@ hat als Reihen &gt;</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>846</x>
-      <y>288</y>
-      <w>198</w>
-      <h>414</h>
+      <x>920</x>
+      <y>310</y>
+      <w>220</w>
+      <h>460</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0,n

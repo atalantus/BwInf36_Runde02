@@ -114,22 +114,21 @@ namespace Aufgabe01_LR_Praesentation
                 var result = FillNextGap(nextGapPos, wall, freeGaps);
                 if (result != null) return result;
 
-                // try next branch
-
                 // remove wrong placed brick
                 possibleRows[i].RemoveLastBrick();
+
+                // try next branch
             }
 
-            // This should never happen
-            //throw new Exception("Couldn't find a solution");
+            // track back
             return null;
         }
 
         /// <summary>
-        /// Checks whetever a <see cref="Row.NextPossibleRowSum"/> fits the next open gap
+        /// Checks whetever a <see cref="NextPossibleRowSum"/> fits the next open gap
         /// </summary>
         /// <param name="row">The row that contains the <param name="nprs"></param></param>
-        /// <param name="nprs">The current <see cref="Row.NextPossibleRowSum"/> to check</param>
+        /// <param name="nprs">The current <see cref="NextPossibleRowSum"/> to check</param>
         /// <param name="nextGapPos">The required gap position</param>
         /// <returns>True if the <param name="nprs"></param> and <param name="nextGapPos"></param> matches</returns>
         private bool ContainsPossibleRowSum(Row row, NextPossibleRowSum nprs, int nextGapPos)
