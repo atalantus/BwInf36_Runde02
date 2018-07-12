@@ -5,11 +5,11 @@ using System.Linq;
 namespace Aufgabe01_LR_Praesentation
 {
     /// <summary>
-    /// Builds the Wall.
+    /// Baut die Mauer
     /// </summary>
     public class WallBuilder
     {
-        #region Fields
+        #region Attribute
 
         /// <summary>
         /// The maximum count of rows in the <see cref="Wall"/>
@@ -48,7 +48,7 @@ namespace Aufgabe01_LR_Praesentation
 
         #endregion
 
-        #region Methods
+        #region Methoden
 
         public void BuildWall(int n)
         {
@@ -61,6 +61,7 @@ namespace Aufgabe01_LR_Praesentation
 
             var wall = new Wall(WallHeight, BricksPerRow);
 
+            // Starte den Mauer-Bau!
             var buildWall = FillNextGap(0, wall, FreeGaps);
 
             AlgorithmStopwatch.Stop();
@@ -71,27 +72,39 @@ namespace Aufgabe01_LR_Praesentation
             PrintWall(buildWall);
         }
 
+        /// <summary>
+        /// Versucht die naechste Luecke in der Mauer zu fuellen
+        /// </summary>
+        /// <param name="nextGap">Die Luecke, die als naechstes gefuellt werden muss</param>
+        /// <param name="curWall">Die aktuelle Mauer</param>
+        /// <param name="freeGaps">Nicht wichtig!</param>
+        /// <returns>Das gueltige Mauer Objekt oder null</returns>
         public Wall FillNextGap(int nextGap, Wall curWall, int freeGaps)
         {
-            // Check if wall is finished
+            // Ueberpruefe ob die Mauer fertig gebaut ist
             if (curWall.Rows.All(r => r.RowSum == WallLength))
+            {
                 return curWall;
+            }
+            #region -
+            Wall wall = curWall.Clone();
 
-            var wall = curWall.Clone();
-
-            // Check if there is a next gap
+            // Gibt es eine naechste Spalte
             int nextGapPos;
             if (nextGap < GapCount + 1)
                 nextGapPos = nextGap + 1;
             else
                 nextGapPos = nextGap;
+            #endregion
 
-            // Get all rows that can reach the next gap
-            var possibleRows = wall.Rows.Where(r => r.NextPossibleRowSums.Any(nrs => ContainsPossibleRowSum(r, nrs, nextGapPos))).ToArray();
+            // Sammle alle Reihen, die die naechste Spalte fuellen koennen
+            Row[] possibleRows = wall.Rows.Where(r => r.NextPossibleRowSums.Any(nrs => 
+                ContainsPossibleRowSum(r, nrs, nextGapPos))).ToArray();
 
-            // If no row can reach next gap and FreeGaps > 0 continue to next gap
             if (possibleRows.Length == 0)
             {
+                // Es gibt keine Reihe, die die naechste Spalte fuellen kann
+                #region -
                 if (freeGaps > 0)
                 {
                     var result = FillNextGap(nextGapPos, wall, freeGaps - 1);
@@ -99,28 +112,53 @@ namespace Aufgabe01_LR_Praesentation
                 }
                 else
                 {
-                    // track back
-                    return null;
+                    #endregion
+
+                // ZURUECK
+                return null;
+                #region -
+
+                    
+
+                   
                 }
+                #endregion
             }
+            #region -
 
             // Get row with lowest row sum and call FillNextGap()
             Array.Sort(possibleRows);
 
-            // Backtracking
-            for (var i = 0; i < possibleRows.Length; i++)
+            #endregion
+
+       
+
+            // BACKTRACKING
+            for (int i = 0; i < possibleRows.Length; i++)
             {
+                // Fuelle die naechste Spalte
                 possibleRows[i].PlaceNextBrick();
-                var result = FillNextGap(nextGapPos, wall, freeGaps);
-                if (result != null) return result;
 
-                // remove wrong placed brick
-                possibleRows[i].RemoveLastBrick();
+                // Neuer Methodenaufruf: Versuche die wieder naechste Spalte zu fuellen
+                Wall result = FillNextGap(nextGapPos, wall, freeGaps);
 
-                // try next branch
+                if (result != null)
+                {
+                    // Wir haben eine gueltige Mauer!
+                    return result;
+                }
+                else
+                {
+                    // Falsche Entscheidung!
+
+                    // Den gesetzten Klotz wieder entfernen und...
+                    possibleRows[i].RemoveLastBrick();
+
+                    // ...die naechste Moeglichkeit ausprobieren
+                }
             }
 
-            // track back
+            // ZURUECK
             return null;
         }
 
