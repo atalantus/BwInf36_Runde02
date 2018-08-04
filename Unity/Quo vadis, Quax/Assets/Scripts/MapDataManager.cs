@@ -10,6 +10,8 @@ public class MapDataManager : MonoBehaviour
         get { return _instance; }
     }
 
+    public Vector2 Dimensions { get; set; }
+
     private void Awake()
     {
         if (_instance == null)

@@ -46,6 +46,7 @@ public class LoadImage : MonoBehaviour
             if (ProcessImage(path))
             {
                 _filePathText.text = path;
+
                 if (UpdatedLoadingState != null)
                     UpdatedLoadingState.Invoke(LoadingState.DONE);
             }
@@ -54,12 +55,6 @@ public class LoadImage : MonoBehaviour
                 if (UpdatedLoadingState != null)
                     UpdatedLoadingState.Invoke(LoadingState.FAILED);
             }
-        }
-        else
-        {
-            _filePathText.text = "<b>No File Loaded!</b>";
-            if (UpdatedLoadingState != null)
-                UpdatedLoadingState.Invoke(LoadingState.NOT_LOADING);
         }
 #else
         Debug.LogWarning("File Browser NOT installed!");
@@ -79,13 +74,14 @@ public class LoadImage : MonoBehaviour
         // TODO: Process Image
         // Check if it's a valid map (only black, white, green and red pixels)
 
-        byte[] imageData;
-
         if (File.Exists(imagePath))
         {
-            imageData = File.ReadAllBytes(imagePath);
+            var imageData = File.ReadAllBytes(imagePath);
             _mapTexture = new Texture2D(2, 2);
+            _mapTexture.filterMode = FilterMode.Point;
             _mapTexture.LoadImage(imageData);
+
+            MapDataManager.Instance.Dimensions = new Vector2(_mapTexture.width, _mapTexture.height);
         }
         return true;
     }
