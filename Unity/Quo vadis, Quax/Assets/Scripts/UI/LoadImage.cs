@@ -17,9 +17,11 @@ public class LoadImage : MonoBehaviour
         DONE
     }
 
-    private Animator _animator;
+    private bool _isOpen;
+    private Vector3 _openPos;
     private Texture2D _mapTexture;
     [SerializeField] private Text _filePathText;
+    [SerializeField] private GameObject _toggleIcon;
     public Texture2D MapTexture
     {
         get { return _mapTexture; }
@@ -28,7 +30,8 @@ public class LoadImage : MonoBehaviour
 
     private void Awake()
     {
-        _animator = GetComponent<Animator>();
+        _isOpen = true;
+        _openPos = transform.position;
     }
 
     private void Start()
@@ -63,7 +66,12 @@ public class LoadImage : MonoBehaviour
 
     public void TogglePanel()
     {
-        _animator.SetTrigger("Toggle");
+        var offset = 0;
+        if (_isOpen) offset = 50;
+        var target = new Vector3(_openPos.x, _openPos.y + offset, _openPos.z);
+        iTween.MoveTo(gameObject, target, .5f);
+        iTween.RotateBy(_toggleIcon, new Vector3(0, 0, .5f), .5f);
+        _isOpen = !_isOpen;
     }
 
     private bool ProcessImage(string imagePath)
