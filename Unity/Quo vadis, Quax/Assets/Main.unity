@@ -428,7 +428,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mapContainer: {fileID: 1698076471}
   _mapRawImage: {fileID: 2088025514}
-  _mapOverlay: {fileID: 497227767}
+  _overlayRawImage: {fileID: 497227767}
   _messageContainer: {fileID: 1897391082}
   _messageText: {fileID: 1813269427}
 --- !u!114 &631124978
@@ -816,7 +816,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 1920x1080
+  m_Text: '-'
 --- !u!222 &989761861
 CanvasRenderer:
   m_ObjectHideFlags: 0

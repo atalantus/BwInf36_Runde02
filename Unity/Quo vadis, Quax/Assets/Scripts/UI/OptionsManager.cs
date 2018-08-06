@@ -2,9 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manages the Options GUI
+/// </summary>
 public class OptionsManager : MonoBehaviour
 {
+    /// <summary>
+    /// Is the options panel currently open
+    /// </summary>
     private bool _isOpen;
+    /// <summary>
+    /// The world position of the option panel when closed
+    /// </summary>
     private Vector3 _closedPos;
     [SerializeField] private GameObject _toggleIcon;
 
@@ -13,6 +22,9 @@ public class OptionsManager : MonoBehaviour
         _closedPos = transform.position;
     }
 
+    /// <summary>
+    /// Toggles the options GUI
+    /// </summary>
     public void ToggleGUI()
     {
         var offset = 0;

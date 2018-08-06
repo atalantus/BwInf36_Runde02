@@ -7,14 +7,17 @@ using Crosstales.FB;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoadImage : MonoBehaviour
+/// <summary>
+/// Manages the LoadImage GUI
+/// </summary>
+public class LoadImageManager : MonoBehaviour
 {
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR
     [DllImport("user32.dll")] static extern uint GetActiveWindow();
     [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr hWnd);
 #endif
 
-    public delegate void LoadingMapEventHandler(LoadingState state);
+    public delegate void LoadingImageEventHandler(LoadingState state);
 
     public enum LoadingState
     {
@@ -25,17 +28,23 @@ public class LoadImage : MonoBehaviour
     }
 
     private IntPtr _hWndUnity;
+    /// <summary>
+    /// Is the LoadImage GUI open
+    /// </summary>
     private bool _isOpen;
+    /// <summary>
+    /// The world position when the LoadImage GUI is open
+    /// </summary>
     private Vector3 _openPos;
-    private Texture2D _mapTexture;
+
     [SerializeField] private Text _imageDimensionsText;
     [SerializeField] private Text _filePathText;
     [SerializeField] private GameObject _toggleIcon;
-    public Texture2D MapTexture
-    {
-        get { return _mapTexture; }
-    }
-    public event LoadingMapEventHandler UpdatedLoadingState;
+    /// <summary>
+    /// The map texture
+    /// </summary>
+    public Texture2D MapTexture { get; private set; }
+    public event LoadingImageEventHandler UpdatedLoadingState;
 
     private void Awake()
     {
@@ -52,12 +61,17 @@ public class LoadImage : MonoBehaviour
             UpdatedLoadingState.Invoke(LoadingState.NOT_LOADING);
     }
 
+    /// <summary>
+    /// Load an selected image file
+    /// </summary>
     public void OpenFile()
     {
 #if CT_FB
+        // Open the file browser
         var path = FileBrowser.OpenSingleFile("Open Quax MapTexture", "", "png");
         if (path != string.Empty)
         {
+            // Check if selected image is a valid quax map
             if (ProcessImage(path))
             {
                 if (UpdatedLoadingState != null)
@@ -77,6 +91,9 @@ public class LoadImage : MonoBehaviour
 #endif
     }
 
+    /// <summary>
+    /// Toggles the LoadImage GUI
+    /// </summary>
     public void TogglePanel()
     {
         var offset = 0;
@@ -87,6 +104,11 @@ public class LoadImage : MonoBehaviour
         _isOpen = !_isOpen;
     }
 
+    /// <summary>
+    /// Processes a selected image file and checks if it's a valid quax map
+    /// </summary>
+    /// <param name="imagePath">The file path</param>
+    /// <returns>True if the selected image it is a valid quax map</returns>
     private bool ProcessImage(string imagePath)
     {
         if (UpdatedLoadingState != null)
@@ -94,18 +116,21 @@ public class LoadImage : MonoBehaviour
 
         // TODO: Process Image
         // Check if it's a valid map (only black, white, green and red pixels)
+        // if not return false
 
         if (File.Exists(imagePath))
         {
+            // Create map texture
             var imageData = File.ReadAllBytes(imagePath);
-            _mapTexture = new Texture2D(2, 2);
-            _mapTexture.filterMode = FilterMode.Point;
-            _mapTexture.LoadImage(imageData);
+            MapTexture = new Texture2D(2, 2) { filterMode = FilterMode.Point };
+            MapTexture.LoadImage(imageData);
 
-            _imageDimensionsText.text = _mapTexture.width + "x" + _mapTexture.height;
+            // Set GUI text
+            _imageDimensionsText.text = MapTexture.width + "x" + MapTexture.height;
             _filePathText.text = imagePath;
 
-            MapDataManager.Instance.Dimensions = new Vector2(_mapTexture.width, _mapTexture.height);
+            // Update the MapDataManager instance
+            MapDataManager.Instance.Dimensions = new Vector2(MapTexture.width, MapTexture.height);
         }
         return true;
     }
