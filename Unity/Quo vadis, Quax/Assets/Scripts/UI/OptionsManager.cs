@@ -34,4 +34,16 @@ public class OptionsManager : MonoBehaviour
         iTween.RotateBy(_toggleIcon, new Vector3(0, 0, .5f), .5f);
         _isOpen = !_isOpen;
     }
+
+    /// <summary>
+    /// Quits the game
+    /// </summary>
+    public void Quit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 }
