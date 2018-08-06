@@ -28,6 +28,7 @@ public class LoadImage : MonoBehaviour
     private bool _isOpen;
     private Vector3 _openPos;
     private Texture2D _mapTexture;
+    [SerializeField] private Text _imageDimensionsText;
     [SerializeField] private Text _filePathText;
     [SerializeField] private GameObject _toggleIcon;
     public Texture2D MapTexture
@@ -59,8 +60,6 @@ public class LoadImage : MonoBehaviour
         {
             if (ProcessImage(path))
             {
-                _filePathText.text = path;
-
                 if (UpdatedLoadingState != null)
                     UpdatedLoadingState.Invoke(LoadingState.DONE);
             }
@@ -102,6 +101,9 @@ public class LoadImage : MonoBehaviour
             _mapTexture = new Texture2D(2, 2);
             _mapTexture.filterMode = FilterMode.Point;
             _mapTexture.LoadImage(imageData);
+
+            _imageDimensionsText.text = _mapTexture.width + "x" + _mapTexture.height;
+            _filePathText.text = imagePath;
 
             MapDataManager.Instance.Dimensions = new Vector2(_mapTexture.width, _mapTexture.height);
         }

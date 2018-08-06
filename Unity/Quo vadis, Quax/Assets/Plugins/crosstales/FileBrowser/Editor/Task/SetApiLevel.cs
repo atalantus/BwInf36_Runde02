@@ -18,7 +18,6 @@ namespace Crosstales.FB.EditorExt
 
             string apiLevel = PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.Standalone).ToString();
             
-            //TODO add new entries from Unity 2018
             if (!apiLevel.Equals("NET_4_6") && PlayerSettings.GetApiCompatibilityLevel(BuildTargetGroup.Standalone) != ApiCompatibilityLevel.NET_2_0) {
                 
                 PlayerSettings.SetApiCompatibilityLevel(BuildTargetGroup.Standalone, ApiCompatibilityLevel.NET_2_0);

@@ -48,14 +48,15 @@ public class MapGUIManager : MonoBehaviour
         if (scrollDelta != 0f)
         {
             scrollDelta = Mathf.Clamp(scrollDelta, -0.15f, 0.15f);
-            var mousePos = Input.mousePosition;
-            mousePos.x -= Screen.width / 2;
-            mousePos.y -= Screen.height / 2;
+            //var mousePos = Input.mousePosition;
+            //mousePos.x -= Screen.width / 2;
+            //mousePos.y -= Screen.height / 2;
             var zoomDelta = Mathf.Abs(scrollDelta * 650 * Time.deltaTime);
 
             if (scrollDelta > 0f)
             {
                 _mapContainer.transform.localScale *= zoomDelta;
+                // TODO: Zoom image to current mouse position
                 //_mapContainer.transform.localPosition -= (mousePos / 4f);
 
                 if (_mapContainer.transform.localScale.x > _maxZoomLevel)
@@ -64,7 +65,7 @@ public class MapGUIManager : MonoBehaviour
             else
             {
                 _mapContainer.transform.localScale /= zoomDelta;
-                //_mapContainer.transform.localPosition -= (_mapContainer.transform.localPosition / 5);
+                _mapContainer.transform.localPosition -= (_mapContainer.transform.localPosition / 5);
 
                 if (_mapContainer.transform.localScale.x < _minZoomLevel)
                     _mapContainer.transform.localScale = new Vector3(_minZoomLevel, _minZoomLevel, _minZoomLevel);
@@ -80,7 +81,7 @@ public class MapGUIManager : MonoBehaviour
         var z = y / (x * 1.25f);
 
         _defaultZoomLevel = z;
-        _maxZoomLevel = z * 50;
+        _maxZoomLevel = z * x * 0.15f;
         _minZoomLevel = z / 3;
     }
 }
