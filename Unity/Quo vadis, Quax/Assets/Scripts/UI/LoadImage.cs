@@ -1,12 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using Crosstales.FB;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LoadImage : MonoBehaviour
 {
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+    [DllImport("user32.dll")] static extern uint GetActiveWindow();
+    [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr hWnd);
+#endif
+
     public delegate void LoadingMapEventHandler(LoadingState state);
 
     public enum LoadingState
@@ -17,6 +24,7 @@ public class LoadImage : MonoBehaviour
         DONE
     }
 
+    private IntPtr _hWndUnity;
     private bool _isOpen;
     private Vector3 _openPos;
     private Texture2D _mapTexture;
@@ -32,6 +40,9 @@ public class LoadImage : MonoBehaviour
     {
         _isOpen = true;
         _openPos = transform.position;
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+        _hWndUnity = (IntPtr)GetActiveWindow();
+#endif
     }
 
     private void Start()
@@ -59,6 +70,9 @@ public class LoadImage : MonoBehaviour
                     UpdatedLoadingState.Invoke(LoadingState.FAILED);
             }
         }
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+        SetForegroundWindow(_hWndUnity);
+#endif
 #else
         Debug.LogWarning("File Browser NOT installed!");
 #endif

@@ -9,6 +9,8 @@ public class MapGUIManager : MonoBehaviour
     [SerializeField] private RawImage _mapRawImage;
     [SerializeField] private RawImage _mapOverlay;
     private Texture2D _overlayTexture;
+    [SerializeField] private GameObject _messageContainer;
+    [SerializeField] private Text _messageText;
 
     private float _defaultZoomLevel;
     private float _maxZoomLevel;
@@ -45,11 +47,16 @@ public class MapGUIManager : MonoBehaviour
         var scrollDelta = Input.GetAxis("Mouse ScrollWheel");
         if (scrollDelta != 0f)
         {
+            scrollDelta = Mathf.Clamp(scrollDelta, -0.15f, 0.15f);
+            var mousePos = Input.mousePosition;
+            mousePos.x -= Screen.width / 2;
+            mousePos.y -= Screen.height / 2;
             var zoomDelta = Mathf.Abs(scrollDelta * 650 * Time.deltaTime);
 
             if (scrollDelta > 0f)
             {
                 _mapContainer.transform.localScale *= zoomDelta;
+                //_mapContainer.transform.localPosition -= (mousePos / 4f);
 
                 if (_mapContainer.transform.localScale.x > _maxZoomLevel)
                     _mapContainer.transform.localScale = new Vector3(_maxZoomLevel, _maxZoomLevel, _maxZoomLevel);
@@ -57,6 +64,7 @@ public class MapGUIManager : MonoBehaviour
             else
             {
                 _mapContainer.transform.localScale /= zoomDelta;
+                //_mapContainer.transform.localPosition -= (_mapContainer.transform.localPosition / 5);
 
                 if (_mapContainer.transform.localScale.x < _minZoomLevel)
                     _mapContainer.transform.localScale = new Vector3(_minZoomLevel, _minZoomLevel, _minZoomLevel);
