@@ -1,7 +1,10 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UI;
+using Debug = UnityEngine.Debug;
 
 /// <summary>
 /// Manages the Map GUI
@@ -15,12 +18,18 @@ public class MapGUIManager : MonoBehaviour
     [SerializeField] private RectTransform _mapContainer;
     [SerializeField] private RawImage _mapRawImage;
     [SerializeField] private RawImage _overlayRawImage;
-    [SerializeField] private GameObject _messageContainer;
-    [SerializeField] private Text _messageText;
+    [SerializeField] private ContainerManager _containerManager;
 
     private float _defaultZoomLevel;
     private float _maxZoomLevel;
     private float _minZoomLevel;
+
+    private Texture2D _overlayTexture;
+    private bool _isColoringOverlayPixels;
+    private Color[] _overlayPixels;
+    private Thread _clearOverlayTextureThread;
+
+    public static readonly string COLORING_OVERLAY_MSG_ID = "coloring_overlay";
 
     /// <summary>
     /// Sets up the map-container, the map and the overlay object
@@ -36,28 +45,47 @@ public class MapGUIManager : MonoBehaviour
         _mapRawImage.texture = texture;
 
         // Create overlay texture
-        var overlayTexture =
-            new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, false) {filterMode = FilterMode.Point};
+        _overlayTexture =
+            new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, false) { filterMode = FilterMode.Point };
 
-        var fillColor = Color.clear;
-        var fillPixels = new Color[texture.width * texture.height];
+        // Create overlay pixels ( way faster than _overlayTexture.getPixels() )
+        _overlayPixels = new Color[texture.width * texture.height];
+        _overlayRawImage.texture = _overlayTexture;
 
-        for (var i = 0; i < fillPixels.Length; i++)
-        {
-            fillPixels[i] = fillColor;
-        }
-
-        // Color overlay texture transparent
-        overlayTexture.SetPixels(fillPixels);
-        overlayTexture.Apply();
-
-        _overlayRawImage.texture = overlayTexture;
+        // Color overlay texture's pixels transparent
+        // There can be up to millions of pixels to color --> extra Thread
+        _clearOverlayTextureThread = new Thread(() => SetOverlayPixels(ref _overlayPixels, Color.clear));
+        _isColoringOverlayPixels = true;
+        _containerManager.CreateMessage("Coloring overlay texture...", COLORING_OVERLAY_MSG_ID);
+        _clearOverlayTextureThread.Start();
     }
 
     private void Update()
     {
+        /**
+         * Check for clearing texture
+         */
+        if (_isColoringOverlayPixels)
+        {
+            if (!_clearOverlayTextureThread.IsAlive)
+            {
+                // Apply colored pixels to overlay texture
+                _overlayTexture.SetPixels(_overlayPixels);
+                _overlayTexture.Apply();
+                _isColoringOverlayPixels = false;
+                _containerManager.DestroyMessage(COLORING_OVERLAY_MSG_ID);
+            }
+            else
+            {
+                Debug.Log("Coloring Overlay Texture: " + Time.deltaTime);
+            }
+        }
+
+        /**
+         * Check for scroll wheel input
+         */
         var scrollDelta = Input.GetAxis("Mouse ScrollWheel");
-        // Check for scroll wheel input
+
         if (scrollDelta != 0f)
         {
             scrollDelta = Mathf.Clamp(scrollDelta, -0.15f, 0.15f);
@@ -113,5 +141,19 @@ public class MapGUIManager : MonoBehaviour
         _maxZoomLevel = z * x * 0.15f;
         // Calculate the minimum zoom level
         _minZoomLevel = z / 3;
+    }
+
+    /// <summary>
+    /// Colors all the pixels with a given color
+    /// </summary>
+    /// <param name="pixels">Pixels to color</param>
+    /// <param name="fillColor">The new color of the pixels</param>
+    private void SetOverlayPixels(ref Color[] pixels, Color fillColor)
+    {
+        Debug.Log(pixels.Length + " pixels to color");
+        for (var i = 0; i < pixels.Length; i++)
+        {
+            pixels[i] = fillColor;
+        }
     }
 }
