@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
@@ -52,35 +53,14 @@ public class MapGUIManager : MonoBehaviour
         _overlayPixels = new Color[texture.width * texture.height];
         _overlayRawImage.texture = _overlayTexture;
 
-        // Color overlay texture's pixels transparent
-        // There can be up to millions of pixels to color --> extra Thread
-        _clearOverlayTextureThread = new Thread(() => SetOverlayPixels(ref _overlayPixels, Color.clear));
-        _isColoringOverlayPixels = true;
         _containerManager.CreateMessage("Coloring overlay texture...", COLORING_OVERLAY_MSG_ID);
-        _clearOverlayTextureThread.Start();
+        // Color overlay texture's pixels transparent
+        // There can multiple millions of pixels to color --> threading
+        ThreadQueuer.Instance.StartThreadedAction(() => { SetOverlayPixels(ref _overlayPixels, Color.clear); });
     }
 
     private void Update()
     {
-        /**
-         * Check for clearing texture
-         */
-        if (_isColoringOverlayPixels)
-        {
-            if (!_clearOverlayTextureThread.IsAlive)
-            {
-                // Apply colored pixels to overlay texture
-                _overlayTexture.SetPixels(_overlayPixels);
-                _overlayTexture.Apply();
-                _isColoringOverlayPixels = false;
-                _containerManager.DestroyMessage(COLORING_OVERLAY_MSG_ID);
-            }
-            else
-            {
-                Debug.Log("Coloring Overlay Texture: " + Time.deltaTime);
-            }
-        }
-
         /**
          * Check for scroll wheel input
          */
@@ -155,5 +135,14 @@ public class MapGUIManager : MonoBehaviour
         {
             pixels[i] = fillColor;
         }
+
+        Action applyPixels = () =>
+        {
+            _overlayTexture.SetPixels(_overlayPixels);
+            _overlayTexture.Apply();
+            _containerManager.DestroyMessage(COLORING_OVERLAY_MSG_ID);
+        };
+
+        ThreadQueuer.Instance.QueueMainThreadAction(applyPixels);
     }
 }
