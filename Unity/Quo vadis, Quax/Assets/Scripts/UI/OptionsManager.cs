@@ -10,7 +10,7 @@ public class OptionsManager : MonoBehaviour
     /// <summary>
     /// Is the options panel currently open
     /// </summary>
-    private bool _isOpen;
+    public bool IsOpen { get; set; }
     /// <summary>
     /// The world position of the option panel when closed
     /// </summary>
@@ -28,11 +28,11 @@ public class OptionsManager : MonoBehaviour
     public void ToggleGUI()
     {
         var offset = 0;
-        if (!_isOpen) offset = 400;
+        if (!IsOpen) offset = 400;
         var target = new Vector3(_closedPos.x + offset, _closedPos.y, _closedPos.z);
         iTween.MoveTo(gameObject, target, .5f);
         iTween.RotateBy(_toggleIcon, new Vector3(0, 0, .5f), .5f);
-        _isOpen = !_isOpen;
+        IsOpen = !IsOpen;
     }
 
     /// <summary>

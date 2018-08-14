@@ -1520,7 +1520,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 540640110}
-        m_MethodName: TogglePanel
+        m_MethodName: ToggleGUI
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2431,6 +2431,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _loadImage: {fileID: 540640110}
+  _options: {fileID: 1521842672}
   _mapManager: {fileID: 631124977}
   _noContentPanel: {fileID: 1298444448}
   _mapContentPanel: {fileID: 631124974}

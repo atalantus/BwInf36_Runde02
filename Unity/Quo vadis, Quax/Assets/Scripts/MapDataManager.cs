@@ -21,6 +21,8 @@ public class MapDataManager : MonoBehaviour
     /// The dimensions of the loaded image
     /// </summary>
     public Vector2 Dimensions { get; set; }
+    public List<Vector2> QuaxPositions { get; set; }
+    public Vector2 CityPosition { get; set; }
 
     private void Awake()
     {
@@ -28,5 +30,7 @@ public class MapDataManager : MonoBehaviour
             _instance = this;
         else if (_instance != this)
             Destroy(gameObject);
+
+        QuaxPositions = new List<Vector2>();
     }
 }

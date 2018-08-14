@@ -11,6 +11,7 @@ using UnityEngine.UI;
 public class ContainerManager : MonoBehaviour
 {
     [SerializeField] private LoadImageManager _loadImage;
+    [SerializeField] private OptionsManager _options;
     [SerializeField] private MapGUIManager _mapManager;
     [SerializeField] private GameObject _noContentPanel;
     [SerializeField] private GameObject _mapContentPanel;
@@ -39,11 +40,13 @@ public class ContainerManager : MonoBehaviour
             case LoadImageManager.LoadingState.LOADING:
                 _noContentPanel.SetActive(true);
                 _mapContentPanel.SetActive(false);
+                DestroyMessage(ERROR_LOADING_MAP_MSG_ID);
                 CreateMessage("Processing Image...", PROCESSING_IMG_MSG_ID);
                 break;
             case LoadImageManager.LoadingState.FAILED:
                 _noContentPanel.SetActive(true);
                 _mapContentPanel.SetActive(false);
+                DestroyMessage(PROCESSING_IMG_MSG_ID);
                 CreateMessage("Error while processing the image!", ERROR_LOADING_MAP_MSG_ID, 5f);
                 break;
             case LoadImageManager.LoadingState.DONE:
@@ -51,6 +54,8 @@ public class ContainerManager : MonoBehaviour
                 _noContentPanel.SetActive(false);
                 _mapManager.SetMap(_loadImage.MapTexture);
                 DestroyMessage(PROCESSING_IMG_MSG_ID);
+                //if (_loadImage.IsOpen) _loadImage.ToggleGUI();
+                //if (!_options.IsOpen) _options.ToggleGUI();
                 break;
             default:
                 throw new ArgumentOutOfRangeException("state", state, null);
