@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Manages the Options GUI
@@ -15,11 +16,54 @@ public class OptionsManager : MonoBehaviour
     /// The world position of the option panel when closed
     /// </summary>
     private Vector3 _closedPos;
+
+    [SerializeField] private LoadImageManager _loadImage;
+    [SerializeField] private Dropdown _quaxPosDropdown;
+    [SerializeField] private GameObject _quaxPosMap;
+    [SerializeField] private GameObject _quaxPosOverlay;
+    [SerializeField] private Text[] _quaxPosCoordinates;
     [SerializeField] private GameObject _toggleIcon;
 
     private void Awake()
     {
         _closedPos = transform.position;
+    }
+
+    private void Start()
+    {
+        _loadImage.UpdatedLoadingState += OnLoadingState_Changed;
+    }
+
+    private void OnLoadingState_Changed(LoadImageManager.LoadingState state)
+    {
+        if (state == LoadImageManager.LoadingState.DONE)
+        {
+            SetUpOptionsGUI();
+        }
+    }
+
+    private void SetUpOptionsGUI()
+    {
+        _quaxPosDropdown.ClearOptions();
+        for (var i = 0; i < MapDataManager.Instance.QuaxPositions.Count; i++)
+        {
+            _quaxPosDropdown.options.Add(new Dropdown.OptionData("Quax " + (i + 1)));
+        }
+
+        _quaxPosDropdown.value = 0;
+        SelectQuaxPos(0);
+        _quaxPosDropdown.RefreshShownValue();
+
+        _quaxPosMap.GetComponent<RawImage>().texture = _loadImage.MapTexture;
+        var aspectRatio = MapDataManager.Instance.Dimensions.x / MapDataManager.Instance.Dimensions.y;
+        _quaxPosMap.GetComponent<AspectRatioFitter>().aspectRatio = aspectRatio;
+    }
+
+    public void SelectQuaxPos(int index)
+    {
+        var pos = MapDataManager.Instance.QuaxPositions[index];
+        _quaxPosCoordinates[0].text = pos.x.ToString();
+        _quaxPosCoordinates[1].text = (MapDataManager.Instance.Dimensions.y - pos.y).ToString();
     }
 
     /// <summary>
