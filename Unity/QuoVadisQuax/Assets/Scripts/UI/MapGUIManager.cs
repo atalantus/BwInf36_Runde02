@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
 
 /// <summary>
 /// Manages the Map GUI
 /// </summary>
-public class MapGUIManager : MonoBehaviour
+public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     /// <summary>
     /// Container for the map and the overlay
@@ -21,6 +22,7 @@ public class MapGUIManager : MonoBehaviour
     [SerializeField] private RawImage _overlayRawImage;
     [SerializeField] private ContainerManager _containerManager;
 
+    private bool _hasFocus;
     private float _defaultZoomLevel;
     private float _maxZoomLevel;
     private float _minZoomLevel;
@@ -68,6 +70,8 @@ public class MapGUIManager : MonoBehaviour
 
         if (scrollDelta != 0f)
         {
+            if (!_hasFocus) return;
+
             scrollDelta = Mathf.Clamp(scrollDelta, -0.15f, 0.15f);
             //var mousePos = Input.mousePosition;
             //mousePos.x -= Screen.width / 2;
@@ -144,5 +148,15 @@ public class MapGUIManager : MonoBehaviour
         };
 
         ThreadQueuer.Instance.QueueMainThreadAction(applyPixels);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        _hasFocus = true;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        _hasFocus = false;
     }
 }
