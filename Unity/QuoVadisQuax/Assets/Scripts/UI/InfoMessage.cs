@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class InfoMessage : MonoBehaviour
 {
+    [SerializeField] private GameObject _spinner;
     [SerializeField] private Text _text;
 
     public delegate void DestroyingMsgEventHandler(string id);
@@ -18,10 +19,12 @@ public class InfoMessage : MonoBehaviour
     }
     public event DestroyingMsgEventHandler DestroyingMsg;
 
-    public void Setup(string msg, string id, float lifetime = -1f)
+    public void Setup(string msg, string id, bool spinnerIcon = false, float lifetime = -1f)
     {
         Msg = msg;
         ID = id;
+
+        _spinner.SetActive(spinnerIcon);
 
         if (lifetime != -1f)
             Destroy(gameObject, lifetime);

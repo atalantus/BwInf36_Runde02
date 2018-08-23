@@ -53,7 +53,7 @@ public class MapGUIManager : MonoBehaviour
         _overlayPixels = new Color[texture.width * texture.height];
         _overlayRawImage.texture = _overlayTexture;
 
-        _containerManager.CreateMessage("Coloring overlay texture...", COLORING_OVERLAY_MSG_ID);
+        _containerManager.CreateMessage("Coloring overlay texture...", COLORING_OVERLAY_MSG_ID, true);
         // Color overlay texture's pixels transparent
         // There can multiple millions of pixels to color --> threading
         ThreadQueuer.Instance.StartThreadedAction(() => { SetOverlayPixels(ref _overlayPixels, Color.clear); });

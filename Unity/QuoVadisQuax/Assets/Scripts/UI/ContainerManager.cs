@@ -41,13 +41,13 @@ public class ContainerManager : MonoBehaviour
                 _noContentPanel.SetActive(true);
                 _mapContentPanel.SetActive(false);
                 DestroyMessage(ERROR_LOADING_MAP_MSG_ID);
-                CreateMessage("Processing Image...", PROCESSING_IMG_MSG_ID);
+                CreateMessage("Processing Image...", PROCESSING_IMG_MSG_ID, true);
                 break;
             case LoadImageManager.LoadingState.FAILED:
                 _noContentPanel.SetActive(true);
                 _mapContentPanel.SetActive(false);
                 DestroyMessage(PROCESSING_IMG_MSG_ID);
-                CreateMessage("Error while processing the image!", ERROR_LOADING_MAP_MSG_ID, 5f);
+                CreateMessage("Error while processing the image!", ERROR_LOADING_MAP_MSG_ID, false, 5f);
                 break;
             case LoadImageManager.LoadingState.DONE:
                 _mapContentPanel.SetActive(true);
@@ -62,13 +62,13 @@ public class ContainerManager : MonoBehaviour
         }
     }
 
-    public void CreateMessage(string msg, string id, float livetime = -1f)
+    public void CreateMessage(string msg, string id, bool spinnerIcon = false, float livetime = -1f)
     {
         var newMsgObj = GameObject.Instantiate(_messagePrefab, _messagePanel.transform);
         var infoMsg = newMsgObj.GetComponent<InfoMessage>();
         _messages.Add(infoMsg);
         infoMsg.DestroyingMsg += On_DestroyingMsg;
-        infoMsg.Setup(msg, id, livetime);
+        infoMsg.Setup(msg, id, spinnerIcon, livetime);
 
         if (_messages.Count >= 5)
             DestroyMessage(_messages[0].ID);
