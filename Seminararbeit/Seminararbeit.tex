@@ -1,31 +1,34 @@
-\documentclass[a4paper,12pt]{article}			%Die Dokumentenklasse ist "article" mit den Einstellungen, dass das Dokument im DIN A4 Format und mit standardmäßiger Schriftgöße von 12pt erstellt wird.
+\documentclass[a4paper,12pt]{article}
 \usepackage[paper=a4paper,left=35mm,right=25mm,top=25mm,bottom=20mm]{geometry}
-\linespread{1.5}						%Zeilenabstand 
-\usepackage[ngerman]{babel}				%Sprachpaket Deutsch
-\usepackage[utf8]{inputenc}				%für die Darstellung von Umlauten
-\usepackage{amsmath}					%für Matheumgebungen
-\usepackage{amssymb}					%für mathematische Symbole
-\usepackage{tikz}						%für Graphen (und vieles mehr)
-\usepackage{enumitem}					%für Auflistungen
-\usepackage{cite}						%für Zitate
-\usepackage{natbib}						%für den Zitierstil
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{cite}
+\usepackage{natbib}
 \usepackage{graphicx}
 \usepackage{float}
 
+\linespread{1.5}
+
+\addto\captionsngerman{
+  \renewcommand{\contentsname}
+    {INHALTSVERZEICHNIS}
+}
 
 
 \begin{document}
-\parindent0cm 							% verhindert das Einrücken von Absätzen 
+\parindent0cm
 
 %===================================================================================
-%---------------------------- Titelseite -------------------------------------------
+%---------------------------- TITELSEITE -------------------------------------------
 %===================================================================================
 
-% Hier wird die Titelseite gebastelt
-% Zuerst wird die Seite auf empty eingestellt, das heißt sie hat keine Seitenzahl und auch keine Kopf- bzw. Fußzeile
 \thispagestyle{empty}
 
-\begin{center} 							%Der Text wird zentriert.
+\begin{center}
 
 \begin{large} 
 GYMNASIUM OTTOBRUNN	\\
@@ -51,46 +54,46 @@ Aufgabe 1 und 3\par
 \vspace{2cm}
 
 
-\begin{large}							%Der Text wird groß.
-\begin{tabular}{rl}						%Das ist eine Tabelle ohne Trennlinien. Die erste Spalte ist rechts- (r), die zweite linksbündig (l).
-Verfasser:& Jonas Fritsch \\			%"&" heißt "neue Spalte", "\\" heißt "neue Zeile"
+\begin{large}
+\begin{tabular}{rl}
+Verfasser:& Jonas Fritsch \\
 Seminarleiter: & StD Peter Brichzin \\
 Bewertung:  & ......... Punkte  \\
 Unterschrift des Seminarleiters: & ...........................................  \\
 \end{tabular} 
 \end{large}
 
-\end{center}							%Der Text wird nicht mehr zentriert.
+\end{center}
 
 %===================================================================================
-%---------------------------- Inhaltsverzeichnis -----------------------------------
+%---------------------------- INHALTSVERZEICHNIS -----------------------------------
 %===================================================================================				
 
-\newpage 								%Fängt eine neue Seite an.
+\newpage
 
 \thispagestyle{empty}
-\tableofcontents 						%Befehl erzeugt aus den Überschriften automatisch das Inhaltsverzeichnis!
+\tableofcontents	
 
 
-\setcounter{page}{1}					%sagt: Zähl die Seiten erst ab hier!
+\setcounter{page}{2}
 
 %===================================================================================
-%-------------------------------- Einleitung ---------------------------------------
+%-------------------------------- EINLEITUNG ---------------------------------------
 %===================================================================================
 
 \newpage
-\section{Einleitung}
+\section{EINLEITUNG}
 
 
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur lorem, imperdiet dignissim est auctor a. Vivamus convallis, leo et iaculis egestas, nunc massa porttitor tellus, id faucibus urna justo eget massa. Praesent quis feugiat odio. Nullam quis mattis enim. Fusce volutpat odio in enim sodales venenatis. Mauris consequat.
 
 %===================================================================================
-%-------------------------------- Aufgabe 1 ----------------------------------------
+%-------------------------------- AUFGABE 1 ----------------------------------------
 %===================================================================================
 
 \newpage
-\section{Aufgabe 1 - "Die Kunst der Fuge"}
+\section{AUFGABE 1 - "Die Kunst der Fuge"}
 
 
 
@@ -126,11 +129,11 @@ Höhe 6 ausgeben können. Wie hoch werden die Mauern deines Programms für grö�
 \subsection{Quellcode}
 
 %===================================================================================
-%-------------------------------- Aufgabe 3 ----------------------------------------
+%-------------------------------- AUFGABE 3 ----------------------------------------
 %===================================================================================
 
 \newpage
-\section{Aufgabe 3 - "Quo vadis, Quax?"}
+\section{AUFGABE 3 - "Quo vadis, Quax?"}
 
 
 
@@ -153,49 +156,51 @@ Höhe 6 ausgeben können. Wie hoch werden die Mauern deines Programms für grö�
 \subsection{Quellcode}
 
 %===================================================================================
-%---------------------------------- Fazit ------------------------------------------
+%---------------------------------- FAZIT ------------------------------------------
 %===================================================================================
 
 \newpage
-\section{Fazit}
+\section{FAZIT}
 
 
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur lorem, imperdiet dignissim est auctor a. Vivamus convallis, leo et iaculis egestas, nunc massa porttitor tellus, id faucibus urna justo eget massa. Praesent quis feugiat odio. Nullam quis mattis enim. Fusce volutpat odio in enim sodales venenatis. Mauris consequat.
 
 %===================================================================================
-%--------------------------- Abbildungsverzeichnis ---------------------------------
+%--------------------------- ABBILDUNGSVERZEICHNIS ---------------------------------
 %===================================================================================
 
 \newpage
-\section{Abbildungsverzeichnis}
+\section{ABBILDUNGSVERZEICHNIS}
 
 
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur lorem, imperdiet dignissim est auctor a. Vivamus convallis, leo et iaculis egestas, nunc massa porttitor tellus, id faucibus urna justo eget massa. Praesent quis feugiat odio. Nullam quis mattis enim. Fusce volutpat odio in enim sodales venenatis. Mauris consequat.
 
 %===================================================================================
-%--------------------------- Literaturverzeichnis ----------------------------------
+%--------------------------- LITERATURVERZEICHNIS ----------------------------------
 %===================================================================================
 
 \newpage
-\section{Literaturverzeichnis}
+\section{LITERATURVERZEICHNIS}
 
 
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur lorem, imperdiet dignissim est auctor a. Vivamus convallis, leo et iaculis egestas, nunc massa porttitor tellus, id faucibus urna justo eget massa. Praesent quis feugiat odio. Nullam quis mattis enim. Fusce volutpat odio in enim sodales venenatis. Mauris consequat.
 
 %===================================================================================
-%------------------------- Erklärung des Verfassers --------------------------------
+%------------------------- ERKLÄRUNG DES VERFASSERS --------------------------------
 %===================================================================================
 
 \newpage
-\section{Erklärung des Verfassers}
+\section{ERKLÄRUNG DES VERFASSERS}
 
 
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur lorem, imperdiet dignissim est auctor a. Vivamus convallis, leo et iaculis egestas, nunc massa porttitor tellus, id faucibus urna justo eget massa. Praesent quis feugiat odio. Nullam quis mattis enim. Fusce volutpat odio in enim sodales venenatis. Mauris consequat.
 
-
+\begin{figure}[H]
+    \includegraphics[width=\linewidth]{Bilder/Sonstiges/ErklaerungDesVerfassers.png}
+\end{figure}
 
 \end{document}
