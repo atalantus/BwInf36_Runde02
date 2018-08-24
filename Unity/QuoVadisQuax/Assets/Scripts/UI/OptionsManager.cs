@@ -17,6 +17,8 @@ public class OptionsManager : MonoBehaviour
     /// </summary>
     private Vector3 _closedPos;
 
+    private Texture2D _quaxPosOverlayTexture;
+
     [SerializeField] private LoadImageManager _loadImage;
     [SerializeField] private Dropdown _quaxPosDropdown;
     [SerializeField] private GameObject _quaxPosMap;
@@ -50,6 +52,10 @@ public class OptionsManager : MonoBehaviour
             _quaxPosDropdown.options.Add(new Dropdown.OptionData("Quax " + (i + 1)));
         }
 
+        _quaxPosOverlayTexture =
+            new Texture2D(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y, TextureFormat.ARGB32, false) { filterMode = FilterMode.Point };
+        _quaxPosOverlay.GetComponent<RawImage>().texture = _quaxPosOverlayTexture;
+
         _quaxPosDropdown.value = 0;
         SelectQuaxPos(0);
         _quaxPosDropdown.RefreshShownValue();
@@ -64,6 +70,9 @@ public class OptionsManager : MonoBehaviour
         var pos = MapDataManager.Instance.QuaxPositions[index];
         _quaxPosCoordinates[0].text = pos.x.ToString();
         _quaxPosCoordinates[1].text = (MapDataManager.Instance.Dimensions.y - pos.y).ToString();
+        TextureUtil.ClearTexture(_quaxPosOverlayTexture);
+        var radius = Mathf.Min(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y) / 4;
+        //TextureUtil.DrawCircle(ref _quaxPosOverlayTexture, pos.x, pos.y, radius, Color.magenta);
     }
 
     /// <summary>

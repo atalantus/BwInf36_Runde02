@@ -29,7 +29,6 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private Texture2D _overlayTexture;
     private bool _isColoringOverlayPixels;
-    private Color[] _overlayPixels;
     private Thread _clearOverlayTextureThread;
 
     public static readonly string COLORING_OVERLAY_MSG_ID = "coloring_overlay";
@@ -51,14 +50,11 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         _overlayTexture =
             new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, false) { filterMode = FilterMode.Point };
 
-        // Create overlay pixels ( way faster than _overlayTexture.getPixels() )
-        _overlayPixels = new Color[texture.width * texture.height];
         _overlayRawImage.texture = _overlayTexture;
 
         _containerManager.CreateMessage("Coloring overlay texture...", COLORING_OVERLAY_MSG_ID, true);
-        // Color overlay texture's pixels transparent
-        // There can multiple millions of pixels to color --> threading
-        ThreadQueuer.Instance.StartThreadedAction(() => { SetOverlayPixels(ref _overlayPixels, Color.clear); });
+
+        TextureUtil.ClearTexture(_overlayTexture, () => _containerManager.DestroyMessage(COLORING_OVERLAY_MSG_ID));
     }
 
     private void Update()
@@ -125,29 +121,6 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         _maxZoomLevel = z * x * 0.15f;
         // Calculate the minimum zoom level
         _minZoomLevel = z / 3;
-    }
-
-    /// <summary>
-    /// Colors all the pixels with a given color
-    /// </summary>
-    /// <param name="pixels">Pixels to color</param>
-    /// <param name="fillColor">The new color of the pixels</param>
-    private void SetOverlayPixels(ref Color[] pixels, Color fillColor)
-    {
-        Debug.Log(pixels.Length + " pixels to color");
-        for (var i = 0; i < pixels.Length; i++)
-        {
-            pixels[i] = fillColor;
-        }
-
-        Action applyPixels = () =>
-        {
-            _overlayTexture.SetPixels(_overlayPixels);
-            _overlayTexture.Apply();
-            _containerManager.DestroyMessage(COLORING_OVERLAY_MSG_ID);
-        };
-
-        ThreadQueuer.Instance.QueueMainThreadAction(applyPixels);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

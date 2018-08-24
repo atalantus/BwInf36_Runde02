@@ -137,7 +137,7 @@ public class LoadImageManager : MonoBehaviour
             MapTexture.LoadImage(imageData);
 
             // Check if map is valid and search city and quax positions
-            var pixels = MapTexture.GetPixels();
+            var pixels = MapTexture.GetPixels32();
             var width = MapTexture.width;
             ThreadQueuer.Instance.StartThreadedAction(() => { CheckMapPixels(pixels, width); });
 
@@ -146,7 +146,7 @@ public class LoadImageManager : MonoBehaviour
             _filePathText.text = imagePath;
 
             // Update the MapDataManager instance
-            MapDataManager.Instance.Dimensions = new Vector2(MapTexture.width, MapTexture.height);
+            MapDataManager.Instance.Dimensions = new Vector2Int(MapTexture.width, MapTexture.height);
         }
         else
         {
@@ -162,7 +162,7 @@ public class LoadImageManager : MonoBehaviour
     /// </summary>
     /// <param name="pixels">The image pixels starting bottom left</param>
     /// <param name="width">The image width</param>
-    private void CheckMapPixels(Color[] pixels, int width)
+    private void CheckMapPixels(Color32[] pixels, int width)
     {
         var error = false;
         MapDataManager.Instance.QuaxPositions.Clear();
@@ -198,9 +198,8 @@ public class LoadImageManager : MonoBehaviour
     /// <param name="i">The index of the pixel</param>
     /// <param name="width">The width of the image</param>
     /// <returns></returns>
-    private Vector2 IndexToMapPos(int i, int width)
+    private Vector2Int IndexToMapPos(int i, int width)
     {
-        // ReSharper disable once PossibleLossOfFraction
-        return new Vector2(i % width, i / width);
+        return new Vector2Int(i % width, i / width);
     }
 }
