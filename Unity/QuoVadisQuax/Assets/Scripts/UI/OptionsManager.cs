@@ -61,8 +61,9 @@ public class OptionsManager : MonoBehaviour
         _quaxPosDropdown.RefreshShownValue();
 
         _quaxPosMap.GetComponent<RawImage>().texture = _loadImage.MapTexture;
-        var aspectRatio = MapDataManager.Instance.Dimensions.x / MapDataManager.Instance.Dimensions.y;
+        var aspectRatio = MapDataManager.Instance.Dimensions.x / (float) MapDataManager.Instance.Dimensions.y;
         _quaxPosMap.GetComponent<AspectRatioFitter>().aspectRatio = aspectRatio;
+        _quaxPosOverlay.GetComponent<AspectRatioFitter>().aspectRatio = aspectRatio;
     }
 
     public void SelectQuaxPos(int index)
@@ -71,7 +72,7 @@ public class OptionsManager : MonoBehaviour
         _quaxPosCoordinates[0].text = pos.x.ToString();
         _quaxPosCoordinates[1].text = (MapDataManager.Instance.Dimensions.y - pos.y).ToString();
         TextureUtil.ClearTexture(_quaxPosOverlayTexture);
-        var radius = Mathf.Min(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y) / 4;
+        //var radius = Mathf.Min(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y) / 4;
         //TextureUtil.DrawCircle(ref _quaxPosOverlayTexture, pos.x, pos.y, radius, Color.magenta);
     }
 
