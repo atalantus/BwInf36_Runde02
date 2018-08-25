@@ -54,7 +54,7 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         _containerManager.CreateMessage("Coloring overlay texture...", COLORING_OVERLAY_MSG_ID, true);
 
-        TextureUtil.ClearTexture(_overlayTexture, () => _containerManager.DestroyMessage(COLORING_OVERLAY_MSG_ID));
+        _overlayTexture.ClearTexture(() => _containerManager.DestroyMessage(COLORING_OVERLAY_MSG_ID));
     }
 
     private void Update()

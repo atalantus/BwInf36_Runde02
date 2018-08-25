@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,7 +24,7 @@ public class OptionsManager : MonoBehaviour
     [SerializeField] private Dropdown _quaxPosDropdown;
     [SerializeField] private GameObject _quaxPosMap;
     [SerializeField] private GameObject _quaxPosOverlay;
-    [SerializeField] private Text[] _quaxPosCoordinates;
+    [SerializeField] private Text[] _guiCoordinates;
     [SerializeField] private GameObject _toggleIcon;
 
     private void Awake()
@@ -61,19 +62,28 @@ public class OptionsManager : MonoBehaviour
         _quaxPosDropdown.RefreshShownValue();
 
         _quaxPosMap.GetComponent<RawImage>().texture = _loadImage.MapTexture;
-        var aspectRatio = MapDataManager.Instance.Dimensions.x / (float) MapDataManager.Instance.Dimensions.y;
+        var aspectRatio = MapDataManager.Instance.Dimensions.x / (float)MapDataManager.Instance.Dimensions.y;
         _quaxPosMap.GetComponent<AspectRatioFitter>().aspectRatio = aspectRatio;
         _quaxPosOverlay.GetComponent<AspectRatioFitter>().aspectRatio = aspectRatio;
+
+        _guiCoordinates[2].text = MapDataManager.Instance.CityPosition.x.ToString();
+        _guiCoordinates[3].text = (MapDataManager.Instance.Dimensions.y - MapDataManager.Instance.CityPosition.y - 1).ToString();
     }
 
     public void SelectQuaxPos(int index)
     {
         var pos = MapDataManager.Instance.QuaxPositions[index];
-        _quaxPosCoordinates[0].text = pos.x.ToString();
-        _quaxPosCoordinates[1].text = (MapDataManager.Instance.Dimensions.y - pos.y).ToString();
-        TextureUtil.ClearTexture(_quaxPosOverlayTexture);
-        //var radius = Mathf.Min(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y) / 4;
-        //TextureUtil.DrawCircle(ref _quaxPosOverlayTexture, pos.x, pos.y, radius, Color.magenta);
+        _guiCoordinates[0].text = pos.x.ToString();
+        _guiCoordinates[1].text = (MapDataManager.Instance.Dimensions.y - pos.y - 1).ToString();
+
+        Action markQuax = () =>
+        {
+            var size = Mathf.Min(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y) / 5;
+            if (size % 2 == 0) size++;
+            _quaxPosOverlayTexture.DrawSquare(new Vector2Int(pos.x - size / 2, pos.y - size / 2), size, Color.magenta);
+        };
+
+        _quaxPosOverlayTexture.ClearTexture(markQuax);
     }
 
     /// <summary>

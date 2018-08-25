@@ -11,6 +11,8 @@ namespace Crosstales.UI.Util
 
         public Text FPS;
 
+        private float smoothing = 0.5f;
+        private float smoothedTime = 0f;
         private float deltaTime = 0f;
         private float elapsedTime = 0f;
 
@@ -36,8 +38,9 @@ namespace Crosstales.UI.Util
             {
                 if (Time.frameCount % 3 == 0 && FPS != null)
                 {
-                    msec = deltaTime * 1000f;
-                    fps = 1f / deltaTime;
+                    smoothedTime = (smoothedTime * smoothing) + (deltaTime * (1 - smoothing));
+                    msec = smoothedTime * 1000f;
+                    fps = 1f / smoothedTime;
 
                     if (fps < 15)
                     {

@@ -169,23 +169,31 @@ public class LoadImageManager : MonoBehaviour
 
         for (var i = 0; i < pixels.Length; i++)
         {
-            if (pixels[i] == Color.green)
+            var type = pixels[i].GetMapType();
+
+            switch (type)
             {
-                // Stadt
-                MapDataManager.Instance.CityPosition = IndexToMapPos(i, width);
+                case MapTypes.QUAX:
+                    MapDataManager.Instance.QuaxPositions.Add(IndexToMapPos(i, width));
+                    break;
+                case MapTypes.CITY:
+                    MapDataManager.Instance.CityPosition = IndexToMapPos(i, width);
+                    break;
+                case MapTypes.NONE:
+                    Debug.LogError("Unexpected pixel color " + pixels[i] + " in map at " + IndexToMapPos(i, width) + "\nMaybe increase the ColorFilterThreshold!");
+                    error = true;
+                    break;
+                case MapTypes.WATER:
+                    break;
+                case MapTypes.GROUND:
+                    break;
+                case MapTypes.UNKNOWN:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-            else if (pixels[i] == Color.red)
-            {
-                // Quax
-                MapDataManager.Instance.QuaxPositions.Add(IndexToMapPos(i, width));
-            }
-            else if (pixels[i] != Color.black && pixels[i] != Color.white)
-            {
-                // ERROR!
-                Debug.LogError("Unexpected pixel color " + pixels[i] + " in map at " + IndexToMapPos(i, width));
-                error = true;
-                break;
-            }
+
+            if (error) break;
         }
 
         _isMapValid = !error;
