@@ -10,14 +10,14 @@ namespace Pathfinding.Quadtree
         #region Properties
 
         /// <summary>
-        /// The North-West (Top-Left) point of the square
+        /// The South-West (Bottom-Left) point of the square
         /// </summary>
-        public PixelPoint NW_Point { get; private set; }
+        public PixelPoint SW_Point { get; private set; }
 
         /// <summary>
-        /// The South-East (Bottom-Right) point of the square
+        /// The North-East (Top-Right) point of the square
         /// </summary>
-        public PixelPoint SE_Point { get; private set; }
+        public PixelPoint NE_Point { get; private set; }
 
         /// <summary>
         /// The width of the square
@@ -44,27 +44,27 @@ namespace Pathfinding.Quadtree
         /// <summary>
         /// Instantiates a new <see cref="Square"/> object
         /// </summary>
-        /// <param name="nwPoint">The North-West (Top-Left) point</param>
-        /// <param name="sePoint">The South-East (Bottom-Right) point</param>
-        public Square(PixelPoint nwPoint, PixelPoint sePoint)
+        /// <param name="swPoint">The South-West (Bottom-Left) point</param>
+        /// <param name="nePoint">The North-East (Top-Right) point</param>
+        public Square(PixelPoint swPoint, PixelPoint nePoint)
         {
-            NW_Point = nwPoint;
-            SE_Point = sePoint;
-            Width = (int) (SE_Point.X - NW_Point.X);
-            Origin = new PixelPoint(NW_Point.X + Width / 2, NW_Point.Y + Height / 2);
+            SW_Point = swPoint;
+            NE_Point = nePoint;
+            Width = NE_Point.X - SW_Point.X;
+            Origin = new PixelPoint(SW_Point.X + Width / 2, SW_Point.Y + Height / 2);
         }
 
         /// <summary>
         /// Instantiates a new <see cref="Square"/> object
         /// </summary>
-        /// <param name="nwPoint">The North-West (Top-Left) point</param>
+        /// <param name="swPoint">The South-West (Bottom-Left) point</param>
         /// <param name="width">The width of the square</param>
-        public Square(PixelPoint nwPoint, int width)
+        public Square(PixelPoint swPoint, int width)
         {
-            NW_Point = nwPoint;
+            SW_Point = swPoint;
             Width = width;
-            SE_Point = new PixelPoint(NW_Point.X + Width, Mathf.Abs(NW_Point.Y + Height));
-            Origin = new PixelPoint(NW_Point.X + Width / 2, NW_Point.Y + Height / 2);
+            NE_Point = new PixelPoint(SW_Point.X + Width, Mathf.Abs(SW_Point.Y + Height));
+            Origin = new PixelPoint(SW_Point.X + Width / 2, SW_Point.Y + Height / 2);
         }
 
         /// <summary>
@@ -74,8 +74,8 @@ namespace Pathfinding.Quadtree
         /// <returns>True if this Square touches the other <see cref="Square"/></returns>
         public bool TouchesSquare(Square other)
         {
-            return !(other.NW_Point.X > SE_Point.X || other.NW_Point.Y > SE_Point.Y ||
-                     other.SE_Point.X < NW_Point.X || other.SE_Point.Y < NW_Point.Y);
+            return !(other.SW_Point.X > NE_Point.X || other.SW_Point.Y > NE_Point.Y ||
+                     other.NE_Point.X < SW_Point.X || other.NE_Point.Y < SW_Point.Y);
         }
 
         /// <summary>
@@ -85,8 +85,8 @@ namespace Pathfinding.Quadtree
         /// <returns>True if this Square touches the <see cref="PixelPoint"/></returns>
         public bool TouchesPoint(PixelPoint other)
         {
-            return !(other.X > SE_Point.X || other.Y > SE_Point.Y ||
-                     other.X < NW_Point.X || other.Y < NW_Point.Y);
+            return !(other.X > NE_Point.X || other.Y > NE_Point.Y ||
+                     other.X < SW_Point.X || other.Y < SW_Point.Y);
         }
 
         #endregion

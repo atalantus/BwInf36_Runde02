@@ -9,14 +9,21 @@ using UnityEngine.UI;
 /// </summary>
 public class OptionsManager : MonoBehaviour
 {
+    public delegate void StartedAlgorithmEventHandler(Vector2Int quaxPos, Vector2Int cityPos);
+
+    public event StartedAlgorithmEventHandler StartedAlgorithm;
+
     /// <summary>
     /// Is the options panel currently open
     /// </summary>
     public bool IsOpen { get; set; }
+
     /// <summary>
     /// The world position of the option panel when closed
     /// </summary>
     private Vector3 _closedPos;
+
+    private Vector2Int _selectedQuax;
 
     private Texture2D _quaxPosOverlayTexture;
 
@@ -54,7 +61,8 @@ public class OptionsManager : MonoBehaviour
         }
 
         _quaxPosOverlayTexture =
-            new Texture2D(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y, TextureFormat.ARGB32, false) { filterMode = FilterMode.Point };
+            new Texture2D(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y,
+                TextureFormat.ARGB32, false) {filterMode = FilterMode.Point};
         _quaxPosOverlay.GetComponent<RawImage>().texture = _quaxPosOverlayTexture;
 
         _quaxPosDropdown.value = 0;
@@ -62,28 +70,36 @@ public class OptionsManager : MonoBehaviour
         _quaxPosDropdown.RefreshShownValue();
 
         _quaxPosMap.GetComponent<RawImage>().texture = _loadImage.MapTexture;
-        var aspectRatio = MapDataManager.Instance.Dimensions.x / (float)MapDataManager.Instance.Dimensions.y;
+        var aspectRatio = MapDataManager.Instance.Dimensions.x / (float) MapDataManager.Instance.Dimensions.y;
         _quaxPosMap.GetComponent<AspectRatioFitter>().aspectRatio = aspectRatio;
         _quaxPosOverlay.GetComponent<AspectRatioFitter>().aspectRatio = aspectRatio;
 
         _guiCoordinates[2].text = MapDataManager.Instance.CityPosition.x.ToString();
-        _guiCoordinates[3].text = (MapDataManager.Instance.Dimensions.y - MapDataManager.Instance.CityPosition.y - 1).ToString();
+        _guiCoordinates[3].text =
+            (MapDataManager.Instance.Dimensions.y - MapDataManager.Instance.CityPosition.y - 1).ToString();
     }
 
     public void SelectQuaxPos(int index)
     {
-        var pos = MapDataManager.Instance.QuaxPositions[index];
-        _guiCoordinates[0].text = pos.x.ToString();
-        _guiCoordinates[1].text = (MapDataManager.Instance.Dimensions.y - pos.y - 1).ToString();
+        _selectedQuax = MapDataManager.Instance.QuaxPositions[index];
+        _guiCoordinates[0].text = _selectedQuax.x.ToString();
+        _guiCoordinates[1].text = (MapDataManager.Instance.Dimensions.y - _selectedQuax.y - 1).ToString();
 
         Action markQuax = () =>
         {
             var size = Mathf.Min(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y) / 5;
             if (size % 2 == 0) size++;
-            _quaxPosOverlayTexture.DrawSquare(new Vector2Int(pos.x - size / 2, pos.y - size / 2), size, Color.magenta);
+            _quaxPosOverlayTexture.DrawSquare(new Vector2Int(_selectedQuax.x - size / 2, _selectedQuax.y - size / 2),
+                size, Color.magenta);
         };
 
         _quaxPosOverlayTexture.ClearTexture(markQuax);
+    }
+
+    public void StartAlgorithm()
+    {
+        if (StartedAlgorithm != null)
+            StartedAlgorithm.Invoke(_selectedQuax, MapDataManager.Instance.CityPosition);
     }
 
     /// <summary>

@@ -28,10 +28,12 @@ public class LoadImageManager : MonoBehaviour
     }
 
     private IntPtr _hWndUnity;
+
     /// <summary>
     /// Is the LoadImage GUI open
     /// </summary>
     public bool IsOpen { get; private set; }
+
     /// <summary>
     /// The world position when the LoadImage GUI is open
     /// </summary>
@@ -40,10 +42,12 @@ public class LoadImageManager : MonoBehaviour
     [SerializeField] private Text _imageDimensionsText;
     [SerializeField] private Text _filePathText;
     [SerializeField] private GameObject _toggleIcon;
+
     /// <summary>
     /// The map texture
     /// </summary>
     public Texture2D MapTexture { get; private set; }
+
     public event LoadingImageEventHandler UpdatedLoadingState;
     private bool _isCheckingMap;
     private bool _isMapValid;
@@ -126,31 +130,53 @@ public class LoadImageManager : MonoBehaviour
     /// <param name="imagePath">The file path</param>
     private void ProcessImage(string imagePath)
     {
-        if (File.Exists(imagePath))
+        try
         {
-            if (UpdatedLoadingState != null)
-                UpdatedLoadingState.Invoke(LoadingState.LOADING);
+            if (File.Exists(imagePath))
+            {
+                if (UpdatedLoadingState != null)
+                    UpdatedLoadingState.Invoke(LoadingState.LOADING);
 
-            // Create map texture
-            var imageData = File.ReadAllBytes(imagePath);
-            MapTexture = new Texture2D(2, 2) { filterMode = FilterMode.Point };
-            MapTexture.LoadImage(imageData);
+                // Create map texture
+                var imageData = File.ReadAllBytes(imagePath);
+                MapTexture = new Texture2D(2, 2) {filterMode = FilterMode.Point};
+                MapTexture.LoadImage(imageData);
 
-            // Check if map is valid and search city and quax positions
-            var pixels = MapTexture.GetPixels32();
-            var width = MapTexture.width;
-            ThreadQueuer.Instance.StartThreadedAction(() => { CheckMapPixels(pixels, width); });
+                var imgWidth = MapTexture.width;
+                var imgHeight = MapTexture.height;
+                var mapSize = 2;
+                var mapMinSize = Mathf.Max(imgWidth, imgHeight);
 
-            // Set GUI text
-            _imageDimensionsText.text = MapTexture.width + "x" + MapTexture.height;
-            _filePathText.text = imagePath;
+                while (mapSize < mapMinSize)
+                {
+                    mapSize *= 2;
+                }
 
-            // Update the MapDataManager instance
-            MapDataManager.Instance.Dimensions = new Vector2Int(MapTexture.width, MapTexture.height);
+                // Check if map is valid and search city and quax positions
+                var pixels = MapTexture.GetPixels32();
+                // TODO: Adjust quax and city positions to new image size!!!
+                ThreadQueuer.Instance.StartThreadedAction(() => { CheckMapPixels(pixels, imgWidth); });
+
+                // Resize map
+                MapTexture.Resize(mapSize, mapSize);
+                MapTexture.SetPixels32(0, 0, imgWidth, imgHeight, pixels);
+                MapTexture.Apply();
+
+                // Set GUI text
+                _imageDimensionsText.text = MapTexture.width + "x" + MapTexture.height;
+                _filePathText.text = imagePath;
+
+                // Update the MapDataManager instance
+                MapDataManager.Instance.Dimensions = new Vector2Int(MapTexture.width, MapTexture.height);
+            }
+            else
+            {
+                throw new FileNotFoundException("File " + imagePath + " not found!");
+            }
         }
-        else
+        catch (Exception e)
         {
-            Debug.LogError("File " + imagePath + " not found!");
+            Debug.LogError(e.Message);
             if (UpdatedLoadingState != null)
                 UpdatedLoadingState.Invoke(LoadingState.FAILED);
         }
@@ -180,7 +206,8 @@ public class LoadImageManager : MonoBehaviour
                     MapDataManager.Instance.CityPosition = IndexToMapPos(i, width);
                     break;
                 case MapTypes.NONE:
-                    Debug.LogError("Unexpected pixel color " + pixels[i] + " in map at " + IndexToMapPos(i, width) + "\nMaybe increase the ColorFilterThreshold!");
+                    Debug.LogError("Unexpected pixel color " + pixels[i] + " in map at " + IndexToMapPos(i, width) +
+                                   "\nMaybe increase the ColorFilterThreshold!");
                     error = true;
                     break;
                 case MapTypes.WATER:

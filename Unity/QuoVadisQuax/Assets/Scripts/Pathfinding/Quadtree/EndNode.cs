@@ -10,11 +10,11 @@
 		/// <summary>
 		/// Instantiates a new <see cref="EndNode"/> object
 		/// </summary>
-		/// <param name="nwPoint">The North-West (Top-Left) point of the Node`s Square</param>
+		/// <param name="swPoint">The South-West (Bottom-Left) point of the Node`s Square</param>
 		/// <param name="width">The width of the Node`s Square</param>
-		public EndNode(PixelPoint nwPoint, int width)
+		public EndNode(PixelPoint swPoint, int width)
 		{
-			MapSquare = new MapSquare(nwPoint, width);
+			MapSquare = new MapSquare(swPoint, width);
 		}
 		
 		#endregion

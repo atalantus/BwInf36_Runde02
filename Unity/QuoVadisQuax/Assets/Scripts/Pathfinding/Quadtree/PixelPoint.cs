@@ -7,15 +7,13 @@
     {
         /// <summary>
         /// The Y-Coordinate of the Point
-        /// TODO: From where? Bottom? Top?
         /// </summary>
-        public int Y { get; set; }
+        public int Y { get; private set; }
 
         /// <summary>
         /// The X-Coordinate of the Point
-        /// TODO: From where? Left? Right?
         /// </summary>
-        public int X { get; set; }
+        public int X { get; private set; }
 
         /// <summary>
         /// Instantiates a new <see cref="PixelPoint"/> struct object

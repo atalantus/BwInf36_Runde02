@@ -21,9 +21,9 @@ namespace Pathfinding.Quadtree
         /// <summary>
         /// Instantiates a new <see cref="MapSquare"/> object
         /// </summary>
-        /// <param name="nwPoint">The North-West (Top-Left) point of the Node`s Square</param>
+        /// <param name="swPoint">The South-West (Bottom-Left) point of the Node`s Square</param>
         /// <param name="width">The width of the Node`s Square</param>
-        public MapSquare(PixelPoint nwPoint, int width) : base(nwPoint, width)
+        public MapSquare(PixelPoint swPoint, int width) : base(swPoint, width)
         {
         }
 

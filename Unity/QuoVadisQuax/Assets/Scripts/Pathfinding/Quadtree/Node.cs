@@ -21,11 +21,11 @@ namespace Pathfinding.Quadtree
 		/// <summary>
 		/// Instantiates a new <see cref="Node"/> object
 		/// </summary>
-		/// <param name="nwPoint">The North-West (Top-Left) point of the Node`s Square</param>
+		/// <param name="swPoint">The South-West (Bottom-Left) point of the Node`s Square</param>
 		/// <param name="width">The width of the Node`s Square</param>
-		public Node(PixelPoint nwPoint, int width)
+		public Node(PixelPoint swPoint, int width)
 		{
-			MapSquare = new MapSquare(nwPoint, width);
+			MapSquare = new MapSquare(swPoint, width);
 			CalculateChildNodes();
 		}
 
