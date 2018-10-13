@@ -7,7 +7,7 @@
 \usepackage{tikz}
 \usepackage{enumitem}
 \usepackage{cite}
-\usepackage{natbib}
+\usepackage[square,sort,comma,numbers]{natbib}
 \usepackage{graphicx}
 \usepackage{float}
 
@@ -21,6 +21,8 @@
 
 \begin{document}
 \parindent0cm
+\setlength{\abovedisplayskip}{-1cm}
+\setlength{\belowdisplayskip}{0.75cm}
 
 %===================================================================================
 %---------------------------- TITELSEITE -------------------------------------------
@@ -116,7 +118,66 @@ Hilf Ilona, indem du ein Programm schreibst, das nach Eingabe von $n$ eine nach 
 konstruierte, möglichst hohe Mauer ausgibt. Für $n = 10$ sollte dein Programm eine Mauer der
 Höhe 6 ausgeben können. Wie hoch werden die Mauern deines Programms für größere $n$?
 
+\subsection{Auslegung der Aufgabe}
+Die grundlegende Aufgabe ist eine Mauer mit möglichst vielen Reihen, die aus verschieden länglichen Klötzchen bestehen, zu bauen.
+
+Die Längen der Klötzchen in einer Reihe sind durch eine Variable $n$ definiert.
+Die Variable $n$ ($n \in \mathbb{N}$\textbackslash$\{0\}$) definiert dabei die Längen und auch die Gesamtanzahl der Klötzchen pro Reihe.
+Gesamtanzahl heißt bei zum Beispiel $n = 5$, besteht jede Reihe aus 5 einzelnen Klötzchen. 
+Jede Reihe setzt sich zusammen aus einem 1er, einem 2er, einem 3er, einem 4er und einem 5er Klotz.
+\\[0.4cm]
+Der Trick bei der Aufgabe ist nun, dass niemals zwei Fugen \textbf{übereinanderliegen dürfen}.
+Eine Fuge ist die Lücke zwischen zwei Klötzchen (Siehe Abbildung 1).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Bilder/Aufgabe1/Definition_Fuge.png}
+    \caption{Darstellung der 3 Fugen einer Reihe mit 4 Klötzchen}
+\end{figure}
+
 \subsection{Lösungsidee}
+Um die Problemstellung der Aufgabe genauer zu verstehen, bietet es sich erstmal an Mauern für kleinere $n$ auf Papier zu zeichnen.
+Beginnt man mit $n = 1$, fällt auf, dass ganz gleich wie viele Reihen übereinanderliegen, es nie zu einer Fugenüberlappung kommen kann, da eine Reihe mit einem einzelnen Klötzchen keine Fuge besitzt.
+Für $n = 1$ kann also theoretisch eine \textbf{unendlich} hohe Mauer gebaut werden.
+\\[0.4cm]
+Für $n = 2$ ist es auch noch recht einfach eine Mauer zu bauen. Denn es gibt pro Reihe nur 2 Mögliche Reihenfolgen von Klötzchen. Entweder kommt zuerst der 1er oder der 2er Klotz. Eine der zwei Möglichen Lösungen ist in Abbildung 2 zu sehen. Es gibt keine Möglichkeit noch ein Klötzchen mehr zu platzieren, ohne eine Fuge doppelt zu besetzen.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.3\linewidth]{Bilder/Aufgabe1/Loesung_N2.png}
+    \caption{Eine der zwei möglichen Lösungen für $n = 2$. Die roten Striche zeigen an, dass die jeweilige Fuge bereits besetzt ist.}
+\end{figure}
+
+Auch für $n = 3$ gibt es eine Mauer mit einer maximalen Höhe von 2 (Siehe Abbildung 3). Hier wird es jedoch schon komplexer, da es nun für eine Reihe nicht mehr $2! = 2\times1 = 2$ sondern $3! = 3\times2\times1 = 6$ mögliche Klötzchen-Reihenfolgen gibt.
+Außerdem tritt bei $N = 3$ das erste mal auf, dass eine \textbf{mögliche Fugenstelle nicht besetzt wird.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Bilder/Aufgabe1/Loesung_N3.png}
+    \caption{Eine mögliche Lösung für $n = 3$. Zu beachten ist, dass in der Mauer eine \textbf{mögliche} Fugenstelle, dort wo es eine größere Lücke zwischen den zwei letzten besetzten Fugenstellen gibt, \textbf{unbesetzt bleibt.}}
+\end{figure}
+
+Geht man noch weiter und bildet eine Mauer für $n = 4$ ($4! = 24$ mögliche Klötzchen Anordnungen pro Reihe), so kann man erstmals eine Mauer der Höhe 3 bilden (Siehe Abbildung 4). Hier ist auch wieder jede einzelne Fugenstelle besetzt
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Bilder/Aufgabe1/Loesung_N4.png}
+    \caption{Eine mögliche Lösung für $n = 4$}
+\end{figure}
+
+Die Komplexität der Aufgabe steigt mit höheren $n$ stark an. Während man bei $n = 2 2!$ Möglichkeiten pro Reihe und 2 Reihen hatte ($2!\times2 = 4$ unterschiedliche Lösungen), gibt es bei $n = 4$ bereits $4!\times3 = 72$ verschiedene Lösungen.
+Allgemein gibt es also für eine Mauer $n!\times h$ Lösungen, wobei $h$ die Anzahl der übereinanderliegenden Reihen ist.
+\\[0.4cm]
+Es ist logisch, dass zwischen der Anzahl der maximal möglichen Reihen $h$ und der Anzahl der Klötzchen pro Reihe $n$ eine Abhängigkeit existiert.
+\\[0.4cm]
+Allgemein kann man sagen, dass die \textbf{maximale Mauerhöhe} dann erreicht ist, wenn \textbf{nicht} mehr \textbf{genug Fugenstellen in der Mauer frei sind}, um eine \textbf{weitere Reihe zu bilden}.
+
+Somit lässt sich die Formel
+\begin{center}
+\begin{Large}
+\[h = \frac{f_{Mauer}}{f_{Reihe}}\]
+\end{Large}
+\end{center}
+ableiten, wobei $f_{Mauer}$ die maximale Anzahl an Fugen in der Mauer und $f_{Reihe}$ die Anzahl der Fugen, die eine Reihe besetzt, beschreibt.
+
+
+
 
 \subsection{Implementierung}
 
@@ -184,9 +245,16 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur 
 \newpage
 \section{LITERATURVERZEICHNIS}
 
+\begin{thebibliography}{9}
 
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur lorem, imperdiet dignissim est auctor a. Vivamus convallis, leo et iaculis egestas, nunc massa porttitor tellus, id faucibus urna justo eget massa. Praesent quis feugiat odio. Nullam quis mattis enim. Fusce volutpat odio in enim sodales venenatis. Mauris consequat.
+    \bibitem{lamport94}
+      Leslie Lamport,
+      \textit{\LaTeX: a document preparation system},
+      Addison Wesley, Massachusetts,
+      2nd edition,
+      1994.
+    
+\end{thebibliography}
 
 %===================================================================================
 %------------------------- ERKLÄRUNG DES VERFASSERS --------------------------------
