@@ -5,6 +5,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{tikz}
+\usepackage{pgfplots}
 \usepackage{enumitem}
 \usepackage{cite}
 \usepackage[square,sort,comma,numbers]{natbib}
@@ -119,42 +120,45 @@ konstruierte, möglichst hohe Mauer ausgibt. Für $n = 10$ sollte dein Programm 
 Höhe 6 ausgeben können. Wie hoch werden die Mauern deines Programms für größere $n$?
 
 \subsection{Auslegung der Aufgabe}
-Die grundlegende Aufgabe ist eine Mauer mit möglichst vielen Reihen, die aus verschieden länglichen Klötzchen bestehen, zu bauen.
+Die grundlegende Aufgabe ist, eine Mauer mit möglichst vielen Reihen, die aus verschieden länglichen Klötzchen bestehen, zu bauen.
 
 Die Längen der Klötzchen in einer Reihe sind durch eine Variable $n$ definiert.
 Die Variable $n$ ($n \in \mathbb{N}$\textbackslash$\{0\}$) definiert dabei die Längen und auch die Gesamtanzahl der Klötzchen pro Reihe.
-Gesamtanzahl heißt bei zum Beispiel $n = 5$, besteht jede Reihe aus 5 einzelnen Klötzchen. 
-Jede Reihe setzt sich zusammen aus einem 1er, einem 2er, einem 3er, einem 4er und einem 5er Klotz.
+Gesamtanzahl heißt, dass bei zum Beispiel $n = 5$ jede Reihe aus 5 einzelnen Klötzchen besteht. 
+Jede Reihe setzt sich dann aus einem 1er, einem 2er, einem 3er, einem 4er und einem 5er Klotz zusammen.
 \\[0.4cm]
 Der Trick bei der Aufgabe ist nun, dass niemals zwei Fugen \textbf{übereinanderliegen dürfen}.
-Eine Fuge ist die Lücke zwischen zwei Klötzchen (Siehe Abbildung 1).
+Eine Fuge ist die Lücke zwischen zwei Klötzchen (siehe Abbildung 1).
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\linewidth]{Bilder/Aufgabe1/Definition_Fuge.png}
     \caption{Darstellung der 3 Fugen einer Reihe mit 4 Klötzchen}
 \end{figure}
 
+Als Hilfestellung wurde außerdem erwähnt, dass eine Mauer für $n = 10$ eine maximale Höhe von $6$ hat.
+
 \subsection{Lösungsidee}
-Um die Problemstellung der Aufgabe genauer zu verstehen, bietet es sich erstmal an Mauern für kleinere $n$ auf Papier zu zeichnen.
+Um die Problemstellung der Aufgabe genauer zu verstehen, bietet es sich erstmal an, Mauern für kleinere $n$ auf Papier zu zeichnen.
 Beginnt man mit $n = 1$, fällt auf, dass ganz gleich wie viele Reihen übereinanderliegen, es nie zu einer Fugenüberlappung kommen kann, da eine Reihe mit einem einzelnen Klötzchen keine Fuge besitzt.
 Für $n = 1$ kann also theoretisch eine \textbf{unendlich} hohe Mauer gebaut werden.
 \\[0.4cm]
-Für $n = 2$ ist es auch noch recht einfach eine Mauer zu bauen. Denn es gibt pro Reihe nur 2 Mögliche Reihenfolgen von Klötzchen. Entweder kommt zuerst der 1er oder der 2er Klotz. Eine der zwei Möglichen Lösungen ist in Abbildung 2 zu sehen. Es gibt keine Möglichkeit noch ein Klötzchen mehr zu platzieren, ohne eine Fuge doppelt zu besetzen.
+Für $n = 2$ ist es auch noch recht einfach, eine Mauer zu bauen. Denn es gibt pro Reihe nur 2 mögliche Reihenfolgen von Klötzchen. Entweder kommt zuerst der 1er oder der 2er Klotz. 
+Eine der zwei möglichen Lösungen ist in Abbildung 2 zu sehen. Es gibt keine Möglichkeit, noch ein Klötzchen mehr zu platzieren, ohne eine Fuge doppelt zu besetzen.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.3\linewidth]{Bilder/Aufgabe1/Loesung_N2.png}
     \caption{Eine der zwei möglichen Lösungen für $n = 2$. Die roten Striche zeigen an, dass die jeweilige Fuge bereits besetzt ist.}
 \end{figure}
 
-Auch für $n = 3$ gibt es eine Mauer mit einer maximalen Höhe von 2 (Siehe Abbildung 3). Hier wird es jedoch schon komplexer, da es nun für eine Reihe nicht mehr $2! = 2\times1 = 2$ sondern $3! = 3\times2\times1 = 6$ mögliche Klötzchen-Reihenfolgen gibt.
-Außerdem tritt bei $N = 3$ das erste mal auf, dass eine \textbf{mögliche Fugenstelle nicht besetzt wird.}
+Auch für $n = 3$ gibt es eine Mauer mit einer maximalen Höhe von 2 (siehe Abbildung 3). Hier wird es jedoch schon komplexer, da es nun für eine Reihe nicht mehr $2! = 2\times1 = 2$, sondern $3! = 3\times2\times1 = 6$ mögliche Klötzchen-Reihenfolgen gibt.
+Außerdem tritt bei $N = 3$ das erste Mal auf, dass eine \textbf{mögliche Fugenstelle nicht besetzt wird.}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{Bilder/Aufgabe1/Loesung_N3.png}
     \caption{Eine mögliche Lösung für $n = 3$. Zu beachten ist, dass in der Mauer eine \textbf{mögliche} Fugenstelle, dort wo es eine größere Lücke zwischen den zwei letzten besetzten Fugenstellen gibt, \textbf{unbesetzt bleibt.}}
 \end{figure}
 
-Geht man noch weiter und bildet eine Mauer für $n = 4$ ($4! = 24$ mögliche Klötzchen Anordnungen pro Reihe), so kann man erstmals eine Mauer der Höhe 3 bilden (Siehe Abbildung 4). Hier ist auch wieder jede einzelne Fugenstelle besetzt
+Geht man noch weiter und bildet eine Mauer für $n = 4$ ($4! = 24$ mögliche Klötzchen Anordnungen pro Reihe), so kann man erstmals eine Mauer der Höhe 3 bilden (siehe Abbildung 4). Hier ist auch wieder jede einzelne Fugenstelle besetzt.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.7\linewidth]{Bilder/Aufgabe1/Loesung_N4.png}
@@ -175,9 +179,46 @@ Somit lässt sich die Formel
 \end{Large}
 \end{center}
 ableiten, wobei $f_{Mauer}$ die maximale Anzahl an Fugen in der Mauer und $f_{Reihe}$ die Anzahl der Fugen, die eine Reihe besetzt, beschreibt.
+\\[0.4cm]
+Um nun auf $f_{Mauer}$ schließen zu können, braucht man nur die Länge der Mauer. Da jede Reihe der Mauer gleich lang ist, ist die Länge der Mauer gleich der Länge einer Reihe. Die Länge einer Reihe definiert sich wiederum durch die Menge und Breite ihrer Klötzchen. Das heißt also, die Länge einer Reihe/der Mauer ist nach der \textbf{Gaußschen Summenformel}
+% TODO: Quelle für Gaußsche Summenformel
+\begin{center}
+\begin{Large}
+\[1+2...+n = \sum_{k=1}^n k = \frac{n(n+1)}{2}\]
+\end{Large}
+\end{center}
+Um nun aber von der Länge der Mauer auf $f_{Mauer}$ zu kommen, muss man noch $1$ von der Länge der Mauer abziehen. Dies wird offensichtlich, wenn man zu einer Mauer eine Reihe aus lauter 1er Klötzchen bildet (siehe Abbildung 5). Da das Ende des letzten Klötzchens nicht als Fuge gilt, wird von der Länge der Reihe noch $1$ abgezogen.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Bilder/Aufgabe1/Definition_Fugenstellen_Mauer.png}
+    \caption{Eine Mauer der Länge 6 besitzt 5 mögliche Fugenstellen.}
+\end{figure}
 
+Ähnlich lässt sich auch $f_{Reihe}$ berechnen. Um wissen zu wollen, wie viele freie Fugen eine Reihe mit $n$ Klötzchen besetzen wird, zieht man einfach wieder von der Anzahl der Klötzchen pro Reihe ($n$) 1 ab (siehe Abbildung 6).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Bilder/Aufgabe1/Definition_Fugenstellen_Reihe.png}
+    \caption{Eine Reihe bei $n = 3$ besetzt $n-1 = 2$ freie Fugen.}
+\end{figure}
 
+Damit haben wir die fertige Formel für die Anzahl der Reihen $h$ in einer maximal hohen Mauer in Abhängigkeit von $n$.
+\begin{center}
+\begin{Large}
+\[h = \frac{\frac{n\times(n+1)}{2}-1}{n-1} = \frac{n}{2}+1\]
+\end{Large}
+\end{center}
 
+%Der Graph der daraus folgenden Funktion
+%\begin{center}
+%\begin{tikzpicture}
+%\begin{axis}[
+%xlabel=$n$,
+%ylabel=$h$
+%]
+%\addplot {x/2+1};
+%\end{axis}
+%\end{tikzpicture}
+%\end{center}
 
 \subsection{Implementierung}
 
@@ -233,10 +274,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur 
 
 \newpage
 \section{ABBILDUNGSVERZEICHNIS}
-
-
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur lorem, imperdiet dignissim est auctor a. Vivamus convallis, leo et iaculis egestas, nunc massa porttitor tellus, id faucibus urna justo eget massa. Praesent quis feugiat odio. Nullam quis mattis enim. Fusce volutpat odio in enim sodales venenatis. Mauris consequat.
+Alle enthaltenen Abbildungen wurden mithilfe von folgenden Tools selbstständig erstellt:
+\begin{itemize}
+\item Microsoft PowerPoint
+\item Adobe Photoshop CC 2018 
+\end{itemize}
 
 %===================================================================================
 %--------------------------- LITERATURVERZEICHNIS ----------------------------------
@@ -245,16 +287,16 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur 
 \newpage
 \section{LITERATURVERZEICHNIS}
 
-\begin{thebibliography}{9}
-
-    \bibitem{lamport94}
-      Leslie Lamport,
-      \textit{\LaTeX: a document preparation system},
-      Addison Wesley, Massachusetts,
-      2nd edition,
-      1994.
-    
-\end{thebibliography}
+%\begin{thebibliography}{9}
+%
+%    \bibitem{lamport94}
+%      Leslie Lamport,
+%      \textit{\LaTeX: a document preparation system},
+%      Addison Wesley, Massachusetts,
+%      2nd edition,
+%      1994.
+%    
+%\end{thebibliography}
 
 %===================================================================================
 %------------------------- ERKLÄRUNG DES VERFASSERS --------------------------------
