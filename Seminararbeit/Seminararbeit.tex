@@ -138,6 +138,7 @@ Eine Fuge ist die Lücke zwischen zwei Klötzchen (siehe Abbildung 1).
 Als Hilfestellung wurde außerdem erwähnt, dass eine Mauer für $n = 10$ eine maximale Höhe von $6$ hat.
 
 \subsection{Lösungsidee}
+\subsubsection{Verstehen des Problems}
 Um die Problemstellung der Aufgabe genauer zu verstehen, bietet es sich erstmal an, Mauern für kleinere $n$ auf Papier zu zeichnen.
 Beginnt man mit $n = 1$, fällt auf, dass ganz gleich wie viele Reihen übereinanderliegen, es nie zu einer Fugenüberlappung kommen kann, da eine Reihe mit einem einzelnen Klötzchen keine Fuge besitzt.
 Für $n = 1$ kann also theoretisch eine \textbf{unendlich} hohe Mauer gebaut werden.
@@ -201,7 +202,7 @@ Um nun aber von der Länge der Mauer auf $f_{Mauer}$ zu kommen, muss man noch $1
     \caption{Eine Reihe bei $n = 3$ besetzt $n-1 = 2$ freie Fugen.}
 \end{figure}
 
-Damit haben wir die fertige Formel für die Anzahl der Reihen $h$ in einer maximal hohen Mauer in Abhängigkeit von $n$.
+Daraus ergibt sich die fertige Formel für die Anzahl der Reihen $h$ in einer maximal hohen Mauer in Abhängigkeit von $n$.
 \begin{center}
 \begin{Large}
 \[h = \frac{\frac{n\times(n+1)}{2}-1}{n-1} = \frac{n}{2}+1\]
@@ -219,6 +220,53 @@ Damit haben wir die fertige Formel für die Anzahl der Reihen $h$ in einer maxim
 %\end{axis}
 %\end{tikzpicture}
 %\end{center}
+
+% TODO: Ungerades n
+
+%\\[0.4cm]
+Die naivste Lösung für die Aufgabe wäre per Brute-Force so lange Klötzchen aneinanderzureihen und Reihen aufeinanderzustapeln, bis man eine fertige Mauer der maximalen Höhe erreicht hat. Jedoch ist die Laufzeit der Brute-Force Methode mit
+\begin{center}
+\begin{Large}
+\[\mathcal{O}(n!^{\lfloor\frac{n}{2}+1\rfloor})\]
+\end{Large}
+\end{center}
+schlechter als exponentiell.
+\\[0.4cm]
+Für die in der Aufgabenstellung festgelegte Mindestanforderung $n = 10$, gäbe es bereits
+\begin{center}
+\begin{Large}
+\[2.283.380.023.591.730.815.784.976.384.000.000.000.000\]
+\end{Large}
+\end{center}
+\textbf{unterschiedliche Mauerkombinationen} für eine Mauerhöhe von 6.
+\\[0.4cm]
+Nun ist hierbei allerdings zu beachten, dass es durchaus mehrere mögliche unterschiedliche Lösungen geben kann und das bei der Gesamtmenge unterschiedlicher Mauern auch auf die Reihenfolge von Reihen geachtet wird (siehe Abbildung ||||), welche für die Aufgabenstellung keinen Unterschied macht.
+% TODO: Abbildung
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Bilder/Aufgabe1/Mauervarianten_N3.png}
+    \caption{Obwohl beide Mauern aus den selben zwei Reihen bestehen, werden sie als unterschiedliche Mauern angesehen.}
+\end{figure}
+Weiterhin ist zu beachten, dass es für Mauern mit ungeradem $n$ mehr unterschiedliche Lösungen gibt, als für die wieder darauffolgende Mauer mit geradem $n$.
+
+Dies liegt eben daran, dass bei ungeraden $n$ immer mindestens eine Fugenstelle frei bleibt, was zu mehr richtigen Mauervariationen führt.
+\\[0.4cm]
+Trotzdem würde das Finden einer Lösung für $n = 10$, selbst wenn ein Computer nur \textbf{1 Millisekunde} für die Permutation einer \textbf{gesamten Mauer} benötigen würde, die maximal erwartete Algorithmuslaufzeit einer BwInf-Lösung bei weitem überschreiten.
+\\[0.4cm]
+Damit ist eine naive Brute-Force Methode als Lösung ausgeschlossen und es muss nach einem effizienteren Algorithmus gesucht werden.
+
+\subsubsection{Der Algorithmus}
+Grundlegend gibt es zwei unterschiedliche Wege eine Mauer, wie in der Aufgabenstellung zu bauen.
+\\[0.4cm]
+Der offensichtlichere ist die Bauart \textbf{'von unten nach oben'}. Bei dieser Bauart setzt man zuerst die Klötzchen zu einer Reihe zusammen. Hat man eine Reihe fertig, beginnt man mit der zweiten Reihe und so weiter (siehe Abbildung ||||). Man setzt Reihe auf Reihe (von unten nach oben) bis man die Maximalhöhe erreicht hat.
+% TODO: Abbildung
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Definition_Mauerbauart_01.png}
+    \caption{Der Bau einer Mauer nach der 'von unten nach oben' Methode. Es wird Reihe nach Reihe gebaut, bis die maximale Höhe erreicht wurde.}
+\end{figure}
+
+Eine andere Möglichkeit ist, wenn man die Anzahl der Reihen ($h$) für eine Mauer der maximalen Höhe bereits weiß, die Mauer \textbf{'von links nach rechts'} aufzubauen.
 
 \subsection{Implementierung}
 
@@ -277,6 +325,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur 
 Alle enthaltenen Abbildungen wurden mithilfe von folgenden Tools selbstständig erstellt:
 \begin{itemize}
 \item Microsoft PowerPoint
+\item Grafikrechner - GeoGebra
 \item Adobe Photoshop CC 2018 
 \end{itemize}
 
