@@ -1,10 +1,16 @@
-﻿namespace Pathfinding.Quadtree
+﻿namespace Algorithm.Quadtree
 {
 	/// <summary>
 	/// Represents the possible smallest Quadtree Node
 	/// </summary>
-	public class EndNode : SquareNode
+	public class EndNode : NodeElement
 	{
+		#region Properties
+
+		public bool IsIndivisible { get; private set; }
+
+		#endregion
+		
 		#region Methods
 
 		/// <summary>
@@ -12,7 +18,7 @@
 		/// </summary>
 		/// <param name="swPoint">The South-West (Bottom-Left) point of the Node`s Square</param>
 		/// <param name="width">The width of the Node`s Square</param>
-		public EndNode(PixelPoint swPoint, int width)
+		public EndNode(Vector2Int swPoint, int width)
 		{
 			MapSquare = new MapSquare(swPoint, width);
 		}

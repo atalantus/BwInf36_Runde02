@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pathfinding.Quadtree
+namespace Algorithm.Quadtree
 {
     /// <summary>
     /// Represents a square cutout of the map
@@ -12,7 +12,7 @@ namespace Pathfinding.Quadtree
         /// <summary>
         /// The Map Type of the map's cutout
         /// </summary>
-        public MapTypes MapTyp { get; private set; }
+        public MapTypes MapType { get; private set; }
 
         #endregion
 
@@ -23,17 +23,16 @@ namespace Pathfinding.Quadtree
         /// </summary>
         /// <param name="swPoint">The South-West (Bottom-Left) point of the Node`s Square</param>
         /// <param name="width">The width of the Node`s Square</param>
-        public MapSquare(PixelPoint swPoint, int width) : base(swPoint, width)
+        public MapSquare(Vector2Int swPoint, int width) : base(swPoint, width)
         {
         }
 
         /// <summary>
-        /// Get`s the <see cref="MapTyp"/> of the map's cutout
+        /// Get`s the <see cref="MapType"/> of the map's cutout
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
         public void GetMapTyp()
         {
-            // TODO: Get Map type
             throw new NotImplementedException();
         }
 

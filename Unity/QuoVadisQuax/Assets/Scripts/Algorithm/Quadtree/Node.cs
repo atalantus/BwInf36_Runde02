@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace Pathfinding.Quadtree
+namespace Algorithm.Quadtree
 {
 	/// <summary>
 	/// Represents a Quadtree Node
 	/// </summary>
-	public class Node : SquareNode
+	public class Node : NodeElement
 	{
 		#region Properties
 		
@@ -23,7 +23,7 @@ namespace Pathfinding.Quadtree
 		/// </summary>
 		/// <param name="swPoint">The South-West (Bottom-Left) point of the Node`s Square</param>
 		/// <param name="width">The width of the Node`s Square</param>
-		public Node(PixelPoint swPoint, int width)
+		public Node(Vector2Int swPoint, int width)
 		{
 			MapSquare = new MapSquare(swPoint, width);
 			CalculateChildNodes();
@@ -35,7 +35,6 @@ namespace Pathfinding.Quadtree
 		/// <exception cref="NotImplementedException"></exception>
 		private void CalculateChildNodes()
 		{
-			// TODO: Calculate Child Nodes
 			throw new NotImplementedException();
 		}
 

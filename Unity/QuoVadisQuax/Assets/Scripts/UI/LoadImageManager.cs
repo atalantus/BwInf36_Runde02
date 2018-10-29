@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using Algorithm.Quadtree;
 using Crosstales.FB;
 using UnityEngine;
 using UnityEngine.UI;
@@ -144,17 +145,10 @@ public class LoadImageManager : MonoBehaviour
 
                 var imgWidth = MapTexture.width;
                 var imgHeight = MapTexture.height;
-                var mapSize = 2;
-                var mapMinSize = Mathf.Max(imgWidth, imgHeight);
-
-                while (mapSize < mapMinSize)
-                {
-                    mapSize *= 2;
-                }
+                var mapSize = Mathf.Max(imgWidth, imgHeight);
 
                 // Check if map is valid and search city and quax positions
                 var pixels = MapTexture.GetPixels32();
-                // TODO: Adjust quax and city positions to new image size!!!
                 ThreadQueuer.Instance.StartThreadedAction(() => { CheckMapPixels(pixels, imgWidth); });
 
                 // Resize map

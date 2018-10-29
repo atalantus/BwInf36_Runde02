@@ -4,7 +4,7 @@ using UnityEngine.UI;
 namespace Crosstales.UI.Util
 {
     /// <summary>Changes the sensitivity of ScrollRects under various platforms.</summary>
-    //[HelpURL("https://www.crosstales.com/media/data/assets/radio/api/class_crosstales_1_1_radio_1_1_demo_1_1_util_1_1_scroll_rect_handler.html")] //TODO update URL
+    //[HelpURL("https://www.crosstales.com/media/data/assets/radio/api/class_crosstales_1_1_radio_1_1_demo_1_1_util_1_1_scroll_rect_handler.html")]
     public class ScrollRectHandler : MonoBehaviour
     {
 
