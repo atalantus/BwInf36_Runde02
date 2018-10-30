@@ -6,16 +6,54 @@ namespace Algorithm.Pathfinding
 {
     public class PathfindingManager : MonoBehaviour
     {
-        [SerializeField] private QuadtreeManager _quadtreeManager;
+        #region Properties
+        
+        public delegate void RequestMapTileEventHandler(Vector2Int tilePos);
 
-        private void Start()
+        public event RequestMapTileEventHandler RequestedMapTile;
+
+        public Grid PresetGrid;
+        private Node startNode, targetNode;
+        private Vector2Int startPos, targetPos;
+        private bool createdGrid;
+        
+        #endregion
+
+        #region Methods
+
+        public void SetupPathfinding(Vector2Int start, Vector2Int goal)
         {
-            _quadtreeManager.GeneratedQuadtree += FindPath;
+            Debug.Log("PathfindingManager - SetupPathfinding");
+            startPos = start;
+            targetPos = goal;
+            ThreadQueuer.Instance.StartThreadedAction(() => {PresetGrid.CreateGrid(ref createdGrid);});
         }
 
-        public void FindPath(Vector2Int quaxPos, Vector2Int cityPos)
+        private void Update()
+        {
+            if (createdGrid)
+            {
+                Debug.Log("PathfindingManager - Update - createdGrid");
+                startNode = PresetGrid.NodeGrid[startPos.x, startPos.y];
+                targetNode = PresetGrid.NodeGrid[targetPos.x, targetPos.y];
+                
+                Debug.Log(startNode);
+                Debug.Log(targetNode);
+
+                createdGrid = false;
+            }
+        }
+
+        public void FindPath()
         {
             
         }
+
+        public void StartPathSearch(bool canWalkUnknown)
+        {
+            
+        }
+
+        #endregion
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using Algorithm.Pathfinding;
 using Algorithm.Quadtree;
 using Crosstales.FB;
 using UnityEngine;
@@ -40,6 +41,7 @@ public class LoadImageManager : MonoBehaviour
     /// </summary>
     private Vector3 _openPos;
 
+    [SerializeField] private PathfindingManager _pathfindingManager;
     [SerializeField] private Text _imageDimensionsText;
     [SerializeField] private Text _filePathText;
     [SerializeField] private GameObject _toggleIcon;
@@ -85,6 +87,7 @@ public class LoadImageManager : MonoBehaviour
             }
 
             _isProcessingImg = false;
+            
             _isMapValid = false;
         }
     }
@@ -145,10 +148,12 @@ public class LoadImageManager : MonoBehaviour
 
                 var imgWidth = MapTexture.width;
                 var imgHeight = MapTexture.height;
+                if (imgHeight > imgWidth) throw new Exception("Flip image (width must be larger or same as height)");
                 var mapSize = Mathf.Max(imgWidth, imgHeight);
 
                 // Check if map is valid and search city and quax positions
                 var pixels = MapTexture.GetPixels32();
+                _pathfindingManager.PresetGrid = new Algorithm.Pathfinding.Grid(imgWidth,imgHeight);
                 ThreadQueuer.Instance.StartThreadedAction(() => { CheckMapPixels(pixels, imgWidth); });
 
                 // Resize map
@@ -157,7 +162,7 @@ public class LoadImageManager : MonoBehaviour
                 MapTexture.Apply();
 
                 // Set GUI text
-                _imageDimensionsText.text = MapTexture.width + "x" + MapTexture.height;
+                _imageDimensionsText.text = imgWidth + "x" + imgHeight;
                 _filePathText.text = imagePath;
 
                 // Update the MapDataManager instance
