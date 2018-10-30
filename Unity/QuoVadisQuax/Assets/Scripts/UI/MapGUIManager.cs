@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using Algorithm;
+using Algorithm.Pathfinding;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,9 +20,13 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     /// This gets moved and scaled for user interaction
     /// </summary>
     [SerializeField] private RectTransform _mapContainer;
+
     [SerializeField] private RawImage _mapRawImage;
     [SerializeField] private RawImage _overlayRawImage;
     [SerializeField] private ContainerManager _containerManager;
+    [SerializeField] private PathfindingManager _pathfindingManager;
+    [SerializeField] private OptionsManager _optionsManager;
+    [SerializeField] private AlgorithmManager _algorithmManager;
 
     private bool _hasFocus;
     private float _defaultZoomLevel;
@@ -32,6 +38,42 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private Thread _clearOverlayTextureThread;
 
     public static readonly string COLORING_OVERLAY_MSG_ID = "coloring_overlay";
+
+    private void Start()
+    {
+        _optionsManager.StartedAlgorithm += SetUpOverlayTexture;
+        _pathfindingManager.FinishedPathfinding += ColorPath;
+    }
+
+    private void ColorPath(List<Node> path, bool foundPath)
+    {
+        Debug.Log("MapGUIManager - ColorPath");
+
+        if (foundPath)
+        {
+            foreach (var node in path)
+            {
+                Debug.Log(node.Position);
+                int posX, posY;
+                posX = node.Position.x;
+                posY = node.Position.y;
+
+                ThreadQueuer.Instance.QueueMainThreadAction(() =>
+                {
+                    _overlayTexture.SetPixel(posX, posY, Color.magenta);
+                });
+            }
+        }
+
+        ThreadQueuer.Instance.QueueMainThreadAction(() => {_overlayTexture.Apply();});
+        
+        Debug.Log("Colored Path");
+    }
+
+    void SetUpOverlayTexture(Vector2Int quaxPos, Vector2Int cityPos)
+    {
+        _overlayTexture.ClearTexture(() => _algorithmManager.SetupAlgorithm(quaxPos, cityPos));
+    }
 
     /// <summary>
     /// Sets up the map-container, the map and the overlay object
@@ -48,7 +90,7 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         // Create overlay texture
         _overlayTexture =
-            new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, false) { filterMode = FilterMode.Point };
+            new Texture2D(texture.width, texture.height, TextureFormat.ARGB32, false) {filterMode = FilterMode.Point};
 
         _overlayRawImage.texture = _overlayTexture;
 

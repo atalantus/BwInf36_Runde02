@@ -30,6 +30,8 @@ namespace Algorithm.Pathfinding
         }
         
         public List<Node> GetNeighbours(Node node) {
+            Debug.Log("Grid - GetNeighbours");
+            
             List<Node> neighbours = new List<Node>();
 
             for (int x = -1; x <= 1; x++) {

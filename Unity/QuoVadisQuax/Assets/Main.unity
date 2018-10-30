@@ -1167,6 +1167,9 @@ MonoBehaviour:
   _mapRawImage: {fileID: 2088025514}
   _overlayRawImage: {fileID: 497227767}
   _containerManager: {fileID: 2096904372}
+  _pathfindingManager: {fileID: 1086849736}
+  _optionsManager: {fileID: 1521842672}
+  _algorithmManager: {fileID: 1086849737}
 --- !u!114 &631124978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2336,6 +2339,7 @@ MonoBehaviour:
   _optionsManager: {fileID: 1521842672}
   _pathfindingManager: {fileID: 1086849736}
   _quadtreeManager: {fileID: 1086849735}
+  _containerManager: {fileID: 2096904372}
 --- !u!4 &1086849738
 Transform:
   m_ObjectHideFlags: 0
