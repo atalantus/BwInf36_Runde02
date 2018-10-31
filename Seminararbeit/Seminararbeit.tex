@@ -147,7 +147,7 @@ Beginnt man mit $n = 1$, fällt auf, dass ganz gleich wie viele Reihen übereina
 Für $n = 1$ kann also theoretisch eine \textbf{unendlich} hohe Mauer gebaut werden.
 \\[0.4cm]
 Für $n = 2$ ist es auch noch recht einfach, eine Mauer zu bauen. Denn es gibt pro Reihe nur 2 mögliche Reihenfolgen von Klötzchen. Entweder kommt zuerst der 1er oder der 2er Klotz. 
-Eine der zwei möglichen Lösungen ist in Abbildung 2 zu sehen. Es gibt keine Möglichkeit, noch ein Klötzchen in einer neuen dritten Reihe mehr zu platzieren, ohne eine Fuge doppelt zu besetzen.
+Eine der zwei möglichen Lösungen ist in Abbildung 2 zu sehen. Es gibt keine Möglichkeit, noch ein Klötzchen in einer neuen dritten Reihe zu platzieren, ohne eine Fuge doppelt zu besetzen.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.3\linewidth]{Bilder/Aufgabe1/Loesung_N2.png}
@@ -169,7 +169,7 @@ Geht man noch weiter und bildet eine Mauer für $n = 4$ ($4! = 24$ mögliche Kl�
     \caption{Eine mögliche Lösung für $n = 4$}
 \end{figure}
 
-Die Komplexität der Aufgabe steigt mit höheren $n$ stark an. Während man bei $n = 2 2!$ Möglichkeiten pro Reihe und 2 Reihen hatte ($2!\times2 = 4$ unterschiedliche Lösungen), gibt es bei $n = 4$ bereits $4!\times3 = 72$ verschiedene Lösungen.
+Die Komplexität der Aufgabe steigt mit höheren $n$ stark an. Während man bei $n = 2$ $2!$ Möglichkeiten pro Reihe und 2 Reihen hatte ($2!\times2 = 4$ unterschiedliche Mauern), gibt es bei $n = 4$ bereits $4!\times3 = 72$ verschiedene Mauern.
 Allgemein gibt es also für eine Mauer $n!\times h$ Lösungen, wobei $h$ die Anzahl der übereinanderliegenden Reihen ist.
 \\[0.4cm]
 Es ist logisch, dass zwischen der Anzahl der maximal möglichen Reihen $h$ und der Anzahl der Klötzchen pro Reihe $n$ eine Abhängigkeit existiert.
@@ -198,7 +198,7 @@ Um nun aber von der Länge der Mauer auf $f_{Mauer}$ zu kommen, muss man noch $1
     \caption{Eine Mauer der Länge 6 besitzt 5 mögliche Fugenstellen.}
 \end{figure}
 
-Ähnlich lässt sich auch $f_{Reihe}$ berechnen. Um wissen zu wollen, wie viele freie Fugen eine Reihe mit $n$ Klötzchen besetzen wird, zieht man einfach wieder von der Anzahl der Klötzchen pro Reihe ($n$) 1 ab (siehe Abbildung 6).
+Ähnlich lässt sich auch $f_{Reihe}$ berechnen. Um wissen zu wollen, wie viele freie Fugen eine Reihe mit $n$ Klötzchen besetzen wird, zieht man einfach wieder 1 von der Anzahl der Klötzchen pro Reihe ($n$) ab (siehe Abbildung 6).
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{Bilder/Aufgabe1/Definition_Fugenstellen_Reihe.png}
@@ -212,38 +212,56 @@ Daraus ergibt sich die fertige Formel für die Anzahl der Reihen $h$ in einer ma
 \end{Large}
 \end{center}
 
-%Der Graph der daraus folgenden Funktion
-%\begin{center}
-%\begin{tikzpicture}
-%\begin{axis}[
-%xlabel=$n$,
-%ylabel=$h$
-%]
-%\addplot {x/2+1};
-%\end{axis}
-%\end{tikzpicture}
-%\end{center}
-
-% TODO: Ungerades n
-
-%\\[0.4cm]
-Die naivste Lösung für die Aufgabe wäre per Brute-Force so lange Klötzchen aneinanderzureihen und Reihen aufeinanderzustapeln, bis man eine fertige Mauer der maximalen Höhe erreicht hat. Jedoch ist die Laufzeit der Brute-Force Methode mit
+Der Graph der daraus folgenden Funktion $h(n) = \frac{n}{2}+1$ verläuft dabei linear (siehe Abbildung 7).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{Bilder/Aufgabe1/Graph_01.png}
+    \caption{Graph der linearen Funktion $h(n) = \frac{n}{2}+1$}
+\end{figure}
+Setzt man nun für $n = 10$ ein, kommt der Funktionswert $6$ raus der mit der in der Aufgabenstellung angegebenen Höhe für eine Mauer von $n = 10$ übereinstimmt.
+Testet man allerdings die maximale Mauerhöhe für zum Beispiel $n = 3$, so kommt als Wert ungefähr $2,5$ raus. Dies macht allerdings keinen Sinn, da die fertige Mauer nur aus vollen Reihen bestehen muss und keine halbfertige Mauer besitzen kann.
+\\[0.4cm]
+Diese Komma-Werte kommen bei allen ungeraden $n$ vor. Der Zusammenhang ist dabei, das wie beim vorherigen Beispiel $n = 3$ (siehe Abbildung 3) eine Fuge unbesetzt bleibt. Diese Fuge kann zwar mit einem weiteren Klotz besetzt werden, die Reihe könnte aber nicht mehr vollständig gebaut werden.
+Da unsere Mauerhöhe also eine Natürliche Zahl sein muss, umgeben wir den Funktionsterm noch mit Abrundungsklammern:
 \begin{center}
 \begin{Large}
-\[\mathcal{O}(n!^{\lfloor\frac{n}{2}+1\rfloor})\]
+\[h(n) = \lfloor\frac{n}{2}+1\rfloor\]
 \end{Large}
 \end{center}
-schlechter als exponentiell.
+Der daraus resultierende Graph ist in Abbildung 8 zu sehen.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.95\linewidth]{Bilder/Aufgabe1/Graph_02.png}
+    \caption{Graph der Funktion $h(n) = \lfloor\frac{n}{2}+1\rfloor$}
+\end{figure}
+Somit gibt uns die Funktion $h(n)$ mit der Definitionsmenge $\mathbb{D}_{h} = \mathbb{N}$\textbackslash$\{0;1\}$ und der Wertemenge $\mathbb{W}_{h} = \mathbb{N}$\textbackslash$\{0\}$ die jeweilige maximale Mauerhöhe ($h$) in Abhängigkeit von $n$ an. Wobei in der Definitionsmenge auch $1$ ausgeschlossen ist, weil für $n = 1$ aus logischer Sicht eine unendlich hohe Mauer und nicht nur eine Mauer der Höhe 1 gebildet werden kann.
+\\[0.4cm]
+Die naivste Lösung für die Aufgabe wäre per Brute-Force so lange Klötzchen aneinanderzureihen und Reihen aufeinanderzustapeln, bis man eine fertige Mauer der maximalen Höhe erreicht hat.
 \\[0.4cm]
 Für die in der Aufgabenstellung festgelegte Mindestanforderung $n = 10$, gäbe es bereits
 \begin{center}
 \begin{Large}
-\[2.283.380.023.591.730.815.784.976.384.000.000.000.000\]
+\[f(10) = 10!^6\approx2,28\mathrm{e}{+39}\]
 \end{Large}
 \end{center}
-\textbf{unterschiedliche Mauerkombinationen} für eine Mauerhöhe von 6.
+\textbf{unterschiedliche Mauerkombinationen} bei der maximalen Mauerhöhe von 6.
+Der Graph der allgemeinen Formel
+\begin{center}
+\begin{Large}
+\[f(n) = n!^{\lfloor\frac{n}{2}+1\rfloor}\]
+\end{Large}
+\end{center}
+ist in Abbildung 9 zu sehen.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{Bilder/Aufgabe1/Graph_03.png}
+    \caption{Der grüne Graph zeigt die extreme Steigung der Funktion 
+        $f(n) = n!^{\lfloor\frac{n}{2}+1\rfloor}$. Zum Vergleich der orangen-farbige Graph der Funktion $g(x) = 100^{x}$.}
+\end{figure}
+Die Anzahl der verschiedenen möglichen Mauern für $n$ steigt somit mehr als 
+\textbf{exponentiell}.
 \\[0.4cm]
-Nun ist hierbei allerdings zu beachten, dass es durchaus mehrere mögliche unterschiedliche Lösungen geben kann und das bei der Gesamtmenge unterschiedlicher Mauern auch auf die Reihenfolge von Reihen geachtet wird (siehe Abbildung ||||), welche für die Aufgabenstellung keinen Unterschied macht.
+Nun ist hierbei zwar zu beachten, dass es durchaus mehrere mögliche unterschiedliche Lösungen geben kann und das bei der Gesamtmenge unterschiedlicher Mauern auch auf die Reihenfolge von Reihen geachtet wird (siehe Abbildung 10), welche für die Aufgabenstellung keinen Unterschied macht.
 % TODO: Abbildung
 \begin{figure}[H]
     \centering
@@ -252,7 +270,7 @@ Nun ist hierbei allerdings zu beachten, dass es durchaus mehrere mögliche unter
 \end{figure}
 Weiterhin ist zu beachten, dass es für Mauern mit ungeradem $n$ mehr unterschiedliche Lösungen gibt, als für die wieder darauffolgende Mauer mit geradem $n$.
 
-Dies liegt eben daran, dass bei ungeraden $n$ immer mindestens eine Fugenstelle frei bleibt, was zu mehr richtigen Mauervariationen führt.
+Dies liegt eben daran, dass bei ungeraden $n$ immer mindestens eine Fugenstelle frei bleibt, was wiederum zu mehr richtigen Mauervariationen führt.
 \\[0.4cm]
 Trotzdem würde das Finden einer Lösung für $n = 10$, selbst wenn ein Computer nur \textbf{1 Millisekunde} für die Permutation einer \textbf{gesamten Mauer} benötigen würde, die maximal erwartete Algorithmuslaufzeit einer BwInf-Lösung bei weitem überschreiten.
 \\[0.4cm]
@@ -261,7 +279,7 @@ Damit ist eine naive Brute-Force Methode als Lösung ausgeschlossen und es muss 
 \subsubsection{Der Algorithmus}
 Grundlegend gibt es zwei unterschiedliche Wege eine Mauer, wie in der Aufgabenstellung zu bauen.
 \\[0.4cm]
-Der offensichtlichere ist die Bauart \textbf{'von unten nach oben'}. Bei dieser Bauart setzt man zuerst die Klötzchen zu einer Reihe zusammen. Hat man eine Reihe fertig, beginnt man mit der zweiten Reihe und so weiter (siehe Abbildung ||||). Man setzt Reihe auf Reihe (von unten nach oben) bis man die Maximalhöhe erreicht hat.
+Der offensichtlichere ist die Bauart \textbf{'von unten nach oben'}. Bei dieser Bauart setzt man zuerst die Klötzchen zu einer Reihe zusammen. Hat man eine Reihe fertig, beginnt man mit der zweiten Reihe und so weiter (siehe Abbildung 11). Man setzt Reihe auf Reihe (von unten nach oben) bis man die Maximalhöhe erreicht hat.
 % TODO: Abbildung
 \begin{figure}[H]
     \centering
