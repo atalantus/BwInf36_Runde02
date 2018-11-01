@@ -262,7 +262,6 @@ Die Anzahl der verschiedenen möglichen Mauern für $n$ steigt somit mehr als
 \textbf{exponentiell}.
 \\[0.4cm]
 Nun ist hierbei zwar zu beachten, dass es durchaus mehrere mögliche unterschiedliche Lösungen geben kann und das bei der Gesamtmenge unterschiedlicher Mauern auch auf die Reihenfolge von Reihen geachtet wird (siehe Abbildung 10), welche für die Aufgabenstellung keinen Unterschied macht.
-% TODO: Abbildung
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\linewidth]{Bilder/Aufgabe1/Mauervarianten_N3.png}
@@ -296,9 +295,49 @@ Man kann die Aufgabe auch so formulieren, dass das \textbf{Ziel ist, möglichst 
 
 Diese \textbf{'von links nach rechts'} Bauart ist dadurch möglich geworden, dass man schon im vornherein die Anzahl an Reihen weiß, die für eine maximale Mauer benötigt wird.
 
-% TODO: Immer kleinste RowSum bevorzugen
-% TODO: Präsentation Folie 23
+Aber auch bei dieser Bauart bleibt die Frage, was passiert, wenn mehr als ein Klotz die nächste Fuge füllen kann. Dies passiert nämlich bei fast jeder Fuge (siehe Abbildung 13).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.35\linewidth]{Bilder/Aufgabe1/Problem_Mauerbauart_02_Mehrere_Kloetze.png}
+    \caption{Zum Besetzen der dritten Fuge (orange markiert) bei $n = 4$ kann entweder ein 3er Klötzchen in einer neuen Reihe, oder ein 2er Klötzchen in der untersten Reihe platziert werden.}
+\end{figure}
 
+Wählt man ein zufälliges Klötzchen aus, so kann es schnell dazu kommen, dass eine Reihe soweit in 'Rückstand' gerät, dass kein möglicher Klotz mehr lang genug wäre, um die Reihe fortzuführen (siehe Abbildung 14).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Bilder/Aufgabe1/Problem_Mauerbauart_02_RowSum.png}
+    \caption{In der dargestellten Mauer für $n = 4$, gibt es für die \textbf{unterste Reihe keine Möglichkeit mehr ein Klötzchen zu platzieren}. Da die obereren Reihen alle Fugen schon besetzt haben und die nächste freie Fuge \textbf{6 Längen} von der untersten Reihe entfernt ist, würde diese Reihe ein \textbf{6er Klötzchen} benötigen. Bei $n = 4$ gibt es jedoch maximal \textbf{4er Klötzchen}.}
+\end{figure}
+Es ist also wichtig immer darauf zu achten, dass die kürzeste Reihe nicht den Anschluss verliert.
+\\[0.4cm]
+Die Lösung für dieses Problem ist bei dem Fall, dass wenn verschiedene Klötzchen mehrerer Reihen eine Fuge befüllen können, immer die \textbf{kürzeste Reihe zu bevorzugen}.
+\\[0.4cm]
+Mit diesem Algorithmus kommt man bis zu $n = 8$. Dort tritt ein weiteres Problem auf (siehe Abbildung 15).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Problem_Mauerbauart_02_Kein_Klotz.png}
+    \caption{Bei $n = 8$ tritt das Problem auf, dass die \textbf{29 Fuge} (rot markiert), durch \textbf{kein einziges, mögliches Klötzchen besetzt werden kann}. Da $n$ jedoch eine \textbf{gerade Zahl} ist, wissen wir, dass für eine Mauer der maximalen Höhe \textbf{alle Fugen besetzt werden müssen}. Das untere Bild zeigt nochmal den hinteren Ausschnitt der Mauer mit allen noch möglichen Klötzchen für jede Reihe an. Keines davon würde die nächste Lücke füllen.}
+\end{figure}
+%TODO: Quelle für Backtracking
+Um dennoch eine Lösung zu bekommen, wird \textbf{Backtracking} verwendet. Backtracking erlaubt es, \textbf{zur letzten Entscheidung zurückzugehen} und eben \textbf{eine andere} zu \textbf{treffen}. Mit "Entscheidung" ist die Wahl eines Klötzchens um eine freie Fuge zu besetzen, wenn es mehrere Möglichkeiten gäbe gemeint (siehe Abbildung 16).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Backtracking_01.png}
+    \caption{Bei einer Mauer von $n = 4$ tritt das vorher schon besprochene Problem auf, dass es zwei mögliche Klötzchen gibt, die die \textbf{3 Fuge} besetzen können. Der Baum auf der linken Seite veranschaulicht die möglichen Klötzchen pro Fuge. Die \textbf{Tiefe des Baumes} entspricht dabei einer \textbf{jeweiligen Fugenposition} und die \textbf{Knoten dieser Tiefe} stehen für die \textbf{möglichen Klötzchen}.}
+\end{figure}
+Wählen wir nun das Klötzchen der kürzesten Reihe (das 3er Klötzchen in der obersten, neuen Reihe) und \textbf{gehen davon aus, dass die 4te Fuge nun nicht mehr gefüllt werden kann} (siehe Abbildung 17),
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Backtracking_02.png}
+    \caption{Angenommen nach der Entscheidung vom einsetzen des 3er Klötzchens, kann die 4te freie Fuge nicht besetzt werden. Theoretisch könnte in der untersten Reihe ein 3er Klotz die 4te Fuge füllen. Zur Vereinfachung der Darstellung wird dies jedoch außer Acht gelassen.}
+\end{figure}
+so gehen wir \textbf{einen Schritt zurück, zu unserer letzten Entscheidung} und \textbf{wählen dort das andere Klötzchen} (siehe Abbildung 18).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Backtracking_03_04.png}
+    % TODO: Quelle für Trial and error Prinzip
+    \caption{Nach dem "Trial and error" Prinzip wird beim Backtracking zur letzten Entscheidung zurückgegangen (oberes Bild) und ein anderes Klötzchen ausgewählt (unteres Bild). Dann wird mit dem Algorithmus fortgefahren.}
+\end{figure}
 \subsection{Implementierung}
 
 \subsection{Optimierungsmöglichkeiten}
