@@ -23,6 +23,7 @@ public class MapDataManager : MonoBehaviour
     public Vector2Int Dimensions { get; set; }
     public List<Vector2Int> QuaxPositions { get; set; }
     public Vector2Int CityPosition { get; set; }
+    public Texture2D MapTexture { get; set; }
 
     private void Awake()
     {

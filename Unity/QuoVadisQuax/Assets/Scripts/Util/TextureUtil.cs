@@ -110,4 +110,11 @@ public static class TextureUtil
 
         return colors;
     }
+
+    public static Color32 ToColor32(this Color color)
+    {
+        var color32 = new Color32[1];
+        color32[0] = color;
+        return color32[0];
+    }
 }

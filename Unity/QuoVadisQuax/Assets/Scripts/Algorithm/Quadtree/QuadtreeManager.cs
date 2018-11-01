@@ -1,3 +1,4 @@
+using Algorithm.Pathfinding;
 using UnityEngine;
 
 namespace Algorithm.Quadtree
@@ -6,8 +7,19 @@ namespace Algorithm.Quadtree
     {
         #region Properties
         
-        public delegate void UpdatedQuadtreeEventHandler(NodeElement[] updatedNodes);
-        public delegate void CreatedNodeEventHandler(NodeElement node);
+        private static QuadtreeManager _instance;
+        /// <summary>
+        /// The Singleton Instance
+        /// </summary>
+        public static QuadtreeManager Instance
+        {
+            get { return _instance; }
+        }
+
+        [SerializeField] private OptionsManager _optionsManager;
+        
+        public delegate void UpdatedQuadtreeEventHandler(NodeElement updatedNode);
+        public delegate void CreatedNodeEventHandler(MapSquare mapSquare);
 
         public event UpdatedQuadtreeEventHandler UpdatedQuadtree;
         public event CreatedNodeEventHandler CreatedNode;
@@ -18,7 +30,35 @@ namespace Algorithm.Quadtree
 
         #region Methods
 
-        
+        private void Awake()
+        {
+            if (_instance == null)
+                _instance = this;
+            else if (_instance != this)
+                Destroy(gameObject);
+        }
+
+        private void Start()
+        {
+            PathfindingManager.Instance.RequestedMapTile += SearchForPoint;
+        }
+
+        public void SetupQuadtree()
+        {
+            this._rootNode = null;
+            this._rootNode = new Node(new Vector2Int(0,0), new Vector2Int(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y));
+        }
+
+        private void SearchForPoint(Vector2Int point)
+        {
+            _rootNode.MapSquare.GetMapTyp();
+        }
+
+        public void RegisterNewNode(MapSquare mapSquare)
+        {
+            if (CreatedNode != null)
+                CreatedNode.Invoke(mapSquare);
+        }
 
         #endregion
     }

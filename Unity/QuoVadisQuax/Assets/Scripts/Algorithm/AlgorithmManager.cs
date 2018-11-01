@@ -11,10 +11,9 @@ namespace Algorithm
         #region Properties
 
         [SerializeField] private OptionsManager _optionsManager;
-        [SerializeField] private PathfindingManager _pathfindingManager;
-        [SerializeField] private QuadtreeManager _quadtreeManager;
         [SerializeField] private ContainerManager _containerManager;
 
+        public static readonly string PREPARING_ALGORITHM_MSG_ID = "preparing_algorithm";
         public static readonly string SEARCHING_PATH_MSG_ID = "searching_path";
 
         #endregion
@@ -25,22 +24,21 @@ namespace Algorithm
         {
             _optionsManager.StartedAlgorithm += (a, b) =>
             {
-                _containerManager.CreateMessage("Searching Path", SEARCHING_PATH_MSG_ID, true);
+                _containerManager.CreateMessage("Preparing Quadcopter", PREPARING_ALGORITHM_MSG_ID, true);
             };
-            
-            _pathfindingManager.FinishedPathfinding += (a, b) =>
+
+            PathfindingManager.Instance.StartedPathfinding += () =>
             {
-                ThreadQueuer.Instance.QueueMainThreadAction(() =>
-                {
-                    _containerManager.DestroyMessage(SEARCHING_PATH_MSG_ID);
-                });
+                _containerManager.DestroyMessage(PREPARING_ALGORITHM_MSG_ID);
+                _containerManager.CreateMessage("Searching Path", SEARCHING_PATH_MSG_ID, true);
             };
         }
 
         public void SetupAlgorithm(Vector2Int quaxPos, Vector2Int cityPos)
         {
             Debug.Log("AlgorithmManager - SetupAlgorithm");
-            _pathfindingManager.SetupPathfinding(quaxPos, cityPos);
+            QuadtreeManager.Instance.SetupQuadtree();
+            PathfindingManager.Instance.SetupPathfinding(quaxPos, cityPos);
         }
 
         #endregion

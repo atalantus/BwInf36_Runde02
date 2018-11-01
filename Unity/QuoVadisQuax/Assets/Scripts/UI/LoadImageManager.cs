@@ -161,6 +161,11 @@ public class LoadImageManager : MonoBehaviour
                 MapTexture.SetPixels32(0, 0, imgWidth, imgHeight, pixels);
                 MapTexture.Apply();
 
+                MapDataManager.Instance.MapTexture = MapTexture;
+
+                if (MapTexture.width <= 2 && MapTexture.height <= 2)
+                    throw new Exception("Image is to small");
+                    
                 // Set GUI text
                 _imageDimensionsText.text = imgWidth + "x" + imgHeight;
                 _filePathText.text = imagePath;

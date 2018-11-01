@@ -19,4 +19,9 @@ public static class MapColors
             return MapTypes.GROUND;
         return MapTypes.NONE;
     }
+    
+    public static MapTypes GetMapType(this Color colorA)
+    {
+        return GetMapType(colorA.ToColor32());
+    }
 }

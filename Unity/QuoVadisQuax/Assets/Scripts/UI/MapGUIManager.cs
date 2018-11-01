@@ -5,10 +5,12 @@ using System.Diagnostics;
 using System.Threading;
 using Algorithm;
 using Algorithm.Pathfinding;
+using Algorithm.Quadtree;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Debug = UnityEngine.Debug;
+using Node = Algorithm.Pathfinding.Node;
 
 /// <summary>
 /// Manages the Map GUI
@@ -24,7 +26,6 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [SerializeField] private RawImage _mapRawImage;
     [SerializeField] private RawImage _overlayRawImage;
     [SerializeField] private ContainerManager _containerManager;
-    [SerializeField] private PathfindingManager _pathfindingManager;
     [SerializeField] private OptionsManager _optionsManager;
     [SerializeField] private AlgorithmManager _algorithmManager;
 
@@ -42,7 +43,30 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private void Start()
     {
         _optionsManager.StartedAlgorithm += SetUpOverlayTexture;
-        _pathfindingManager.FinishedPathfinding += ColorPath;
+        PathfindingManager.Instance.FinishedPathfinding += ColorPath;
+        QuadtreeManager.Instance.CreatedNode += ColorQuadtreeNode;
+    }
+
+    private void ColorQuadtreeNode(MapSquare mapSquare)
+    {
+        Color32 color;
+
+        switch (mapSquare.MapType)
+        {
+            case MapTypes.WATER:
+                color = new Color32(255,0,0,100);
+                break;
+            case MapTypes.GROUND:
+                color = new Color32(0,255,0,100);
+                break;
+            case MapTypes.UNKNOWN:
+                color = new Color32(200,150,50,50);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        
+        _overlayTexture.DrawSquare(mapSquare.SW_Point, mapSquare.Width, color, () => {_overlayTexture.Apply();});
     }
 
     private void ColorPath(List<Node> path, bool foundPath)
@@ -51,8 +75,9 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         if (foundPath)
         {
-            foreach (var node in path)
+            for (var index = 0; index < path.Count - 1; index++)
             {
+                var node = path[index];
                 Debug.Log(node.Position);
                 int posX, posY;
                 posX = node.Position.x;
@@ -65,7 +90,11 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             }
         }
 
-        ThreadQueuer.Instance.QueueMainThreadAction(() => {_overlayTexture.Apply();});
+        ThreadQueuer.Instance.QueueMainThreadAction(() =>
+        {
+            _overlayTexture.Apply();
+            _containerManager.DestroyMessage(AlgorithmManager.SEARCHING_PATH_MSG_ID);
+        });
         
         Debug.Log("Colored Path");
     }

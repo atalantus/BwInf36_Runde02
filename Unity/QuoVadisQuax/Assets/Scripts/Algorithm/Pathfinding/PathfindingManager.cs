@@ -9,11 +9,21 @@ namespace Algorithm.Pathfinding
     public class PathfindingManager : MonoBehaviour
     {
         #region Properties
+        
+        private static PathfindingManager _instance;
+        /// <summary>
+        /// The Singleton Instance
+        /// </summary>
+        public static PathfindingManager Instance
+        {
+            get { return _instance; }
+        }
 
         public delegate void RequestMapTileEventHandler(Vector2Int tilePos);
-
+        public delegate void StartedPathfindingEventHandler();
         public delegate void FinishedPathfindingEventHandler(List<Node> path, bool foundPath);
 
+        public event StartedPathfindingEventHandler StartedPathfinding;
         public event RequestMapTileEventHandler RequestedMapTile;
         public event FinishedPathfindingEventHandler FinishedPathfinding;
 
@@ -25,6 +35,14 @@ namespace Algorithm.Pathfinding
         #endregion
 
         #region Methods
+        
+        private void Awake()
+        {
+            if (_instance == null)
+                _instance = this;
+            else if (_instance != this)
+                Destroy(gameObject);
+        }
 
         public void SetupPathfinding(Vector2Int start, Vector2Int goal)
         {
@@ -32,6 +50,10 @@ namespace Algorithm.Pathfinding
             startPos = start;
             targetPos = goal;
             ThreadQueuer.Instance.StartThreadedAction(() => { AStarGrid.CreateGrid(ref createdGrid); });
+            
+            // TODO: REMOVE
+            if (RequestedMapTile != null)
+                RequestedMapTile.Invoke(new Vector2Int(0,0));
         }
 
         private void Update()
@@ -46,6 +68,9 @@ namespace Algorithm.Pathfinding
                 Debug.Log(targetNode);
 
                 createdGrid = false;
+                
+                if (StartedPathfinding != null)
+                    StartedPathfinding.Invoke();
 
                 ThreadQueuer.Instance.StartThreadedAction(() => { FindPath(true); });
             }

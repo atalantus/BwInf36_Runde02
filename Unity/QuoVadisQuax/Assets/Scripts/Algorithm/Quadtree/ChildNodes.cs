@@ -17,7 +17,7 @@
         /// </summary>
         public NodeElement NE_Node
         {
-            get { return Nodes[0]; }
+            get { return Nodes[2]; }
         }
 
         /// <summary>
@@ -33,7 +33,7 @@
         /// </summary>
         public NodeElement SW_Node
         {
-            get { return Nodes[2]; }
+            get { return Nodes[0]; }
         }
 
         /// <summary>
