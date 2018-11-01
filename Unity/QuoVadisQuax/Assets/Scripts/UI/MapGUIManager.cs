@@ -93,7 +93,7 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         ThreadQueuer.Instance.QueueMainThreadAction(() =>
         {
             _overlayTexture.Apply();
-            _containerManager.DestroyMessage(AlgorithmManager.SEARCHING_PATH_MSG_ID);
+            _algorithmManager.FinishedAlgorithm();
         });
         
         Debug.Log("Colored Path");
