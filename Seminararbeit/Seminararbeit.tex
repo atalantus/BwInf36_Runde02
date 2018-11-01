@@ -280,18 +280,26 @@ Damit ist eine naive Brute-Force Methode als Lösung ausgeschlossen und es muss 
 Grundlegend gibt es zwei unterschiedliche Wege eine Mauer, wie in der Aufgabenstellung zu bauen.
 \\[0.4cm]
 Der offensichtlichere ist die Bauart \textbf{'von unten nach oben'}. Bei dieser Bauart setzt man zuerst die Klötzchen zu einer Reihe zusammen. Hat man eine Reihe fertig, beginnt man mit der zweiten Reihe und so weiter (siehe Abbildung 11). Man setzt Reihe auf Reihe (von unten nach oben) bis man die Maximalhöhe erreicht hat.
-% TODO: Abbildung
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Definition_Mauerbauart_01.png}
-    \caption{Der Bau einer Mauer nach der 'von unten nach oben' Methode. Es wird Reihe nach Reihe gebaut, bis die maximale Höhe erreicht wurde.}
+    \caption{Der Bau einer Mauer nach der \textbf{'von unten nach oben'} Methode. Es wird Reihe nach Reihe gebaut (1-5), bis die maximale Höhe erreicht wurde (6).}
 \end{figure}
 
 Eine andere Möglichkeit ist, wenn man die Anzahl der Reihen ($h$) für eine Mauer der maximalen Höhe bereits weiß, die Mauer \textbf{'von links nach rechts'} aufzubauen.
+Man kann die Aufgabe auch so formulieren, dass das \textbf{Ziel ist, möglichst alle Fugenposition in der Mauer zu füllen}. Nun bietet es sich an, anstatt wie bei \textbf{'von unten nach oben'} immer einen Klotz zu setzen und \textbf{dann} zu gucken, ob die jeweilige Fugenposition noch frei ist, von den \textbf{Fugenpositionen auszugehen} und diese jeweils zu versuchen \textbf{mit einem Klotz zu füllen} (siehe Abbildung 12).
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Definition_Mauerbauart_02.png}
+    \caption{Der Bau einer Mauer nach der \textbf{'von links nach rechts'} Methode. Es wird jeweils immer die nächste freie Fuge angeschaut und überprüft, welcher Klotz in welcher Reihe diese Fuge füllen kann. Dieser Klotz wird dann gesetzt (1-5). Dies wiederholt sich solange, bis die letzte Fuge erreicht wurde und die Mauer fertig ist (6).}
+\end{figure}
+
+Diese \textbf{'von links nach rechts'} Bauart ist dadurch möglich geworden, dass man schon im vornherein die Anzahl an Reihen weiß, die für eine maximale Mauer benötigt wird.
+
+% TODO: Immer kleinste RowSum bevorzugen
+% TODO: Präsentation Folie 23
 
 \subsection{Implementierung}
-
-\subsection{Laufzeitanalyse}
 
 \subsection{Optimierungsmöglichkeiten}
 
@@ -317,7 +325,6 @@ Eine andere Möglichkeit ist, wenn man die Anzahl der Reihen ($h$) für eine Mau
 
 \subsection{Teilaufgabe (c)}
 \subsubsection{Implementierung}
-\subsubsection{Laufzeitanalyse}
 \subsubsection{Optimierungsmöglichkeiten}
 \subsubsection{Beispiele}
 
