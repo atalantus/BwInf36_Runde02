@@ -53,7 +53,7 @@ namespace Algorithm.Pathfinding
             
             // TODO: REMOVE
             if (RequestedMapTile != null)
-                RequestedMapTile.Invoke(new Vector2Int(0,0));
+                RequestedMapTile.Invoke(start);
         }
 
         private void Update()

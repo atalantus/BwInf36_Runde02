@@ -209,7 +209,7 @@ public class LoadImageManager : MonoBehaviour
                 case MapTypes.CITY:
                     MapDataManager.Instance.CityPosition = IndexToMapPos(i, width);
                     break;
-                case MapTypes.NONE:
+                case MapTypes.UNKNOWN:
                     Debug.LogError("Unexpected pixel color " + pixels[i] + " in map at " + IndexToMapPos(i, width) +
                                    "\nMaybe increase the ColorFilterThreshold!");
                     error = true;
@@ -217,8 +217,6 @@ public class LoadImageManager : MonoBehaviour
                 case MapTypes.WATER:
                     break;
                 case MapTypes.GROUND:
-                    break;
-                case MapTypes.UNKNOWN:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

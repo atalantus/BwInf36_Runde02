@@ -5,6 +5,8 @@ using UnityEngine;
 
 public static class MapColors
 {
+    // WARNING:
+    // Adjusting the Threshold might lead to pixels outside of the map (RGBA 0.804,0.804,0.804,0.804) not getting recognized as water!
     public static readonly int ColorFilterThreshold = 50;
 
     public static MapTypes GetMapType(this Color32 color)
@@ -17,7 +19,7 @@ public static class MapColors
             return MapTypes.WATER;
         if (color.r <= ColorFilterThreshold && color.g <= ColorFilterThreshold && color.b <= ColorFilterThreshold)
             return MapTypes.GROUND;
-        return MapTypes.NONE;
+        return MapTypes.UNKNOWN;
     }
     
     public static MapTypes GetMapType(this Color colorA)

@@ -21,6 +21,8 @@
 
 		#region Methods
 
+		public abstract MapSquare FindPoint(Vector2Int point);
+
 		/// <summary>
 		/// Checks if this Square Node touches a <see cref="NodeElement"/>
 		/// </summary>

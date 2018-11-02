@@ -27,6 +27,7 @@ namespace Algorithm.Quadtree
         /// <param name="width">The width of the Node`s Square</param>
         public MapSquare(Vector2Int swPoint, int width) : base(swPoint, width)
         {
+            MapType = MapTypes.UNKNOWN;
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace Algorithm.Quadtree
         /// <param name="nePoint">The North-East (Top-Right) point of the Node`s Square</param>
         public MapSquare(Vector2Int swPoint, Vector2Int nePoint) : base(swPoint, nePoint)
         {
-            
+            MapType = MapTypes.UNKNOWN;
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace Algorithm.Quadtree
             }
 
             if (containsLand && containsWater && Width > 2)
-                MapType = MapTypes.UNKNOWN;
+                MapType = MapTypes.MIXED;
             else if (containsWater && containsLand && Width <= 2 || !containsWater)
                 MapType = MapTypes.GROUND;
             else

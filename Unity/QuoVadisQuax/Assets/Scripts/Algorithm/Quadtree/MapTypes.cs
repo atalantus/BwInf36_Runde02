@@ -6,8 +6,8 @@
         GROUND,
         QUAX,
         CITY,
-        UNKNOWN,
-        NONE
+        MIXED,
+        UNKNOWN
     }
 }
 

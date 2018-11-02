@@ -40,6 +40,34 @@ namespace Algorithm.Quadtree
 			MapSquare = new MapSquare(swPoint, nePoint);
 			CalculateChildNodes();
 		}
+		
+		public override MapSquare FindPoint(Vector2Int point)
+		{
+			if (MapSquare.MapType == MapTypes.UNKNOWN)
+				MapSquare.GetMapTyp();
+
+			switch (MapSquare.MapType)
+			{
+				case MapTypes.WATER:
+					return MapSquare;
+				case MapTypes.GROUND:
+					return MapSquare;
+				case MapTypes.MIXED:
+					NodeElement targetNode = null;
+					for (int i = 0; i < ChildNodes.Nodes.Length; i++)
+					{
+						if (ChildNodes.Nodes[i].TouchesPoint(point))
+							targetNode = ChildNodes.Nodes[i];
+					}
+					
+					if (targetNode == null) throw new Exception("Unable to find point in quadtree");
+
+					return targetNode.FindPoint(point);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
 
 		/// <summary>
 		/// Calculates the <see cref="ChildNodes"/> of this Node

@@ -5,12 +5,6 @@
 	/// </summary>
 	public class EndNode : NodeElement
 	{
-		#region Properties
-
-		public bool IsIndivisible { get; private set; }
-
-		#endregion
-		
 		#region Methods
 
 		/// <summary>
@@ -21,6 +15,14 @@
 		public EndNode(Vector2Int swPoint, int width)
 		{
 			MapSquare = new MapSquare(swPoint, width);
+		}
+		
+		public override MapSquare FindPoint(Vector2Int point)
+		{
+			if (MapSquare.MapType == MapTypes.UNKNOWN)
+				MapSquare.GetMapTyp();
+
+			return MapSquare;
 		}
 		
 		#endregion

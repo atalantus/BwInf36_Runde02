@@ -18,7 +18,7 @@ namespace Algorithm.Quadtree
 
         [SerializeField] private OptionsManager _optionsManager;
         
-        public delegate void UpdatedQuadtreeEventHandler(NodeElement updatedNode);
+        public delegate void UpdatedQuadtreeEventHandler(MapSquare mapSquare);
         public delegate void CreatedNodeEventHandler(MapSquare mapSquare);
 
         public event UpdatedQuadtreeEventHandler UpdatedQuadtree;
@@ -51,7 +51,10 @@ namespace Algorithm.Quadtree
 
         private void SearchForPoint(Vector2Int point)
         {
-            _rootNode.MapSquare.GetMapTyp();
+            var square = _rootNode.FindPoint(point);
+            
+            if (UpdatedQuadtree != null)
+                UpdatedQuadtree.Invoke(square);
         }
 
         public void RegisterNewNode(MapSquare mapSquare)

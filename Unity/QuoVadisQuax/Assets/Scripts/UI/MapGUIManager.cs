@@ -42,13 +42,24 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private Queue<Action> _colorSquareOverlayActions;
     private bool _isColoringSquareOverlay;
+    private bool _readyToColorPath;
+    private List<Node> _path;
 
     private void Start()
     {
         _colorSquareOverlayActions = new Queue<Action>();
         
         _optionsManager.StartedAlgorithm += SetUpOverlayTexture;
-        PathfindingManager.Instance.FinishedPathfinding += ColorPath;
+        PathfindingManager.Instance.FinishedPathfinding += (path, foundPath) =>
+        {
+            Debug.LogWarning("MapGUIManager - ColorPath");
+
+            if (foundPath)
+            {
+                _readyToColorPath = true;
+                _path = path;
+            }
+        };
         QuadtreeManager.Instance.CreatedNode += ColorQuadtreeNode;
     }
 
@@ -64,7 +75,7 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             case MapTypes.GROUND:
                 color = new Color32(0,255,0,100);
                 break;
-            case MapTypes.UNKNOWN:
+            case MapTypes.MIXED:
                 color = new Color32(200,150,50,50);
                 break;
             default:
@@ -83,26 +94,21 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         
     }
 
-    private void ColorPath(List<Node> path, bool foundPath)
+    private void ColorPath()
     {
-        Debug.LogWarning("MapGUIManager - ColorPath");
-
-        if (foundPath)
+        for (var index = 0; index < _path.Count - 1; index++)
         {
-            for (var index = 0; index < path.Count - 1; index++)
+            var node = _path[index];
+            int posX, posY;
+            posX = node.Position.x;
+            posY = node.Position.y;
+
+            ThreadQueuer.Instance.QueueMainThreadActionMultiple(() =>
             {
-                var node = path[index];
-                int posX, posY;
-                posX = node.Position.x;
-                posY = node.Position.y;
-
-                ThreadQueuer.Instance.QueueMainThreadActionMultiple(() =>
-                {
-                    _overlayTexture.SetPixel(posX, posY, Color.magenta);
-                });
-            }
+                _overlayTexture.SetPixel(posX, posY, Color.magenta);
+            });
         }
-
+        
         ThreadQueuer.Instance.QueueMainThreadActionMultiple(() =>
         {
             Debug.LogWarning("----- APPLY -----");
@@ -145,10 +151,18 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private void Update()
     {
         // Execute overlay stuff things
-        if (!_isColoringSquareOverlay && _colorSquareOverlayActions.Count > 0)
+        if (!_isColoringSquareOverlay)
         {
-            _isColoringSquareOverlay = true;
-            _colorSquareOverlayActions.Peek()();
+            if (_colorSquareOverlayActions.Count > 0)
+            {
+                _isColoringSquareOverlay = true;
+                _colorSquareOverlayActions.Peek()();
+            }
+            else if (_readyToColorPath)
+            {
+                _readyToColorPath = false;
+                ThreadQueuer.Instance.StartThreadedAction(ColorPath);
+            }
         }
         
         /**
