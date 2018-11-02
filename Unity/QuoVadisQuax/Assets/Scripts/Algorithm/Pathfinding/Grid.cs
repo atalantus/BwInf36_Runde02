@@ -30,7 +30,7 @@ namespace Algorithm.Pathfinding
         }
         
         public List<Node> GetNeighbours(Node node) {
-            Debug.Log("Grid - GetNeighbours");
+            //Debug.Log("Grid - GetNeighbours");
             
             List<Node> neighbours = new List<Node>();
 

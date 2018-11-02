@@ -24,9 +24,9 @@ namespace Algorithm.Pathfinding
 
         public bool IsWalkable(bool canWalkUnknown)
         {
-            Debug.Log("Node - IsWalkable");
+            //Debug.Log("Node - IsWalkable");
             var result = NodeType == NodeTypes.WALKABLE || NodeType == NodeTypes.UNKNOWN && canWalkUnknown;
-            Debug.Log("NodeType: " + NodeType + "; canWalkUnknown: " + canWalkUnknown + "; result: " + result);
+            //Debug.Log("NodeType: " + NodeType + "; canWalkUnknown: " + canWalkUnknown + "; result: " + result);
             return result;
         }
 

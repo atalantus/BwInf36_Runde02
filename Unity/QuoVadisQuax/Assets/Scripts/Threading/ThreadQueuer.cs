@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading;
 using System;
+using System.Linq;
 
 public class ThreadQueuer : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class ThreadQueuer : MonoBehaviour
     }
 
     private List<Action> _mainThreadActions;
+    private List<Action> _mainThreadActionsMultiple;
+    private int _mainThreadActionsMultipleMaxSize = 100;
 
     private void Awake()
     {
@@ -25,10 +28,37 @@ public class ThreadQueuer : MonoBehaviour
             Destroy(gameObject);
 
         _mainThreadActions = new List<Action>();
+        _mainThreadActionsMultiple = new List<Action>();
     }
 
     private void Update()
     {
+        if (_mainThreadActionsMultiple.Count > 0)
+        {
+            var clearList = true;
+            
+            List<Action> mainThreadActions = _mainThreadActionsMultiple;
+
+            if (_mainThreadActionsMultiple.Count > _mainThreadActionsMultipleMaxSize)
+            {
+                mainThreadActions = _mainThreadActionsMultiple.GetRange(0, _mainThreadActionsMultipleMaxSize);
+                clearList = false;
+            }
+            
+            //Debug.LogWarning("MainThreadActionsMultiple: " + mainThreadActions.Count);
+            
+            for (int i = 0; i < mainThreadActions.Count; i++)
+            {
+                var a = mainThreadActions[i];
+                a();
+            }
+
+            if (clearList) _mainThreadActionsMultiple.Clear();
+            else _mainThreadActionsMultiple.RemoveRange(0, _mainThreadActionsMultipleMaxSize);
+            
+            //Debug.LogWarning(1f/Time.deltaTime);
+        }
+        
         if (_mainThreadActions.Count > 0)
         {
             var a = _mainThreadActions[0];
@@ -47,5 +77,10 @@ public class ThreadQueuer : MonoBehaviour
     public void QueueMainThreadAction(Action mainThreadAction)
     {
         _mainThreadActions.Add(mainThreadAction);
+    }
+    
+    public void QueueMainThreadActionMultiple(Action mainThreadAction)
+    {
+        _mainThreadActionsMultiple.Add(mainThreadAction);
     }
 }

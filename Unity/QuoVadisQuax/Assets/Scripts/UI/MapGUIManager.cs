@@ -40,8 +40,13 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public static readonly string COLORING_OVERLAY_MSG_ID = "coloring_overlay";
 
+    private Queue<Action> _colorSquareOverlayActions;
+    private bool _isColoringSquareOverlay;
+
     private void Start()
     {
+        _colorSquareOverlayActions = new Queue<Action>();
+        
         _optionsManager.StartedAlgorithm += SetUpOverlayTexture;
         PathfindingManager.Instance.FinishedPathfinding += ColorPath;
         QuadtreeManager.Instance.CreatedNode += ColorQuadtreeNode;
@@ -66,32 +71,41 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 throw new ArgumentOutOfRangeException();
         }
         
-        _overlayTexture.DrawSquare(mapSquare.SW_Point, mapSquare.Width, color, () => {_overlayTexture.Apply();});
+        _colorSquareOverlayActions.Enqueue(() =>
+        {
+            _overlayTexture.DrawSquare(mapSquare.SW_Point, mapSquare.Width, color, () =>
+            {
+                _overlayTexture.Apply();
+                _colorSquareOverlayActions.Dequeue();
+                _isColoringSquareOverlay = false;
+            });
+        });
+        
     }
 
     private void ColorPath(List<Node> path, bool foundPath)
     {
-        Debug.Log("MapGUIManager - ColorPath");
+        Debug.LogWarning("MapGUIManager - ColorPath");
 
         if (foundPath)
         {
             for (var index = 0; index < path.Count - 1; index++)
             {
                 var node = path[index];
-                Debug.Log(node.Position);
                 int posX, posY;
                 posX = node.Position.x;
                 posY = node.Position.y;
 
-                ThreadQueuer.Instance.QueueMainThreadAction(() =>
+                ThreadQueuer.Instance.QueueMainThreadActionMultiple(() =>
                 {
                     _overlayTexture.SetPixel(posX, posY, Color.magenta);
                 });
             }
         }
 
-        ThreadQueuer.Instance.QueueMainThreadAction(() =>
+        ThreadQueuer.Instance.QueueMainThreadActionMultiple(() =>
         {
+            Debug.LogWarning("----- APPLY -----");
             _overlayTexture.Apply();
             _algorithmManager.FinishedAlgorithm();
         });
@@ -130,6 +144,13 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private void Update()
     {
+        // Execute overlay stuff things
+        if (!_isColoringSquareOverlay && _colorSquareOverlayActions.Count > 0)
+        {
+            _isColoringSquareOverlay = true;
+            _colorSquareOverlayActions.Peek()();
+        }
+        
         /**
          * Check for scroll wheel input
          */

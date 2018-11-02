@@ -60,12 +60,12 @@ namespace Algorithm.Pathfinding
         {
             if (createdGrid)
             {
-                Debug.Log("PathfindingManager - Update - createdGrid");
+                //Debug.Log("PathfindingManager - Update - createdGrid");
                 startNode = AStarGrid.NodeGrid[startPos.x, startPos.y];
                 targetNode = AStarGrid.NodeGrid[targetPos.x, targetPos.y];
 
-                Debug.Log(startNode);
-                Debug.Log(targetNode);
+                //Debug.Log(startNode);
+                //Debug.Log(targetNode);
 
                 createdGrid = false;
                 
@@ -139,7 +139,7 @@ namespace Algorithm.Pathfinding
 
         int GetDistance(Node nodeA, Node nodeB)
         {
-            Debug.Log("PathfindingManager - GetDistance");
+            //Debug.Log("PathfindingManager - GetDistance");
 
             int dstX = Mathf.Abs(nodeA.Position.x - nodeB.Position.x);
             int dstY = Mathf.Abs(nodeA.Position.y - nodeB.Position.y);

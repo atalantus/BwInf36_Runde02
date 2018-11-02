@@ -55,28 +55,28 @@ namespace Algorithm.Quadtree
 
             var i = prime % pixelsSize;
             
-            Debug.LogWarning("Pixels Size: " + pixelsSize);
+            //Debug.LogWarning("Pixels Size: " + pixelsSize);
 
             for (var j = 1; j <= pixelsSize; j++)
             {
                 var pixelType = pixels[i].GetMapType();
                 
-                Debug.LogWarning("Get Pixel " + i + " type: " + pixelType + " color: " + pixels[i]);
+                //Debug.LogWarning("Get Pixel " + i + " type: " + pixelType + " color: " + pixels[i]);
 
                 if (pixelType == MapTypes.WATER && !containsWater)
                 {
-                    Debug.LogWarning("----- FOUND WATER on " + (float)j /pixelsSize * 100 + "% -----");
+                    Debug.Log("----- FOUND WATER on " + (float)j /pixelsSize * 100 + "% -----");
                     containsWater = true;
                 }
                 else if (pixelType != MapTypes.WATER && !containsLand)
                 {
-                    Debug.LogWarning("----- FOUND LAND on " + (float)j /pixelsSize * 100 + "% -----");
+                    Debug.Log("----- FOUND LAND on " + (float)j /pixelsSize * 100 + "% -----");
                     containsLand = true;
                 }
 
                 if (containsWater && containsLand)
                 {
-                    Debug.LogWarning("----- STOP FOUND BOTH WATER AND LAND on " + (float)j /pixelsSize * 100 + "% -----");
+                    Debug.Log("----- STOP FOUND BOTH WATER AND LAND on " + (float)j /pixelsSize * 100 + "% -----");
                     break;
                 }
 
