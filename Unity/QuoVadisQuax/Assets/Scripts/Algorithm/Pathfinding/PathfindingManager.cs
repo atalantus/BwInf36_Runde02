@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Algorithm.Quadtree;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Debug = UnityEngine.Debug;
 
 namespace Algorithm.Pathfinding
 {
@@ -39,6 +41,10 @@ namespace Algorithm.Pathfinding
         private bool _updatedGrid;
         private bool _tryPathfindingWithUnknownWalkable;
 
+        private Heap<Node> _cachedOpenSet;
+        private HashSet<Node> _cachedClosedSet;
+        private Node _cachedLastPathNode;
+
         #endregion
 
         #region Methods
@@ -55,7 +61,22 @@ namespace Algorithm.Pathfinding
         {
             QuadtreeManager.Instance.UpdatedQuadtree += (square) =>
             {
-                ThreadQueuer.Instance.StartThreadedAction(() => { UpdateGrid(square, ref _updatedGrid); });
+                ThreadQueuer.Instance.StartThreadedAction(() =>
+                {
+                    var s = new Stopwatch();
+                    s.Start();
+                    try
+                    {
+                        UpdateGrid(square, ref _updatedGrid);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError(e);
+                    }
+
+                    s.Stop();
+                    Debug.LogWarning("Updating Grid took: " + s.ElapsedMilliseconds + "ms");
+                });
             };
         }
 
@@ -64,6 +85,12 @@ namespace Algorithm.Pathfinding
             //Debug.Log("PathfindingManager - SetupPathfinding");
             startPos = start;
             targetPos = goal;
+
+            _cachedOpenSet =
+                new Heap<Node>(PathfindingGrid.NodeGrid.GetLength(0) * PathfindingGrid.NodeGrid.GetLength(1));
+            _cachedClosedSet = new HashSet<Node>();
+            _cachedLastPathNode = null;
+
             ThreadQueuer.Instance.StartThreadedAction(() => { PathfindingGrid.CreateGrid(ref createdGrid); });
         }
 
@@ -97,6 +124,14 @@ namespace Algorithm.Pathfinding
                 }
             }
 
+            if (mapType == MapTypes.GROUND && _cachedLastPathNode != null)
+            {
+                //Debug.LogWarning("REOPEN LAST PATH NODE");
+                // Update cached open set
+                var lastPathNode = _cachedLastPathNode;
+                _cachedOpenSet.Add(lastPathNode);
+            }
+
             updated = true;
         }
 
@@ -126,7 +161,23 @@ namespace Algorithm.Pathfinding
                 _updatedGrid = false;
 
                 //Debug.LogWarning("PathfindingManager - Update - SearchPath 01");
-                ThreadQueuer.Instance.StartThreadedAction(() => { FindPath(false); });
+                ThreadQueuer.Instance.StartThreadedAction(() =>
+                {
+                    var s = new Stopwatch();
+                    s.Start();
+
+                    try
+                    {
+                        FindPath(false);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError(e);
+                    }
+
+                    s.Stop();
+                    Debug.LogWarning("Pathfinding 01 took: " + s.ElapsedMilliseconds + "ms");
+                });
             }
 
             if (_tryPathfindingWithUnknownWalkable)
@@ -134,18 +185,51 @@ namespace Algorithm.Pathfinding
                 _tryPathfindingWithUnknownWalkable = false;
 
                 //Debug.LogWarning("PathfindingManager - Update - SearchPath 02");
-                ThreadQueuer.Instance.StartThreadedAction(() => { FindPath(true); });
+                ThreadQueuer.Instance.StartThreadedAction(() =>
+                {
+                    var s = new Stopwatch();
+                    s.Start();
+
+                    try
+                    {
+                        FindPath(true);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError(e);
+                    }
+
+                    s.Stop();
+                    Debug.LogWarning("Pathfinding 02 took: " + s.ElapsedMilliseconds + "ms");
+                });
             }
         }
 
         public void FindPath(bool canWalkUnknown)
         {
-            //Debug.Log("PathfindingManager - FindPath");
+            //Debug.Log("PathfindingManager - FindPath - canWalkUnknown: " + canWalkUnknown);
 
-            Heap<Node> openSet =
-                new Heap<Node>(PathfindingGrid.NodeGrid.GetLength(0) * PathfindingGrid.NodeGrid.GetLength(1));
-            HashSet<Node> closedSet = new HashSet<Node>();
-            openSet.Add(startNode);
+            Heap<Node> openSet;
+            HashSet<Node> closedSet;
+
+            if (!canWalkUnknown)
+            {
+                //Debug.LogWarning("Use Cached Sets");
+                openSet = _cachedOpenSet;
+                closedSet = _cachedClosedSet;
+            }
+            else
+            {
+                openSet =
+                    new Heap<Node>(PathfindingGrid.NodeGrid.GetLength(0) * PathfindingGrid.NodeGrid.GetLength(1));
+                closedSet = new HashSet<Node>();
+            }
+
+            if (openSet.Count == 0)
+            {
+                //Debug.LogWarning("Start pathfinding from beginning");
+                openSet.Add(startNode);
+            }
 
             while (openSet.Count > 0)
             {
@@ -166,6 +250,17 @@ namespace Algorithm.Pathfinding
                             //Debug.LogWarning("Checking Path Node " + path[i].Position + " Type: " + path[i].NodeType);
                             if (path[i].NodeType == NodeTypes.UNKNOWN)
                             {
+                                // cache last path node
+                                if (i - 1 < 0)
+                                {
+                                    Debug.LogWarning("SET CACHED NODE TO START NODE");
+                                    _cachedLastPathNode = startNode;
+                                }
+                                else
+                                {
+                                    _cachedLastPathNode = path[i - 1];
+                                }
+
                                 // Request map information about this node
                                 if (RequestedMapTile != null)
                                     RequestedMapTile.Invoke(path[i].Position);
