@@ -113,7 +113,7 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             Debug.LogWarning("----- APPLY -----");
             _overlayTexture.Apply();
-            _algorithmManager.FinishedAlgorithm();
+            _algorithmManager.FinishAlgorithm();
         });
         
         Debug.Log("Colored Path");

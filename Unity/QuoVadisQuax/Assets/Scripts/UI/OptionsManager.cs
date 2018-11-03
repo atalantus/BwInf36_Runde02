@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Algorithm;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,12 +28,14 @@ public class OptionsManager : MonoBehaviour
 
     private Texture2D _quaxPosOverlayTexture;
 
+    [SerializeField] private AlgorithmManager _algorithmManager;
     [SerializeField] private LoadImageManager _loadImage;
     [SerializeField] private Dropdown _quaxPosDropdown;
     [SerializeField] private GameObject _quaxPosMap;
     [SerializeField] private GameObject _quaxPosOverlay;
     [SerializeField] private Text[] _guiCoordinates;
     [SerializeField] private GameObject _toggleIcon;
+    [SerializeField] private Text[] _algorithmResults;
 
     private void Awake()
     {
@@ -42,6 +45,7 @@ public class OptionsManager : MonoBehaviour
     private void Start()
     {
         _loadImage.UpdatedLoadingState += OnLoadingState_Changed;
+        _algorithmManager.FinishedAlgorithm += UpdateAlgorithmResults;
     }
 
     private void OnLoadingState_Changed(LoadImageManager.LoadingState state)
@@ -77,6 +81,13 @@ public class OptionsManager : MonoBehaviour
         _guiCoordinates[2].text = MapDataManager.Instance.CityPosition.x.ToString();
         _guiCoordinates[3].text =
             (MapDataManager.Instance.Dimensions.y - MapDataManager.Instance.CityPosition.y - 1).ToString();
+    }
+
+    private void UpdateAlgorithmResults(bool foundPath, int flights, TimeSpan time)
+    {
+        _algorithmResults[0].text = foundPath ? "YES" : "NO";
+        _algorithmResults[1].text = flights.ToString();
+        _algorithmResults[2].text = time.Minutes + "m " + time.Seconds + "s " + time.Milliseconds + "ms";
     }
 
     public void SelectQuaxPos(int index)
