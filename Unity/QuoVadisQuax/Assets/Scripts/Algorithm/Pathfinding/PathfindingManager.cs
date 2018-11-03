@@ -75,7 +75,7 @@ namespace Algorithm.Pathfinding
                     }
 
                     s.Stop();
-                    Debug.LogWarning("Updating Grid took: " + s.ElapsedMilliseconds + "ms");
+                    //Debug.LogWarning("Updating Grid took: " + s.ElapsedMilliseconds + "ms");
                 });
             };
         }
@@ -124,14 +124,6 @@ namespace Algorithm.Pathfinding
                 }
             }
 
-            if (mapType == MapTypes.GROUND && _cachedLastPathNode != null)
-            {
-                //Debug.LogWarning("REOPEN LAST PATH NODE");
-                // Update cached open set
-                var lastPathNode = _cachedLastPathNode;
-                _cachedOpenSet.Add(lastPathNode);
-            }
-
             updated = true;
         }
 
@@ -142,6 +134,8 @@ namespace Algorithm.Pathfinding
                 //Debug.Log("PathfindingManager - Update - createdGrid");
                 startNode = PathfindingGrid.NodeGrid[startPos.x, startPos.y];
                 targetNode = PathfindingGrid.NodeGrid[targetPos.x, targetPos.y];
+
+                _cachedLastPathNode = startNode;
 
                 //Debug.Log(startNode);
                 //Debug.Log(targetNode);
@@ -176,7 +170,7 @@ namespace Algorithm.Pathfinding
                     }
 
                     s.Stop();
-                    Debug.LogWarning("Pathfinding 01 took: " + s.ElapsedMilliseconds + "ms");
+                    //Debug.LogWarning("Pathfinding 01 took: " + s.ElapsedMilliseconds + "ms");
                 });
             }
 
@@ -217,17 +211,15 @@ namespace Algorithm.Pathfinding
                 //Debug.LogWarning("Use Cached Sets");
                 openSet = _cachedOpenSet;
                 closedSet = _cachedClosedSet;
+                openSet.Add(_cachedLastPathNode);
             }
             else
             {
                 openSet =
                     new Heap<Node>(PathfindingGrid.NodeGrid.GetLength(0) * PathfindingGrid.NodeGrid.GetLength(1));
                 closedSet = new HashSet<Node>();
-            }
-
-            if (openSet.Count == 0)
-            {
-                //Debug.LogWarning("Start pathfinding from beginning");
+                //closedSet = new HashSet<Node>(_cachedClosedSet);
+                //openSet.Add(_cachedLastPathNode);
                 openSet.Add(startNode);
             }
 
@@ -253,7 +245,7 @@ namespace Algorithm.Pathfinding
                                 // cache last path node
                                 if (i - 1 < 0)
                                 {
-                                    Debug.LogWarning("SET CACHED NODE TO START NODE");
+                                    //Debug.LogWarning("SET CACHED NODE TO START NODE");
                                     _cachedLastPathNode = startNode;
                                 }
                                 else

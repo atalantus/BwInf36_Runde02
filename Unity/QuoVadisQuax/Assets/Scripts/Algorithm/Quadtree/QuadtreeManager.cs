@@ -64,7 +64,7 @@ namespace Algorithm.Quadtree
                 var square = _rootNode.FindPoint(point);
                 
                 s.Stop();
-                Debug.LogWarning("Quadtree Search took: " + s.ElapsedMilliseconds + "ms");
+                //Debug.LogWarning("Quadtree Search took: " + s.ElapsedMilliseconds + "ms");
             
                 if (UpdatedQuadtree != null)
                     UpdatedQuadtree.Invoke(square);
