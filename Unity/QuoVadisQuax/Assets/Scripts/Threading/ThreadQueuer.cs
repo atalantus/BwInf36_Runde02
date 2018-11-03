@@ -68,15 +68,23 @@ public class ThreadQueuer : MonoBehaviour
         }
     }
 
-    public void StartThreadedAction(Action threadedAction)
+    public void StartThreadedAction(Action threadedAction, Action callback = null)
     {
+        var action = new ThreadStart(threadedAction);
+        if (callback != null)
+        {
+            action += () => { callback(); };
+        }
+
         var t = new Thread(new ThreadStart(threadedAction));
         t.Start();
     }
 
-    public void QueueMainThreadAction(Action mainThreadAction)
+    public void QueueMainThreadAction(Action mainThreadAction, Action callback = null)
     {
         _mainThreadActions.Add(mainThreadAction);
+        if (callback != null)
+            _mainThreadActions.Add(callback);
     }
     
     public void QueueMainThreadActionMultiple(Action mainThreadAction)

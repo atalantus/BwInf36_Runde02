@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using Algorithm.Pathfinding;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace Algorithm.Quadtree
 {
@@ -56,7 +58,13 @@ namespace Algorithm.Quadtree
             // TODO: Performance: don't run whole quadtree on main thread! only GetPixel in GetMatType() in MapSquare.cs
             ThreadQueuer.Instance.QueueMainThreadAction(() =>
             {
+                var s = new Stopwatch();
+                s.Start();
+                
                 var square = _rootNode.FindPoint(point);
+                
+                s.Stop();
+                Debug.LogWarning("Quadtree Search took: " + s.ElapsedMilliseconds + "ms");
             
                 if (UpdatedQuadtree != null)
                     UpdatedQuadtree.Invoke(square);

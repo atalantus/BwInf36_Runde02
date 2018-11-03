@@ -52,7 +52,7 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         _optionsManager.StartedAlgorithm += SetUpOverlayTexture;
         PathfindingManager.Instance.FinishedPathfinding += (path, foundPath) =>
         {
-            Debug.LogWarning("MapGUIManager - ColorPath");
+            //Debug.LogWarning("MapGUIManager - ColorPath");
 
             _path = foundPath ? path : new List<Node>();
             
@@ -80,11 +80,12 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 throw new ArgumentOutOfRangeException();
         }
         
+        //Debug.Log("Queue: SW " + mapSquare.SW_Point + " NE " + mapSquare.NE_Point);
+        
         _colorSquareOverlayActions.Enqueue(() =>
         {
             _overlayTexture.DrawSquare(mapSquare.SW_Point, mapSquare.Width, color, () =>
             {
-                _overlayTexture.Apply();
                 _colorSquareOverlayActions.Dequeue();
                 _isColoringSquareOverlay = false;
             });
@@ -109,12 +110,12 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         
         ThreadQueuer.Instance.QueueMainThreadActionMultiple(() =>
         {
-            Debug.LogWarning("----- APPLY -----");
+            //Debug.LogWarning("----- APPLY -----");
             _overlayTexture.Apply();
             _algorithmManager.FinishAlgorithm();
         });
         
-        Debug.Log("Colored Path");
+        //Debug.Log("Colored Path");
     }
 
     void SetUpOverlayTexture(Vector2Int quaxPos, Vector2Int cityPos)

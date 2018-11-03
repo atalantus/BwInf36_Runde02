@@ -33,6 +33,8 @@ namespace Algorithm
 
         private void Start()
         {
+            Application.targetFrameRate = 300;
+            
             _stopwatch = new Stopwatch();
             
             _optionsManager.StartedAlgorithm += (a, b) =>

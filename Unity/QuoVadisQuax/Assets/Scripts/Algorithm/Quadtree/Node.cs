@@ -13,7 +13,7 @@ namespace Algorithm.Quadtree
 		/// <summary>
 		/// The Child Nodes of this Node
 		/// </summary>
-		public ChildNodes ChildNodes { get; set; }
+		public NodeElement[] ChildNodes { get; set; }
 		
 		#endregion
 
@@ -41,17 +41,19 @@ namespace Algorithm.Quadtree
 				case MapTypes.GROUND:
 					return MapSquare;
 				case MapTypes.MIXED:
-					CalculateChildNodes();
+					if (ChildNodes == null)
+						CalculateChildNodes();
+					
 					NodeElement targetNode = null;
-					for (int i = 0; i < ChildNodes.Nodes.Length; i++)
+					for (int i = 0; i < ChildNodes.Length; i++)
 					{
-						if (ChildNodes.Nodes[i].TouchesPoint(point))
-							targetNode = ChildNodes.Nodes[i];
+						if (ChildNodes[i].TouchesPoint(point))
+							targetNode = ChildNodes[i];
 					}
 
 					if (targetNode == null)
 					{
-						foreach (var node in ChildNodes.Nodes)
+						foreach (var node in ChildNodes)
 						{
 							//Debug.LogWarning("Node: SW " + node.MapSquare.SW_Point + " | NE " + node.MapSquare.NE_Point);
 						}
@@ -147,7 +149,7 @@ namespace Algorithm.Quadtree
 			}
 			
 			
-			ChildNodes = new ChildNodes(childNodes);
+			ChildNodes = childNodes;
 		}
 
 		#endregion

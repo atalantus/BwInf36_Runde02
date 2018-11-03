@@ -45,7 +45,10 @@ public class OptionsManager : MonoBehaviour
     private void Start()
     {
         _loadImage.UpdatedLoadingState += OnLoadingState_Changed;
-        _algorithmManager.FinishedAlgorithm += UpdateAlgorithmResults;
+        _algorithmManager.FinishedAlgorithm += (foundPath, flights, time) =>
+        {
+            UpdateAlgorithmResults(foundPath ? "YES" : "NO", flights.ToString(), time.Minutes + "m " + time.Seconds + "s " + time.Milliseconds + "ms");
+        };
     }
 
     private void OnLoadingState_Changed(LoadImageManager.LoadingState state)
@@ -82,11 +85,11 @@ public class OptionsManager : MonoBehaviour
         _guiCoordinates[3].text = MapDataManager.Instance.CityPosition.y.ToString();
     }
 
-    private void UpdateAlgorithmResults(bool foundPath, int flights, TimeSpan time)
+    private void UpdateAlgorithmResults(string foundPath, string flights, string time)
     {
-        _algorithmResults[0].text = foundPath ? "YES" : "NO";
-        _algorithmResults[1].text = flights.ToString();
-        _algorithmResults[2].text = time.Minutes + "m " + time.Seconds + "s " + time.Milliseconds + "ms";
+        _algorithmResults[0].text = foundPath;
+        _algorithmResults[1].text = flights;
+        _algorithmResults[2].text = time;
     }
 
     public void SelectQuaxPos(int index)
@@ -109,7 +112,10 @@ public class OptionsManager : MonoBehaviour
     public void StartAlgorithm()
     {
         if (StartedAlgorithm != null)
+        {
             StartedAlgorithm.Invoke(_selectedQuax, MapDataManager.Instance.CityPosition);
+            UpdateAlgorithmResults("...", "...", "...");
+        }
     }
 
     /// <summary>
