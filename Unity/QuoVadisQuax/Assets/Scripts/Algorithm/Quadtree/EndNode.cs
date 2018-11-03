@@ -1,4 +1,6 @@
-﻿namespace Algorithm.Quadtree
+﻿using UnityEngine;
+
+namespace Algorithm.Quadtree
 {
 	/// <summary>
 	/// Represents the possible smallest Quadtree Node
@@ -22,6 +24,7 @@
 			if (MapSquare.MapType == MapTypes.UNKNOWN)
 				MapSquare.GetMapTyp();
 
+			Debug.Log("Reached EndNode SW " + MapSquare.SW_Point + " NE " + MapSquare.NE_Point + " MapType: " + MapSquare.MapType);
 			return MapSquare;
 		}
 		

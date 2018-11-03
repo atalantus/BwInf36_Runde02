@@ -153,7 +153,7 @@ public class LoadImageManager : MonoBehaviour
 
                 // Check if map is valid and search city and quax positions
                 var pixels = MapTexture.GetPixels32();
-                _pathfindingManager.AStarGrid = new Algorithm.Pathfinding.Grid(imgWidth,imgHeight);
+                _pathfindingManager.PathfindingGrid = new Algorithm.Pathfinding.Grid(imgWidth,imgHeight);
                 ThreadQueuer.Instance.StartThreadedAction(() => { CheckMapPixels(pixels, imgWidth); });
 
                 // Resize map

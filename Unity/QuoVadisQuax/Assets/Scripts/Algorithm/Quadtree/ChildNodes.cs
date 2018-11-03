@@ -1,4 +1,7 @@
-﻿namespace Algorithm.Quadtree
+﻿using System;
+using System.Threading;
+
+namespace Algorithm.Quadtree
 {
     /// <summary>
     /// Contains the Child Nodes of a parent Node Element
@@ -55,6 +58,12 @@
         public ChildNodes(NodeElement[] childNodes)
         {
             Nodes = childNodes;
+
+            foreach (var node in childNodes)
+            {
+                if (node.MapSquare.Width < 2)
+                    throw new Exception("Node with width: " + node.MapSquare.Width);
+            }
         }
 
         #endregion

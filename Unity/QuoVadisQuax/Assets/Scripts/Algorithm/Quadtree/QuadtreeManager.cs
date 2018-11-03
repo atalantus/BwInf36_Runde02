@@ -46,15 +46,21 @@ namespace Algorithm.Quadtree
         public void SetupQuadtree()
         {
             this._rootNode = null;
-            this._rootNode = new Node(new Vector2Int(0,0), new Vector2Int(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y));
+            this._rootNode = new Node(new Vector2Int(0,0), MapDataManager.Instance.Dimensions.x);
         }
 
         private void SearchForPoint(Vector2Int point)
         {
-            var square = _rootNode.FindPoint(point);
+            Debug.Log("QuadtreeManager - FindPoint " + point);
             
-            if (UpdatedQuadtree != null)
-                UpdatedQuadtree.Invoke(square);
+            // TODO: Performance: don't run whole quadtree on main thread! only GetPixel in GetMatType() in MapSquare.cs
+            ThreadQueuer.Instance.QueueMainThreadAction(() =>
+            {
+                var square = _rootNode.FindPoint(point);
+            
+                if (UpdatedQuadtree != null)
+                    UpdatedQuadtree.Invoke(square);
+            });
         }
 
         public void RegisterNewNode(MapSquare mapSquare)

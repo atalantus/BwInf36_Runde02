@@ -29,17 +29,6 @@ namespace Algorithm.Quadtree
 			MapSquare = new MapSquare(swPoint, width);
 			CalculateChildNodes();
 		}
-
-		/// <summary>
-		/// Instantiates a new <see cref="Node"/> object
-		/// </summary>
-		/// <param name="swPoint">The South-West (Bottom-Left) point of the Node`s Square</param>
-		/// <param name="nePoint">The North-East (Top-Right) point of the Node`s Square</param>
-		public Node(Vector2Int swPoint, Vector2Int nePoint)
-		{
-			MapSquare = new MapSquare(swPoint, nePoint);
-			CalculateChildNodes();
-		}
 		
 		public override MapSquare FindPoint(Vector2Int point)
 		{
@@ -59,11 +48,21 @@ namespace Algorithm.Quadtree
 						if (ChildNodes.Nodes[i].TouchesPoint(point))
 							targetNode = ChildNodes.Nodes[i];
 					}
+
+					if (targetNode == null)
+					{
+						foreach (var node in ChildNodes.Nodes)
+						{
+							Debug.LogWarning("Node: SW " + node.MapSquare.SW_Point + " | NE " + node.MapSquare.NE_Point);
+						}
+
+						throw new Exception("Unable to find point " + point + " in quadtree");
+					}
 					
-					if (targetNode == null) throw new Exception("Unable to find point in quadtree");
+					Debug.LogWarning("Touching Node: SW " + targetNode.MapSquare.SW_Point + " | NE " + targetNode.MapSquare.NE_Point + " | Width " + targetNode.MapSquare.Width + " | Height " + targetNode.MapSquare.Height);
+					Debug.LogWarning("Touches Point: " + point);
 
 					return targetNode.FindPoint(point);
-					break;
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
@@ -75,37 +74,78 @@ namespace Algorithm.Quadtree
 		/// <exception cref="NotImplementedException"></exception>
 		private void CalculateChildNodes()
 		{
-			var newWidth = Mathf.CeilToInt(MapSquare.Width / 2);
+			var newWidth = Mathf.CeilToInt(MapSquare.Width / 2f);
+			Debug.Log(newWidth);
+			
+			if (newWidth < 2)
+				throw new Exception("New width is " + newWidth + " | (" + MapSquare.Width + "/2)");
 			NodeElement[] childNodes;
 
-			if (newWidth > 2)
+			if (MapSquare.Width / 2 == newWidth)
 			{
-				childNodes = new[]
+				// kein überlappen
+				if (newWidth > 2)
 				{
-					new Node(
-						new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
-					new Node(
-						new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y), newWidth),
-					new Node(
-						new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y + newWidth), newWidth),
-					new Node(
-						new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth), newWidth),
-				};
+					childNodes = new[]
+					{
+						new Node(
+							new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
+						new Node(
+							new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y), newWidth),
+						new Node(
+							new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y + newWidth), newWidth),
+						new Node(
+							new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth), newWidth),
+					};
+				}
+				else
+				{
+					childNodes = new[]
+					{
+						new EndNode(
+							new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
+						new EndNode(
+							new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y), newWidth),
+						new EndNode(
+							new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y + newWidth), newWidth),
+						new EndNode(
+							new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth), newWidth),
+					};
+				}
 			}
 			else
 			{
-				childNodes = new[]
+				// überlappen
+				if (newWidth > 2)
 				{
-					new EndNode(
-						new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
-					new EndNode(
-						new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y), newWidth),
-					new EndNode(
-						new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y + newWidth), newWidth),
-					new EndNode(
-						new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth), newWidth),
-				};
+					childNodes = new[]
+					{
+						new Node(
+							new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
+						new Node(
+							new Vector2Int(MapSquare.SW_Point.x + newWidth - 1, MapSquare.SW_Point.y), newWidth),
+						new Node(
+							new Vector2Int(MapSquare.SW_Point.x + newWidth - 1, MapSquare.SW_Point.y + newWidth - 1), newWidth),
+						new Node(
+							new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth - 1), newWidth),
+					};
+				}
+				else
+				{
+					childNodes = new[]
+					{
+						new EndNode(
+							new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
+						new EndNode(
+							new Vector2Int(MapSquare.SW_Point.x + newWidth - 1, MapSquare.SW_Point.y), newWidth),
+						new EndNode(
+							new Vector2Int(MapSquare.SW_Point.x + newWidth - 1, MapSquare.SW_Point.y + newWidth), newWidth),
+						new EndNode(
+							new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth - 1), newWidth),
+					};
+				}
 			}
+			
 			
 			ChildNodes = new ChildNodes(childNodes);
 		}

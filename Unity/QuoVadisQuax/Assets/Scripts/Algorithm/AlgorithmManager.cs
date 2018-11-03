@@ -56,9 +56,9 @@ namespace Algorithm
             QuadtreeManager.Instance.CreatedNode += (a) => { _quadcopterFlights++; };
         }
 
-        public void SetupAlgorithm(Vector2Int quaxPos, Vector2Int cityPos)
+        public void StartAlgorithm(Vector2Int quaxPos, Vector2Int cityPos)
         {
-            Debug.Log("AlgorithmManager - SetupAlgorithm");
+            //Debug.Log("AlgorithmManager - SetupAlgorithm");
             _foundPath = false;
             _quadcopterFlights = 0;
             _stopwatch.Reset();

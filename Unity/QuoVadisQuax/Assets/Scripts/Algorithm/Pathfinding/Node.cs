@@ -4,7 +4,7 @@ namespace Algorithm.Pathfinding
 {
     public class Node : IHeapItem<Node>
     {
-        public NodeTypes NodeType { private get; set; }
+        public NodeTypes NodeType { get; set; }
         public Vector2Int Position { get; private set; }
 
         public int gCost;

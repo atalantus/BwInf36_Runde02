@@ -31,16 +31,6 @@ namespace Algorithm.Quadtree
         }
 
         /// <summary>
-        /// Instantiates a new <see cref="MapSquare"/> object
-        /// </summary>
-        /// <param name="swPoint">The South-West (Bottom-Left) point of the Node`s Square</param>
-        /// <param name="nePoint">The North-East (Top-Right) point of the Node`s Square</param>
-        public MapSquare(Vector2Int swPoint, Vector2Int nePoint) : base(swPoint, nePoint)
-        {
-            MapType = MapTypes.UNKNOWN;
-        }
-
-        /// <summary>
         /// Get`s the <see cref="MapType"/> of the map's cutout
         /// </summary>
         /// <returns>The Map Type</returns>
@@ -49,35 +39,38 @@ namespace Algorithm.Quadtree
             var containsWater = false;
             var containsLand = false;
 
+            Debug.LogWarning("SW " + SW_Point + " | NE " + NE_Point + " | Width " + Width);
+            
             var pixels = MapDataManager.Instance.MapTexture.GetPixels(SW_Point.x, SW_Point.y, Width, Height);
+
             var pixelsSize = pixels.Length;
             var prime = Utilities.GetHigherPrime(pixelsSize);
             if (prime < 0) throw new Exception("Couldn't find a higher prime");
 
             var i = prime % pixelsSize;
-            
+
             //Debug.LogWarning("Pixels Size: " + pixelsSize);
 
             for (var j = 1; j <= pixelsSize; j++)
             {
                 var pixelType = pixels[i].GetMapType();
-                
+
                 //Debug.LogWarning("Get Pixel " + i + " type: " + pixelType + " color: " + pixels[i]);
 
                 if (pixelType == MapTypes.WATER && !containsWater)
                 {
-                    Debug.Log("----- FOUND WATER on " + (float)j /pixelsSize * 100 + "% -----");
+                    //Debug.Log("----- FOUND WATER on " + (float)j /pixelsSize * 100 + "% -----");
                     containsWater = true;
                 }
                 else if (pixelType != MapTypes.WATER && !containsLand)
                 {
-                    Debug.Log("----- FOUND LAND on " + (float)j /pixelsSize * 100 + "% -----");
+                    //Debug.Log("----- FOUND LAND on " + (float)j /pixelsSize * 100 + "% -----");
                     containsLand = true;
                 }
 
                 if (containsWater && containsLand)
                 {
-                    Debug.Log("----- STOP FOUND BOTH WATER AND LAND on " + (float)j /pixelsSize * 100 + "% -----");
+                    //Debug.Log("----- STOP FOUND BOTH WATER AND LAND on " + (float)j /pixelsSize * 100 + "% -----");
                     break;
                 }
 
@@ -90,7 +83,7 @@ namespace Algorithm.Quadtree
                 MapType = MapTypes.GROUND;
             else
                 MapType = MapTypes.WATER;
-            
+
             QuadtreeManager.Instance.RegisterNewNode(this);
 
             return MapType;

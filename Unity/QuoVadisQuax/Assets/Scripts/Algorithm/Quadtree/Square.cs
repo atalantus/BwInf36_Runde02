@@ -32,27 +32,9 @@ namespace Algorithm.Quadtree
             get { return Width; }
         }
 
-        /// <summary>
-        /// The origin of the square
-        /// </summary>
-        public Vector2Int Origin { get; private set; }
-
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Instantiates a new <see cref="Square"/> object
-        /// </summary>
-        /// <param name="swPoint">The South-West (Bottom-Left) point</param>
-        /// <param name="nePoint">The North-East (Top-Right) point</param>
-        public Square(Vector2Int swPoint, Vector2Int nePoint)
-        {
-            SW_Point = swPoint;
-            NE_Point = nePoint;
-            Width = NE_Point.x - SW_Point.x;
-            Origin = new Vector2Int(SW_Point.x + Width / 2, SW_Point.y + Height / 2);
-        }
 
         /// <summary>
         /// Instantiates a new <see cref="Square"/> object
@@ -63,8 +45,7 @@ namespace Algorithm.Quadtree
         {
             SW_Point = swPoint;
             Width = width;
-            NE_Point = new Vector2Int(SW_Point.x + Width, Mathf.Abs(SW_Point.y + Height));
-            Origin = new Vector2Int(SW_Point.x + Width / 2, SW_Point.y + Height / 2);
+            NE_Point = new Vector2Int(SW_Point.x + Width - 1, Mathf.Abs(SW_Point.y + Height - 1));
         }
 
         /// <summary>

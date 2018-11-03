@@ -17,7 +17,7 @@ namespace Algorithm.Pathfinding
 
         public void CreateGrid(ref bool isFinished)
         {
-            Debug.Log("Grid - CreateGrid");
+            //Debug.Log("Grid - CreateGrid");
             for (int x = 0; x < _gridSizeX; x++)
             {
                 for (int y = 0; y < _gridSizeY; y++)

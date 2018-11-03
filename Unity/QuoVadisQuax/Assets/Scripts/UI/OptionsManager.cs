@@ -79,8 +79,7 @@ public class OptionsManager : MonoBehaviour
         _quaxPosOverlay.GetComponent<AspectRatioFitter>().aspectRatio = aspectRatio;
 
         _guiCoordinates[2].text = MapDataManager.Instance.CityPosition.x.ToString();
-        _guiCoordinates[3].text =
-            (MapDataManager.Instance.Dimensions.y - MapDataManager.Instance.CityPosition.y - 1).ToString();
+        _guiCoordinates[3].text = MapDataManager.Instance.CityPosition.y.ToString();
     }
 
     private void UpdateAlgorithmResults(bool foundPath, int flights, TimeSpan time)
@@ -94,7 +93,7 @@ public class OptionsManager : MonoBehaviour
     {
         _selectedQuax = MapDataManager.Instance.QuaxPositions[index];
         _guiCoordinates[0].text = _selectedQuax.x.ToString();
-        _guiCoordinates[1].text = (MapDataManager.Instance.Dimensions.y - _selectedQuax.y - 1).ToString();
+        _guiCoordinates[1].text = _selectedQuax.y.ToString();
 
         Action markQuax = () =>
         {

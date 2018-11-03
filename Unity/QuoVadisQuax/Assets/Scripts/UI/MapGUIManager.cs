@@ -54,11 +54,9 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             Debug.LogWarning("MapGUIManager - ColorPath");
 
-            if (foundPath)
-            {
-                _readyToColorPath = true;
-                _path = path;
-            }
+            _path = foundPath ? path : new List<Node>();
+            
+            _readyToColorPath = true;
         };
         QuadtreeManager.Instance.CreatedNode += ColorQuadtreeNode;
     }
@@ -121,7 +119,7 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     void SetUpOverlayTexture(Vector2Int quaxPos, Vector2Int cityPos)
     {
-        _overlayTexture.ClearTexture(() => _algorithmManager.SetupAlgorithm(quaxPos, cityPos));
+        _overlayTexture.ClearTexture(() => _algorithmManager.StartAlgorithm(quaxPos, cityPos));
     }
 
     /// <summary>
