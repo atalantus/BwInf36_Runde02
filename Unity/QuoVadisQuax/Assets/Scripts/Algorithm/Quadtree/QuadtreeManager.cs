@@ -51,7 +51,7 @@ namespace Algorithm.Quadtree
 
         private void SearchForPoint(Vector2Int point)
         {
-            Debug.Log("QuadtreeManager - FindPoint " + point);
+            //Debug.Log("QuadtreeManager - FindPoint " + point);
             
             // TODO: Performance: don't run whole quadtree on main thread! only GetPixel in GetMatType() in MapSquare.cs
             ThreadQueuer.Instance.QueueMainThreadAction(() =>

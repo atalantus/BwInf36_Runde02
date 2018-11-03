@@ -69,7 +69,7 @@ namespace Algorithm.Pathfinding
 
         public void UpdateGrid(MapSquare square, ref bool updated)
         {
-            Debug.LogWarning("PathfindingManager - UpdateGrid");
+            //Debug.LogWarning("PathfindingManager - UpdateGrid");
             var mapType = square.MapType;
 
             if (mapType != MapTypes.GROUND && mapType != MapTypes.WATER)
@@ -85,16 +85,13 @@ namespace Algorithm.Pathfinding
                     if (PathfindingGrid.NodeGrid.GetLength(0) - 1 >= x &&
                         PathfindingGrid.NodeGrid.GetLength(1) - 1 >= y)
                     {
-                        Debug.Log("(" + x + ", " + y + ") NodeType: " +
-                                  (mapType == MapTypes.GROUND ? NodeTypes.WALKABLE : NodeTypes.UNWALKABLE));
+                        //Debug.Log("(" + x + ", " + y + ") NodeType: " + (mapType == MapTypes.GROUND ? NodeTypes.WALKABLE : NodeTypes.UNWALKABLE));
                         PathfindingGrid.NodeGrid[x, y].NodeType =
                             mapType == MapTypes.GROUND ? NodeTypes.WALKABLE : NodeTypes.UNWALKABLE;
                     }
                     else
                     {
-                        Debug.LogWarning(x + ", " + y + " liegt außerhalb des A* Grids (" +
-                                         PathfindingGrid.NodeGrid.GetLength(0) + ", " +
-                                         PathfindingGrid.NodeGrid.GetLength(1) + ")!");
+                        //Debug.LogWarning(x + ", " + y + " liegt außerhalb des A* Grids (" + PathfindingGrid.NodeGrid.GetLength(0) + ", " + PathfindingGrid.NodeGrid.GetLength(1) + ")!");
                         // Quadtree Bereich außerhalb des A* Grids (Eh wasser also nicht wert zu untersuchen)
                     }
                 }
@@ -128,7 +125,7 @@ namespace Algorithm.Pathfinding
             {
                 _updatedGrid = false;
 
-                Debug.LogWarning("PathfindingManager - Update - SearchPath 01");
+                //Debug.LogWarning("PathfindingManager - Update - SearchPath 01");
                 ThreadQueuer.Instance.StartThreadedAction(() => { FindPath(false); });
             }
 
@@ -136,14 +133,14 @@ namespace Algorithm.Pathfinding
             {
                 _tryPathfindingWithUnknownWalkable = false;
 
-                Debug.LogWarning("PathfindingManager - Update - SearchPath 02");
+                //Debug.LogWarning("PathfindingManager - Update - SearchPath 02");
                 ThreadQueuer.Instance.StartThreadedAction(() => { FindPath(true); });
             }
         }
 
         public void FindPath(bool canWalkUnknown)
         {
-            Debug.Log("PathfindingManager - FindPath");
+            //Debug.Log("PathfindingManager - FindPath");
 
             Heap<Node> openSet =
                 new Heap<Node>(PathfindingGrid.NodeGrid.GetLength(0) * PathfindingGrid.NodeGrid.GetLength(1));
@@ -166,7 +163,7 @@ namespace Algorithm.Pathfinding
                         // Get the first unknown node in the path
                         for (int i = 0; i < path.Count; i++)
                         {
-                            Debug.LogWarning("Checking Path Node " + path[i].Position + " Type: " + path[i].NodeType);
+                            //Debug.LogWarning("Checking Path Node " + path[i].Position + " Type: " + path[i].NodeType);
                             if (path[i].NodeType == NodeTypes.UNKNOWN)
                             {
                                 // Request map information about this node
@@ -224,7 +221,7 @@ namespace Algorithm.Pathfinding
 
         List<Node> RetracePath(Node startNode, Node endNode)
         {
-            Debug.Log("PathfindingManager - RetracePath");
+            //Debug.Log("PathfindingManager - RetracePath");
 
             List<Node> path = new List<Node>();
             Node currentNode = endNode;

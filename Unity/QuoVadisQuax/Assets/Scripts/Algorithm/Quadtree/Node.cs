@@ -27,7 +27,6 @@ namespace Algorithm.Quadtree
 		public Node(Vector2Int swPoint, int width)
 		{
 			MapSquare = new MapSquare(swPoint, width);
-			CalculateChildNodes();
 		}
 		
 		public override MapSquare FindPoint(Vector2Int point)
@@ -42,6 +41,7 @@ namespace Algorithm.Quadtree
 				case MapTypes.GROUND:
 					return MapSquare;
 				case MapTypes.MIXED:
+					CalculateChildNodes();
 					NodeElement targetNode = null;
 					for (int i = 0; i < ChildNodes.Nodes.Length; i++)
 					{
@@ -53,14 +53,14 @@ namespace Algorithm.Quadtree
 					{
 						foreach (var node in ChildNodes.Nodes)
 						{
-							Debug.LogWarning("Node: SW " + node.MapSquare.SW_Point + " | NE " + node.MapSquare.NE_Point);
+							//Debug.LogWarning("Node: SW " + node.MapSquare.SW_Point + " | NE " + node.MapSquare.NE_Point);
 						}
 
 						throw new Exception("Unable to find point " + point + " in quadtree");
 					}
 					
-					Debug.LogWarning("Touching Node: SW " + targetNode.MapSquare.SW_Point + " | NE " + targetNode.MapSquare.NE_Point + " | Width " + targetNode.MapSquare.Width + " | Height " + targetNode.MapSquare.Height);
-					Debug.LogWarning("Touches Point: " + point);
+					//Debug.LogWarning("Touching Node: SW " + targetNode.MapSquare.SW_Point + " | NE " + targetNode.MapSquare.NE_Point + " | Width " + targetNode.MapSquare.Width + " | Height " + targetNode.MapSquare.Height);
+					//Debug.LogWarning("Touches Point: " + point);
 
 					return targetNode.FindPoint(point);
 				default:
@@ -75,7 +75,7 @@ namespace Algorithm.Quadtree
 		private void CalculateChildNodes()
 		{
 			var newWidth = Mathf.CeilToInt(MapSquare.Width / 2f);
-			Debug.Log(newWidth);
+			//Debug.Log(newWidth);
 			
 			if (newWidth < 2)
 				throw new Exception("New width is " + newWidth + " | (" + MapSquare.Width + "/2)");

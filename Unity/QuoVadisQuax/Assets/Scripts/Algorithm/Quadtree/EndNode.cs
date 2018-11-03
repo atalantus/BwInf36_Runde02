@@ -24,7 +24,7 @@ namespace Algorithm.Quadtree
 			if (MapSquare.MapType == MapTypes.UNKNOWN)
 				MapSquare.GetMapTyp();
 
-			Debug.Log("Reached EndNode SW " + MapSquare.SW_Point + " NE " + MapSquare.NE_Point + " MapType: " + MapSquare.MapType);
+			//Debug.Log("Reached EndNode SW " + MapSquare.SW_Point + " NE " + MapSquare.NE_Point + " MapType: " + MapSquare.MapType);
 			return MapSquare;
 		}
 		

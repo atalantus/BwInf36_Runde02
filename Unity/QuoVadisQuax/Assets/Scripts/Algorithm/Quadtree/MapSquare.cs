@@ -39,7 +39,7 @@ namespace Algorithm.Quadtree
             var containsWater = false;
             var containsLand = false;
 
-            Debug.LogWarning("SW " + SW_Point + " | NE " + NE_Point + " | Width " + Width);
+            //Debug.LogWarning("SW " + SW_Point + " | NE " + NE_Point + " | Width " + Width);
             
             var pixels = MapDataManager.Instance.MapTexture.GetPixels(SW_Point.x, SW_Point.y, Width, Height);
 
