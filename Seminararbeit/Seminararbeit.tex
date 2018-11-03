@@ -404,8 +404,81 @@ Als letzte Anweisung der Methode wird mit einem Rekursionsende \code{null} zurü
 \end{figure}
 
 \subsection{Optimierungsmöglichkeiten}
+Mit der Implementierung dieses Algorithmus können maximale Mauern bis zu $n = 17$ in wenigen Sekunden erzeugt werden. Jedoch steigt die durchschnittliche Algorithmuslaufzeit ab $n = 17$ sehr stark an. Für $n = 18$ dauert das Finden einer Mauer schon mehrere Minuten.
+\\[0.4cm]
+% TODO: QUELLE FÜR BWINF LÖSUNGEN
+Dieser Algorithmus lässt sich jedoch noch um einiges optimieren. In den vom Bundeswettbewerb Informatik offiziell veröffentlichten Lösungshinweisen werden zur ersten Aufgabe noch mehrere Optimierungsmöglichkeiten genannt:
+\begin{itemize}
+\item Randomized Algorithm
+\item Kopplung und Spiegelung einer halben Mauer
+\item Einschränkung des Suchraums
+\item Ergänzung vorheriger Permutationen
+\end{itemize}
+
+Mithilfe dieser Optimierungen kann der Algorithmus so erweitert werden, dass er bis $n = 110$ eine Mauer wenigen Minuten generieren kann.
+
+% TODO: QUELLE: https://www.calculator.net/big-number-calculator.html
+Dies ist vor allem Eindrucksvoll, wenn man bedenkt, dass es für $n = 100$ schon
+\begin{center}
+\begin{Large}
+\[100!^{51} \approx 2,95\mathrm{e}{+8,056}\]
+\end{Large}
+\end{center}
+unterschiedliche Mauern der maximalen Höhe gibt.
+
+Eine Zahl mit \textbf{über 8057 Stellen}.
 
 \subsection{Beispiele}
+Wie bereits erwähnt kann der Algorithmus Mauern von $n = 2$ bis $n = 17$ in wenigen Sekunden erstellen. Test mit größeren $n$ wurden nach mehreren Minuten abgebrochen.
+\\[0.4cm]
+Außerdem können Mauern von $n = 2$ bis $n = 7$ komplett \textbf{ohne Backtracking} generiert werden. Dies sorgt dafür, dass die Algorithmuslaufzeit für diese $n$ in etwa gleich niedrig sind.
+\\[0.4cm]
+Weiterhin erwähnenswert ist, dass das Finden von Mauern für ungerade $n$ meist kürzer dauert, als das Generieren der $n - 1$ Mauer, da dort Fugen freigelassen werden können und es dadurch deutlich mehr mögliche Mauerkombinationen gibt.
+\\[0.4cm]
+Im Folgenden sind die durchschnittlichen Algorithmuslaufzeiten für die verschiedenen $n$ in einer Tabelle aufgelistet. Außerdem werden in Abbildung 22 bis 24 Konsolen-Ausgaben des Programms für verschiedene $n$ gezeigt.
+\vspace{0.4cm}
+\begin{table}[H]
+\begin{center}
+\begin{tabular}{cr}
+\hline
+n  & Algorithmuslaufzeit \\ \hline
+2  & 10,25 ms            \\
+3  & 10 ms               \\
+4  & 11 ms               \\
+5  & 10 ms               \\
+6  & 10,75 ms            \\
+7  & 10,75 ms            \\
+8  & 10 ms               \\
+9  & 10,75 ms            \\
+10 & 15 ms               \\
+11 & 14,75 ms            \\
+12 & 29,25 ms            \\
+13 & 42 ms               \\
+14 & 372 ms              \\
+15 & 125 ms              \\
+16 & 11348 ms            \\
+17 & 636 ms             
+\end{tabular}
+\end{center}
+\end{table}
+
+Die linke Spalte gibt den eingegeben Wert für $n$ an, die rechte die durchschnittliche Algorithmuslaufzeit in Millisekunden.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Programm_17.png}
+    \caption{Programm-Ausgabe für $n = 17$.}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Programm_10.png}
+    \caption{Programm-Ausgabe für $n = 10$.}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Programm_6.png}
+    \caption{Programm-Ausgabe für $n = 6$ mit vorherigen fehlerhaften Eingaben für $n$ (1 und abc).}
+\end{figure}
 
 
 %===================================================================================
