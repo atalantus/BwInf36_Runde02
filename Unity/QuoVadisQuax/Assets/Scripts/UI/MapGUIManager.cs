@@ -63,6 +63,8 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private void ColorQuadtreeNode(MapSquare mapSquare)
     {
+        if (!_optionsManager.ShowNodes) return;
+        
         Color32 color;
 
         switch (mapSquare.MapType)

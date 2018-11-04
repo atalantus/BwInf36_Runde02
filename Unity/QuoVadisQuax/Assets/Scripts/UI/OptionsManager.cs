@@ -37,6 +37,8 @@ public class OptionsManager : MonoBehaviour
     [SerializeField] private GameObject _toggleIcon;
     [SerializeField] private Text[] _algorithmResults;
 
+    public bool ShowNodes { get; set; }
+
     private void Awake()
     {
         _closedPos = transform.position;

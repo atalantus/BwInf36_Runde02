@@ -45,7 +45,7 @@ namespace Algorithm
             PathfindingManager.Instance.StartedPathfinding += () =>
             {
                 _containerManager.DestroyMessage(PREPARING_ALGORITHM_MSG_ID);
-                _containerManager.CreateMessage("Searching Path", SEARCHING_PATH_MSG_ID, true);
+                _containerManager.CreateMessage("Finding Path", SEARCHING_PATH_MSG_ID, true);
                 _stopwatch.Start();
             };
 
@@ -70,10 +70,26 @@ namespace Algorithm
 
         public void FinishAlgorithm()
         {
+            ulong time = (ulong) QuadtreeManager.Instance.QuadtreeTime +
+                         (ulong) PathfindingManager.Instance.TotalTimeUpdateGrid +
+                         (ulong) PathfindingManager.Instance.TotalTimePathfinding01 +
+                         (ulong) PathfindingManager.Instance.TotalTimePathfinding02;
+
+            var ts = TimeSpan.FromMilliseconds(time);
+            
             _containerManager.DestroyMessage(SEARCHING_PATH_MSG_ID);
-            _containerManager.CreateMessage(_stopwatch.Elapsed.Seconds + "s " + _stopwatch.Elapsed.Milliseconds + "ms", "algorithm_time", false, 5f);
+            _containerManager.CreateMessage(ts.Seconds + "s " + ts.Milliseconds + "ms", "algorithm_time", false, 5f);
+            
+            Debug.LogWarning("----- ALGORITHM TIME -----");
+            Debug.LogWarning("Quadtree Searches: " + QuadtreeManager.Instance.QuadtreeTime);
+            Debug.LogWarning("Updating A* Grid: " + PathfindingManager.Instance.TotalTimeUpdateGrid);
+            Debug.LogWarning("Pathfinding 01: " + PathfindingManager.Instance.TotalTimePathfinding01);
+            Debug.LogWarning("Pathfinding 02: " + PathfindingManager.Instance.TotalTimePathfinding02);
+            Debug.LogWarning("WHOLE ALGORITHM: " + _stopwatch.Elapsed.TotalMilliseconds);
+
+
             if (FinishedAlgorithm != null)
-                FinishedAlgorithm.Invoke(_foundPath, _quadcopterFlights, _stopwatch.Elapsed);
+                FinishedAlgorithm.Invoke(_foundPath, _quadcopterFlights, ts);
         }
 
         #endregion

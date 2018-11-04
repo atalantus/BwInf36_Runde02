@@ -45,6 +45,10 @@ namespace Algorithm.Pathfinding
         private HashSet<Node> _cachedClosedSet;
         private Node _cachedLastPathNode;
 
+        public double TotalTimeUpdateGrid;
+        public double TotalTimePathfinding01;
+        public double TotalTimePathfinding02;
+
         #endregion
 
         #region Methods
@@ -75,7 +79,8 @@ namespace Algorithm.Pathfinding
                     }
 
                     s.Stop();
-                    //Debug.LogWarning("Updating Grid took: " + s.ElapsedMilliseconds + "ms");
+                    Debug.LogWarning("Updating Grid took: " + s.Elapsed.TotalMilliseconds + "ms");
+                    TotalTimeUpdateGrid += s.Elapsed.TotalMilliseconds;
                 });
             };
         }
@@ -90,6 +95,10 @@ namespace Algorithm.Pathfinding
                 new Heap<Node>(PathfindingGrid.NodeGrid.GetLength(0) * PathfindingGrid.NodeGrid.GetLength(1));
             _cachedClosedSet = new HashSet<Node>();
             _cachedLastPathNode = null;
+
+            TotalTimeUpdateGrid = 0;
+            TotalTimePathfinding01 = 0;
+            TotalTimePathfinding02 = 0;
 
             ThreadQueuer.Instance.StartThreadedAction(() => { PathfindingGrid.CreateGrid(ref createdGrid); });
         }
@@ -170,7 +179,8 @@ namespace Algorithm.Pathfinding
                     }
 
                     s.Stop();
-                    //Debug.LogWarning("Pathfinding 01 took: " + s.ElapsedMilliseconds + "ms");
+                    Debug.LogWarning("Pathfinding 01 took: " + s.Elapsed.TotalMilliseconds + "ms");
+                    TotalTimePathfinding01 += s.Elapsed.TotalMilliseconds;
                 });
             }
 
@@ -194,7 +204,8 @@ namespace Algorithm.Pathfinding
                     }
 
                     s.Stop();
-                    Debug.LogWarning("Pathfinding 02 took: " + s.ElapsedMilliseconds + "ms");
+                    Debug.LogWarning("Pathfinding 02 took: " + s.Elapsed.TotalMilliseconds + "ms");
+                    TotalTimePathfinding02 += s.Elapsed.TotalMilliseconds;
                 });
             }
         }

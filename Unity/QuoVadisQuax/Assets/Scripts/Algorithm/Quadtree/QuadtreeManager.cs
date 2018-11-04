@@ -27,6 +27,8 @@ namespace Algorithm.Quadtree
         public event CreatedNodeEventHandler CreatedNode;
         
         public NodeElement _rootNode;
+
+        public double QuadtreeTime;
         
         #endregion
 
@@ -47,8 +49,9 @@ namespace Algorithm.Quadtree
 
         public void SetupQuadtree()
         {
-            this._rootNode = null;
-            this._rootNode = new Node(new Vector2Int(0,0), MapDataManager.Instance.Dimensions.x);
+            _rootNode = null;
+            _rootNode = new Node(new Vector2Int(0,0), MapDataManager.Instance.Dimensions.x);
+            QuadtreeTime = 0;
         }
 
         private void SearchForPoint(Vector2Int point)
@@ -64,7 +67,8 @@ namespace Algorithm.Quadtree
                 var square = _rootNode.FindPoint(point);
                 
                 s.Stop();
-                //Debug.LogWarning("Quadtree Search took: " + s.ElapsedMilliseconds + "ms");
+                Debug.LogWarning("Quadtree Search took: " + s.Elapsed.TotalMilliseconds + "ms");
+                QuadtreeTime += s.Elapsed.TotalMilliseconds;
             
                 if (UpdatedQuadtree != null)
                     UpdatedQuadtree.Invoke(square);
