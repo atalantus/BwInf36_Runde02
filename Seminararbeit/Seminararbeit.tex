@@ -547,9 +547,84 @@ und erkläre, worin das Problem besteht.
 \end{enumerate}
 
 \subsection{Auslegung der Aufgabe}
-% SPEZIALFALL
+Die Aufgabenstellung ist größtenteils sehr klar. Das grundlegende Problem ist eine Wegfindung. Jedoch reicht als Lösung kein einfacher Wegfindungs-Algorithmus, da es bestimmte Bedingungen gibt, wie das der Quadcopter minimal 20x20 Gebiete scannen kann. Beim Scannen eines Gebiets gibt es 3 Mögliche Resultate. Entweder das Gebiet besteht eindeutig aus Wasser oder aus Land, oder das Gebiet liefert den Wert gemischt und besitzt damit sowohl Wasser als auch Land.
+
+Das Endziel des Algorithmus ist nicht wie bei den meisten normalen Pathfinding Algorithmen möglichst schnell einen möglichst kurzen Weg zu finden, sondern mit \textbf{möglichst wenig Flügen} einen Pfad zur Stadt zu finden.
+
+Angenommen man verwendet einen auf einem 20x20 Gitter basierenden Wegfindungs-Algorithmus, so müsste der Quadcopter zuerst
+\begin{center}
+\begin{Large}
+\[\lceil \frac{w}{2}\rceil \times \lceil \frac{h}{2}\rceil\]
+\end{Large}
+\end{center}
+wobei $w$ die Breite und $h$ die Höhe der Karte sind, Flüge durchführen, um das benötigte Gitter zu erstellen.
+Im Falle der ersten offiziellen Test-Map des BwInfs (siehe Abbildung 25) mit den Dimensionen 1674x1102 wären das \textbf{461,187 Flüge}.
+\begin{figure}[H]
+\centering
+    \includegraphics[width=0.8\linewidth]{Bilder/Aufgabe3/Maps/quax1.png}
+    \caption{quax1.png des zur Aufgabe 3 verfügbar gestellten Materials}
+\end{figure}
+Hier könnte man allerdings allein schon zehntausende Flüge einsparen, wenn man den Quadcopter die linke obere Ecke von einer höheren Position aus scannen lasst, so dass er ein größeres Gebiet auf einmal betrachtet (siehe Abbildung 26).
+\begin{figure}[H]
+\centering
+    \includegraphics[width=0.8\linewidth]{Bilder/Aufgabe3/Einsparung_Fluege.png}
+    \caption{Das einzelne Scannen dieses Bereiches würde ungefähr \textbf{63 tausend Flüge einsparen}.}
+\end{figure}
+
+Es lohnt sich also groß anzufangen und nicht direkt auf der niedrigsten Höhe die Map zu untersuchen.
+\\[0.4cm]
+Zusätzlich würde es nicht ausreichen das Gebiet in nebeneinander liegende 20x20 Quadrate zu unterteilen, da es so zu einem Sonderfall kommen könnte.
+\\[0.4cm] 
+In der Aufgabenstellung ist definiert, dass Quax zwar ein 20x20 gemischtes Quadrat überqueren kann, jedoch kein 20x20 Wasser-Quadrat.
+
+Nun kann es dazu kommen, dass zwei benachbarte, gemischte 20x20 Quadrate ein quasi „unentdecktes“ 20x20 Wasser-Quadrat zwischen sich haben (siehe Abbildung 27). In diesem Fall würde ein normaler Wegfindungs-Algorithmus Quax diese zwei 20x20 gemischten Quadrate überqueren lassen. Jedoch müsste Quax dafür auch ein 20x20 Wasser-Quadrat überqueren, was nicht geht.
+\begin{figure}[H]
+\centering
+    \includegraphics[width=0.8\linewidth]{Bilder/Aufgabe3/Sonderfall.png}
+    \caption{Bei einer Überquerung der beiden Linken 20x20 Quadrate, würde Quax das eigentliche 20x20 Wasser-Quadrat einfach „überspringen“.}
+\end{figure}
 
 \subsection{Lösungsidee}
+% TODO: QUELLE: QUADTREE
+Um die Map mit möglichst wenig Flügen zu untersuchen, eignet es sich einen Quadtree („Quaternärbaum“) zu verwenden. Ein Quadtree ist eine Baum-Datenstruktur, bei der jeder innere Knoten genau vier Tochterknoten hat. Quadtrees werden in der Informatik oft zur Unterteilung von Bildern verwendet.
+\\[0.4cm]
+Diese Datenstruktur eignet sich hervorragend für die Unterteilung der Karte. Ein größeres Quadrat würd dabei in jeweils 4 gleichgroße kleinere Quadrate unterteilt (siehe Abbildung 28).
+\begin{figure}[H]
+\centering
+    \includegraphics[width=0.5\linewidth]{Bilder/Aufgabe3/Quadtree_Einfach.png}
+    \caption{Das größere Quadrat wird in jeweils 4 gleichgroße, kleinere Quadrate unterteilt. Das große Quadrat Objekt, hält dabei eine Referenz auf die kleineren.}
+\end{figure}
+
+Man teilt ein Quadrat immer dann auf, wenn der jeweilige Inhalt nicht eindeutig als Land oder Wasser bestimmt werden kann, und das Quadrat noch größer als 20x20 ist.
+
+Abbildung 29 zeigt eine solche Unterteilung für eine Beispielkarte. Es wird nach Quaxs Position (1, 10) gesucht. Hierbei wird zuerst die Wurzel des Quadtrees gebildet, welche die gesamte Karte beinhaltet. Nachdem diese als gemischt identifiziert wird (1. Flug), wird die Wurzel unterteilt. Da das Süd-Westliche Quadrat den Punkt (1, 10) enthält, wird dieses als nächstes angeflogen (2. Flug). Da jedoch auch dieses das Ergebnis „Gemischt“ zurückliefert, wird es auch unterteilt. Das Süd-Westliche innere Quadrat ist wieder das, welches die Position (1, 10) enthält und wird somit untersucht (3. Flug). Da dieses jedoch eindeutig Land enthält, ist die Unterteilung abgeschlossen.
+\begin{figure}[H]
+\centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Quadtree_01.png}
+    \caption{Für die links abgebildete Karte wird ein Quadtree (rechts) so gebildet, dass Quaxs Umgebung eindeutig bestimmt werden kann.}
+\end{figure}
+
+Nun stellt diese Quadtree Struktur aber auch eine Bedingung an die zu untersuchende Karte. Da der Quadcopter immer Viereckige Gebiete untersucht und die Wurzel des Quadtree-Baums die gesamte Karte umfassen muss, muss die Karte auch quadratisch sein. Dies ist jedoch kein größeres Problem, da in der Aufgabenstellung festgelegt wurde, dass alle Bereiche außerhalb der definierten Karte als Wasser angenommen werden können.
+\\[0.4cm]
+Jetzt gibt es aber auch beim Quadtree den Sonderfall, dass ein Quadrat mit ungerader Größe unterteilt werden muss. Dabei, wenn man alle Bereiche abdecken will, kommt es zu Überlappungen der inneren Quadrate (siehe Abbildung 29).
+\begin{figure}[H]
+\centering
+    \includegraphics[width=.5\linewidth]{Bilder/Aufgabe3/Quadtree_Ueberlappung.png}
+    \caption{Bei einer Aufteilung eines Quadrats mit ungerader Größe überlappen sich die inneren Quadrate.}
+\end{figure}
+
+Um dies zu verhindern könnte man die Karte nicht einfach nur quadratisch machen, sondern auf eine Größe bringen, so dass die Breite und Höhe der Map einer Zweierpotenz entsprechen. Dadurch könnte jede Aufteilung bis zum kleinst-möglichen 20x20 Quadrat ohne Überlappungen durchgeführt werden.
+\\[0.4cm]
+Der Nachteil dieser Skalierung ist jedoch eine ziemliche Vergrößerung der Karte im Vergleich zur ersten Methode (siehe Abbildung 31).
+\begin{figure}[H]
+\centering
+    \includegraphics[width=.9\linewidth]{Bilder/Aufgabe3/Erweiterung_Karte.png}
+    \caption{Links die einfache Umformung der Map zu einem Quadrat so dass Breite = Höhe. Rechts die Umformung zu einer Zweierpotenz-Größe. Der blau markierte Bereich zeigt jeweils die zusätzlich hinzugefügten Gebiete an.}
+\end{figure}
+
+Für noch größere Karten steigt der Unterschied zwischen den beiden Methoden noch mehr und je größer die Karte, desto mehr Quadcopter Flüge bis man das eigentliche Gebiet erreicht hat.
+\\[0.4cm]
+% SONDERFALL
 
 \subsection{Teilaufgabe (a)}
 % A*
@@ -581,6 +656,10 @@ Das bereits implementierte Caching für eine Wegfindung, bei der noch unbekannte
 
 Nun ist es aber noch möglich Zustände für die Wegfindung, bei der unbekannte Nodes als betretbar angenommen werden, zu speichern, so dass dieser Algorithmus nicht jedes mal von der Startposition bis zur Zielposition suchen muss, sondern auf vorher durchgeführte Suchergebnisse zurückgreifen kann.
 \\[0.4cm]
+\textbf{Verbindung beider A* Suchen}
+
+Eine Alternative zum Speichern des aktuellen Zustandes der zweiten A* Suche, wäre auch eine Integration dieser in die schon vorherige A* Suche. Indem man alle unbekannten Nachbar-Nodes in einem zweiten \code{openSet} speichert und nach fehlgeschlagener ersten Suche eine Zweite mit dem zusätzlich erstellten \code{openSet} und der Bedingung, unbekannte Nodes begehbar sind, lässt einiges an Laufzeit einsparen.
+\\[0.4cm]
 \textbf{Bidirektionale Suche}
 
 % TODO: QUELLE BIDIREKTIONALE SUCHE
@@ -588,7 +667,7 @@ Mit Hilfe einer „Bidirektionale Suche“, könnte sich sowohl die Laufzeit, al
 \\[0.4cm]
 \textbf{Unity Implementierung}
 
-Die Wahl einer Game-Engine als Entwicklungsumgebung hat auch einen großen Einfluss auf die Laufzeit, durch viele für dieses Programm unnötige Hintergrundprozesse. Auch das einzelne Darstellen von Flügen auf der Map-Textur verbraucht viele Ressourcen.
+Die Wahl einer Game-Engine als Entwicklungsumgebung hat auch einen sehr großen Einfluss auf die Laufzeit, durch viele für dieses Programm unnötige Hintergrundprozesse. Auch das einzelne Darstellen von Flügen auf der Map-Textur verbraucht viele Ressourcen. Die Laufzeit des puren Algorithmus ist daher wesentlich geringer als die Zeit, die das Programm für die fertige Abbildung des Weges benötigt.
 
 Eine simplere Konsolen-Anwendung, die dem Benutzer die Flüge am Ende in eine PNG-Datei einträgt, würde zum Beispiel nochmals deutlich effizienter laufen.
 
@@ -599,9 +678,26 @@ Eine simplere Konsolen-Anwendung, die dem Benutzer die Flüge am Ende in eine PN
 \subsection{Teilaufgabe (d)}
 Mit einer eher unnatürlichen Verteilung von Flüssen und Seen wie zum Beispiel einem Schachbrettmuster (siehe Abbildung ||||), einem verzweigten Labyrinth (siehe Abbildung ||||) oder eine Anordnung mehrerer schmaler Wasser und Land streifen (siehe Abbildung ||||), können kaum noch größere Flächen eindeutig eingeteilt werden.
 
-Dies sorgt schnell für einen sehr umfangreichen Quaternärbaum und damit auch für viele Quadcopter Flüge.
+Dies sorgt schnell für einen sehr umfangreichen Quadtree und damit auch für viele Quadcopter Flüge.
 \\[0.4cm]
 Der hier besprochene Algorithmus läuft am effizientesten, bei eher natürlichen Landschaften, mit größeren Wasser- und Landflächen. Dabei kann der Quadcopter den Typ größere Gebiete mit nur einem Flug identifizieren.
+
+\begin{figure}[H]
+\centering
+    \includegraphics[width=0.7\linewidth]{Bilder/Aufgabe3/Teilaufgabe_D/schachbrett.png}
+    \caption{Schachbrettartige Landverteilung}
+\end{figure}
+\begin{figure}[H]
+\centering
+    \includegraphics[width=0.7\linewidth]{Bilder/Aufgabe3/Teilaufgabe_D/irrgarten.png}
+    \caption{Irrgarten ähnliche Landverteilung}
+\end{figure}
+\begin{figure}[H]
+\centering
+    \includegraphics[width=0.7\linewidth]{Bilder/Aufgabe3/Teilaufgabe_D/linien.png}
+    \caption{Linienartige Landverteilung}
+\end{figure}
+
 
 %===================================================================================
 %---------------------------------- FAZIT ------------------------------------------
@@ -708,15 +804,20 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur 
 
 \newpage
 \section{ABBILDUNGSVERZEICHNIS}
-Alle enthaltenen Abbildungen wurden entweder selbst mit unten aufgelisteten Tools erstellt oder von unten genannten Programmen/Quellen gescreenshottet.
+Die meisten enthaltenen Abbildungen wurden entweder selbst mit unten aufgelisteten Tools erstellt oder von unten genannten Programmen/Quellen aufgenommen.
 \begin{itemize}
 \item Microsoft PowerPoint
-\item Grafikrechner - GeoGebra
-\item UMLet
 \item Adobe Photoshop CC 2018
+\item UMLet
+\item Grafikrechner - GeoGebra
 % TODO: QUELLEN REFERENZIEREN 
 \item BwInf36 Runde 2 Aufgabenstellung
 \item Windows 10 Konsole
+\end{itemize}
+
+Sonstige Bildquellen:
+\begin{itemize}
+\item https://upload.wikimedia.org/wikipedia/commons/d/df/ZweiWegeIrrgarten.png
 \end{itemize}
 
 %===================================================================================
