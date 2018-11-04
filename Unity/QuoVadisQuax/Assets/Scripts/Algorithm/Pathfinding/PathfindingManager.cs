@@ -25,12 +25,15 @@ namespace Algorithm.Pathfinding
 
         public delegate void RequestMapTileEventHandler(Vector2Int tilePos);
 
+        public delegate void RequestSpecialSquareEventHandler(Vector2Int lw_point);
+
         public delegate void StartedPathfindingEventHandler();
 
         public delegate void FinishedPathfindingEventHandler(List<Node> path, bool foundPath);
 
         public event StartedPathfindingEventHandler StartedPathfinding;
         public event RequestMapTileEventHandler RequestedMapTile;
+        public event RequestSpecialSquareEventHandler RequestSpecialSquare;
         public event FinishedPathfindingEventHandler FinishedPathfinding;
 
         public Grid PathfindingGrid;
@@ -63,7 +66,7 @@ namespace Algorithm.Pathfinding
 
         private void Start()
         {
-            QuadtreeManager.Instance.UpdatedQuadtree += (square) =>
+            QuadtreeManager.Instance.UpdatedQuadtree += (square, lw_point) =>
             {
                 ThreadQueuer.Instance.StartThreadedAction(() =>
                 {
@@ -71,7 +74,7 @@ namespace Algorithm.Pathfinding
                     s.Start();
                     try
                     {
-                        UpdateGrid(square, ref _updatedGrid);
+                        UpdateGrid(square, lw_point, ref _updatedGrid);
                     }
                     catch (Exception e)
                     {
@@ -82,6 +85,13 @@ namespace Algorithm.Pathfinding
                     Debug.LogWarning("Updating Grid took: " + s.Elapsed.TotalMilliseconds + "ms");
                     TotalTimeUpdateGrid += s.Elapsed.TotalMilliseconds;
                 });
+            };
+
+            QuadtreeManager.Instance.CheckedSpecialSquare += (isWalkable, sw_point) =>
+            {
+                PathfindingGrid.NodeGrid[sw_point.x, sw_point.y].NodeType =
+                    isWalkable ? NodeTypes.WALKABLE : NodeTypes.UNWALKABLE;
+                _updatedGrid = true;
             };
         }
 
@@ -103,35 +113,27 @@ namespace Algorithm.Pathfinding
             ThreadQueuer.Instance.StartThreadedAction(() => { PathfindingGrid.CreateGrid(ref createdGrid); });
         }
 
-        public void UpdateGrid(MapSquare square, ref bool updated)
+        public void UpdateGrid(List<MapSquare> updatedSquares, Vector2Int sw_point, ref bool updated)
         {
             //Debug.LogWarning("PathfindingManager - UpdateGrid");
-            var mapType = square.MapType;
 
-            if (mapType != MapTypes.GROUND && mapType != MapTypes.WATER)
-                ThreadQueuer.Instance.QueueMainThreadAction(() =>
-                {
-                    throw new Exception("Unexpected MapType: " + mapType);
-                });
+            var isWalkable = true;
 
-            for (int x = square.SW_Point.x; x <= square.NE_Point.x; x++)
+            if (updatedSquares.TrueForAll(s => s.MapType == MapTypes.GROUND))
+                isWalkable = true;
+            else if (updatedSquares.TrueForAll(s => s.MapType == MapTypes.WATER))
+                isWalkable = false;
+            else
             {
-                for (int y = square.SW_Point.y; y <= square.NE_Point.y; y++)
-                {
-                    if (PathfindingGrid.NodeGrid.GetLength(0) - 1 >= x &&
-                        PathfindingGrid.NodeGrid.GetLength(1) - 1 >= y)
-                    {
-                        //Debug.Log("(" + x + ", " + y + ") NodeType: " + (mapType == MapTypes.GROUND ? NodeTypes.WALKABLE : NodeTypes.UNWALKABLE));
-                        PathfindingGrid.NodeGrid[x, y].NodeType =
-                            mapType == MapTypes.GROUND ? NodeTypes.WALKABLE : NodeTypes.UNWALKABLE;
-                    }
-                    else
-                    {
-                        //Debug.LogWarning(x + ", " + y + " liegt außerhalb des A* Grids (" + PathfindingGrid.NodeGrid.GetLength(0) + ", " + PathfindingGrid.NodeGrid.GetLength(1) + ")!");
-                        // Quadtree Bereich außerhalb des A* Grids (Eh wasser also nicht wert zu untersuchen)
-                    }
-                }
+                //Debug.LogWarning(sw_point + " nicht eindeutig!");
+                if (RequestSpecialSquare != null)
+                    RequestSpecialSquare.Invoke(sw_point);
+                return;
             }
+
+
+            PathfindingGrid.NodeGrid[sw_point.x, sw_point.y].NodeType =
+                isWalkable ? NodeTypes.WALKABLE : NodeTypes.UNWALKABLE;
 
             updated = true;
         }
@@ -154,9 +156,10 @@ namespace Algorithm.Pathfinding
                 if (StartedPathfinding != null)
                     StartedPathfinding.Invoke();
 
+                startNode.NodeType = NodeTypes.WALKABLE;
+                targetNode.NodeType = NodeTypes.WALKABLE;
 
-                if (RequestedMapTile != null)
-                    RequestedMapTile.Invoke(startPos);
+                _updatedGrid = true;
             }
 
             if (_updatedGrid)

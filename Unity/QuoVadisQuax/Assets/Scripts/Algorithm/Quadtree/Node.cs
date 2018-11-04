@@ -34,6 +34,14 @@ namespace Algorithm.Quadtree
 			if (MapSquare.MapType == MapTypes.UNKNOWN)
 				MapSquare.GetMapTyp();
 
+			if (!TouchesPoint(point))
+			{
+				//Debug.LogWarning("Point " + point + " is outside of Quadtree bounds.");
+				var extraMapSquare = new MapSquare(point, 1);
+				extraMapSquare.MapType = MapTypes.WATER;
+				return extraMapSquare;
+			}
+
 			switch (MapSquare.MapType)
 			{
 				case MapTypes.WATER:
@@ -58,7 +66,10 @@ namespace Algorithm.Quadtree
 							//Debug.LogWarning("Node: SW " + node.MapSquare.SW_Point + " | NE " + node.MapSquare.NE_Point);
 						}
 
-						throw new Exception("Unable to find point " + point + " in quadtree");
+						//Debug.LogWarning("Point " + point + " is outside of Quadtree bounds.");
+						var extraMapSquare = new MapSquare(point, 1);
+						extraMapSquare.MapType = MapTypes.WATER;
+						return extraMapSquare;
 					}
 					
 					//Debug.LogWarning("Touching Node: SW " + targetNode.MapSquare.SW_Point + " | NE " + targetNode.MapSquare.NE_Point + " | Width " + targetNode.MapSquare.Width + " | Height " + targetNode.MapSquare.Height);

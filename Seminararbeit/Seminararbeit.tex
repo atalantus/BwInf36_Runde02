@@ -629,7 +629,17 @@ Um nun auch auf den Sonderfall der zwei angrenzenden, gemischten 20x20 Quadrate,
 Auf diese Weise kann sichergestellt werden, dass keine 20x20 Wasser-Quadrate, die zwischen zwei 20x20 gemischten Quadraten liegen übersprungen werden.
 
 \subsection{Teilaufgabe (a)}
-% A*
+Ein Quadrat in der Landschaft kann für Quax drei mögliche Zustände Wasser („W“), Land („L“) oder Unbekannt („U“) haben.
+
+% TODO: A* und Dijkstra quelle
+Als Wegfindungs-Algorithmus wird \textbf{A* (A-Star)} verwendet. A* ist eine Variante des Dijkstra-Algorithmus, die auf einem vorher schon angesprochenem Grid-System beruht (siehe Abbildung 32). Die einzelnen Elemente des Grids werden als „Nodes“ bezeichnet.
+\begin{figure}[H]
+\centering
+    \includegraphics[width=.8\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/AStar_01.png}
+    \caption{Findung des kürzesten Wegs vom grünen zum blauen Quadrat durch A*. Hierbei ist nur der Weg markiert und nicht alle untersuchten Nodes. Die Zahlen geben die Entfernung in Nodes zum Ausgangspunkt an.}
+\end{figure}
+
+Die grundlegende Funktionsweise des A* Algorithmus soll hier nur kurz erklärt werden. Für eine umfassendere Erklärung werden die im Literaturverzeichnis zu diesem Thema angegebenen Quellen empfohlen.
 
 \subsection{Teilaufgabe (b)}
 % QUADTREE
@@ -650,7 +660,7 @@ Nicht alle Bestandteile des Algorithmus nutzen das Prinzip des Multithreadings o
 \\[0.4cm]
 \textbf{A* Pathfinding}
 
-A* ist ein Pathfinding-Algorithmus zum Finden eines kürzesten oder zumindest möglichst kurzen Weges. Jedoch ist für diese Aufgabenstellung die Länge des Weges irrelevant und viele der Quadcopter Flüge zum Erkunden sehr kleiner Gebiete sind nicht unbedingt notwendig. Um dieses Verhalten des A*-Algorithmus zumindest abzuschwächen, könnte man noch Heuristiken implementieren.
+A* ist ein Pathfinding-Algorithmus zum Finden eines kürzesten oder zumindest möglichst kurzen Weges. Jedoch ist für diese Aufgabenstellung die Länge des Weges irrelevant und viele der Quadcopter Flüge zum Erkunden sehr kleiner Gebiete sind nicht unbedingt notwendig. Um dieses Verhalten des A*-Algorithmus zumindest abzuschwächen, könnte man noch weitere Heuristiken implementieren.
 \\[0.4cm]
 \textbf{Speichern von Pathfinding Zuständen}
 
@@ -820,6 +830,7 @@ Die meisten enthaltenen Abbildungen wurden entweder selbst mit unten aufgelistet
 Sonstige Bildquellen:
 \begin{itemize}
 \item https://upload.wikimedia.org/wikipedia/commons/d/df/ZweiWegeIrrgarten.png
+\item https://de.wikipedia.org/wiki/Datei:Pathfinding\_A\_Star.svg
 \end{itemize}
 
 %===================================================================================

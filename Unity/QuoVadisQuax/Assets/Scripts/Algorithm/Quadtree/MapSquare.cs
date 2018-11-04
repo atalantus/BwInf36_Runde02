@@ -14,7 +14,7 @@ namespace Algorithm.Quadtree
         /// <summary>
         /// The Map Type of the map's cutout
         /// </summary>
-        public MapTypes MapType { get; private set; }
+        public MapTypes MapType { get; set; }
 
         #endregion
 
@@ -77,9 +77,9 @@ namespace Algorithm.Quadtree
                 i = (i + prime) % pixelsSize;
             }
 
-            if (containsLand && containsWater && Width > 2)
+            if (containsLand && containsWater)
                 MapType = MapTypes.MIXED;
-            else if (containsWater && containsLand && Width <= 2 || !containsWater)
+            else if (containsLand)
                 MapType = MapTypes.GROUND;
             else
                 MapType = MapTypes.WATER;
