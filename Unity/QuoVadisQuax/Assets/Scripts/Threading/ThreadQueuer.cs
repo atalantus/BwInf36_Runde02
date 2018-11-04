@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ThreadQueuer : MonoBehaviour
 {
-    private readonly int _mainThreadActionsMultipleMaxSize = 100;
+    private const int MainThreadActionsMultipleMaxSize = 10;
     private List<Action> _mainThreadActions;
     private List<Action> _mainThreadActionsMultiple;
 
@@ -33,9 +33,9 @@ public class ThreadQueuer : MonoBehaviour
 
             var mainThreadActions = _mainThreadActionsMultiple;
 
-            if (_mainThreadActionsMultiple.Count > _mainThreadActionsMultipleMaxSize)
+            if (_mainThreadActionsMultiple.Count > MainThreadActionsMultipleMaxSize)
             {
-                mainThreadActions = _mainThreadActionsMultiple.GetRange(0, _mainThreadActionsMultipleMaxSize);
+                mainThreadActions = _mainThreadActionsMultiple.GetRange(0, MainThreadActionsMultipleMaxSize);
                 clearList = false;
             }
 
@@ -48,7 +48,7 @@ public class ThreadQueuer : MonoBehaviour
             }
 
             if (clearList) _mainThreadActionsMultiple.Clear();
-            else _mainThreadActionsMultiple.RemoveRange(0, _mainThreadActionsMultipleMaxSize);
+            else _mainThreadActionsMultiple.RemoveRange(0, MainThreadActionsMultipleMaxSize);
 
             //Debug.LogWarning(1f/Time.deltaTime);
         }

@@ -638,9 +638,31 @@ Als Wegfindungs-Algorithmus wird \textbf{A* (A-Star)} verwendet. A* ist eine Var
     \caption{Findung des kürzesten Wegs vom grünen zum blauen Quadrat durch A*. Hierbei ist nur der Weg markiert und nicht alle untersuchten Nodes. Die Zahlen geben die Entfernung in Nodes zum Ausgangspunkt an.}
 \end{figure}
 
-Die grundlegende Funktionsweise des A* Algorithmus soll hier nur kurz erklärt werden. Für eine umfassendere Erklärung werden die im Literaturverzeichnis zu diesem Thema angegebenen Quellen empfohlen.
+Die generelle Funktionsweise des A* Algorithmus soll hier nur kurz erklärt werden. Für eine umfassendere Erklärung werden die zu diesem Thema im Literaturverzeichnis angegebenen Quellen empfohlen.
 \\[0.4cm]
-Der A* Algorithmus beginnt bei einer Start-Node (S). Für S
+Der A* Algorithmus beginnt mit einer Start-Node (\code{S}), einer Target-Node (\code{T}), einem \code{openSet} und einem \code{closedSet}. Jede Node hat dabei entweder den Status „Walkable“ oder „Unwalkable“. Es werden zuerst alle Nachbar-Nodes von \code{S} mit dem Zustand „Walkable“ zum \code{openSet} hinzugefügt. Für sie werden jeweils 3 Werte berechnet. \code{G-Cost} beschreibt die Entfernung zu \code{S}. \code{H-Cost} beschreibt die Entfernung zu \code{T}. \code{F-Cost} entspricht \code{G-Cost} + \code{H-Cost}. (Für die Berechnung dieser \code{F-Cost} gibt es mehrere Varianten. Hier wird die sogenannte „Manhatten-Distanz“ verwendet.)
+\\[0.4cm]
+Als nächstes wird die Node im \code{openSet} mit der geringsten \code{F-Cost} aus dem \code{openSet} entfernt und dem \code{closedSet} hinzugefügt. Für diese Node werden wieder alle Nachbarn mit dem Status „Walkable“ entweder in das \code{openSet} aufgenommen und ihre Werte berechnet oder, falls sie schon im \code{openSet} vorhanden sind, werden ihre Werte aktualisiert.
+\\[0.4cm]
+Dieser Vorgang wiederholt sich so lange, bis \code{T} erreicht wurde.
+\\[0.4cm]
+Das A* Grid wird zwar aus 10x10 breiten Nodes bestehen, jedoch wird auf den Sonderfall dadurch geachtet, dass der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20 Map-Quadrats entspricht, dessen linke, untere Ecke die gleichen Koordinaten hat wie die Grid-Node (siehe Abbildung 33).
+
+\begin{figure}[H]
+\centering
+    \includegraphics[width=.8\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/AStar_Grid.png}
+    \caption{Der blaue Pixel repräsentiert eine Node im A*-Grid. Der Status dieser Node wird jedoch über den Map-Typ des gelben Quadrats definiert. Beinhaltet dieses zum Beispiel nur Land, ist die Grid-Node „Walkable“.}
+\end{figure}
+
+Dadurch entsteht letztendlich ein Geflecht aus überlappenden 20x20 Quadraten, welches wiederum den Sonderfall abdeckt (siehe Abbildung 34).
+
+\begin{figure}[H]
+\centering
+    \includegraphics[width=.8\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/AStar_Grid_02.png}
+    \caption{Ein Geflecht aus Grid-Nodes und den jeweils dazugehörigen Map-Quadraten. Die 2x2 Map-Quadrate überlappen sich sichern somit den Sonderfall ab.}
+\end{figure}
+
+
 
 \subsection{Teilaufgabe (b)}
 % QUADTREE
