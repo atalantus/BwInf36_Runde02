@@ -1,12 +1,15 @@
 ﻿namespace Algorithm.Quadtree
 {
+    /// <summary>
+    ///     The different map types
+    /// </summary>
     public enum MapTypes
     {
-        WATER,
-        GROUND,
-        QUAX,
-        CITY,
-        MIXED,
-        UNKNOWN
+        Water,
+        Ground,
+        Quax,
+        City,
+        Mixed,
+        Unknown
     }
 }

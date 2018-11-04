@@ -201,20 +201,20 @@ public class LoadImageManager : MonoBehaviour
 
             switch (type)
             {
-                case MapTypes.QUAX:
+                case MapTypes.Quax:
                     MapDataManager.Instance.QuaxPositions.Add(IndexToMapPos(i, width));
                     break;
-                case MapTypes.CITY:
+                case MapTypes.City:
                     MapDataManager.Instance.CityPosition = IndexToMapPos(i, width);
                     break;
-                case MapTypes.UNKNOWN:
+                case MapTypes.Unknown:
                     Debug.LogError("Unexpected pixel color " + pixels[i] + " in map at " + IndexToMapPos(i, width) +
                                    "\nMaybe increase the ColorFilterThreshold!");
                     error = true;
                     break;
-                case MapTypes.WATER:
+                case MapTypes.Water:
                     break;
-                case MapTypes.GROUND:
+                case MapTypes.Ground:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

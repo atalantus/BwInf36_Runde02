@@ -76,13 +76,13 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         switch (mapSquare.MapType)
         {
-            case MapTypes.WATER:
+            case MapTypes.Water:
                 color = new Color32(255, 0, 0, 100);
                 break;
-            case MapTypes.GROUND:
+            case MapTypes.Ground:
                 color = new Color32(0, 255, 0, 100);
                 break;
-            case MapTypes.MIXED:
+            case MapTypes.Mixed:
                 color = new Color32(200, 150, 50, 50);
                 break;
             default:

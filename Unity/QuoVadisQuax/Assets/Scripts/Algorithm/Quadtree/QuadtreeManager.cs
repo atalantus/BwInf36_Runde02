@@ -6,6 +6,10 @@ using Debug = UnityEngine.Debug;
 
 namespace Algorithm.Quadtree
 {
+    /// <inheritdoc />
+    /// <summary>
+    ///     General Quadtree Manager
+    /// </summary>
     public class QuadtreeManager : MonoBehaviour
     {
         #region Properties
@@ -15,26 +19,58 @@ namespace Algorithm.Quadtree
         /// </summary>
         public static QuadtreeManager Instance { get; private set; }
 
-        [SerializeField] private OptionsManager _optionsManager;
+        /// <summary>
+        ///     Updated Quadtree delegate
+        /// </summary>
+        /// <param name="updatedMapSquares">List of the updated <see cref="MapSquare" />s</param>
+        /// <param name="point">The point that was checked for</param>
+        public delegate void UpdatedQuadtreeEventHandler(List<MapSquare> updatedMapSquares, Vector2Int point);
 
-        public delegate void UpdatedQuadtreeEventHandler(List<MapSquare> updatedMapSquares, Vector2Int sw_point);
-
+        /// <summary>
+        ///     Checked Special Square delegate
+        /// </summary>
+        /// <param name="isWalkable">Is the special square walkable</param>
+        /// <param name="sw_point">The South-West (Bottom-Left) point of the square</param>
         public delegate void CheckedSpecialSquareEventHandler(bool isWalkable, Vector2Int sw_point);
 
+        /// <summary>
+        ///     Created Node delegate
+        /// </summary>
+        /// <param name="mapSquare">The <see cref="MapSquare" /> that was created</param>
         public delegate void CreatedNodeEventHandler(MapSquare mapSquare);
 
+        /// <summary>
+        ///     UpdatedQuadtree event
+        /// </summary>
         public event UpdatedQuadtreeEventHandler UpdatedQuadtree;
+
+        /// <summary>
+        ///     CheckedSpecialSquare event
+        /// </summary>
         public event CheckedSpecialSquareEventHandler CheckedSpecialSquare;
+
+        /// <summary>
+        ///     CreatedNode event
+        /// </summary>
         public event CreatedNodeEventHandler CreatedNode;
 
-        public NodeElement _rootNode;
+        /// <summary>
+        ///     The root of the Quadtree
+        /// </summary>
+        public Node RootNode;
 
+        /// <summary>
+        ///     The execution time of the quadtree methods
+        /// </summary>
         public double QuadtreeTime;
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        ///     Unity Awake
+        /// </summary>
         private void Awake()
         {
             if (Instance == null)
@@ -43,25 +79,36 @@ namespace Algorithm.Quadtree
                 Destroy(gameObject);
         }
 
+        /// <summary>
+        ///     Unity Start
+        /// </summary>
         private void Start()
         {
+            /**
+             * Subscribe to events
+             */
             PathfindingManager.Instance.RequestedMapTile += SearchForPoint;
 
             PathfindingManager.Instance.RequestSpecialSquare += CheckSpecialSquare;
         }
 
+        /// <summary>
+        ///     Setup Quadtree
+        /// </summary>
         public void SetupQuadtree()
         {
-            _rootNode = null;
-            _rootNode = new Node(new Vector2Int(0, 0), MapDataManager.Instance.Dimensions.x);
+            RootNode = null;
+            RootNode = new Node(new Vector2Int(0, 0), MapDataManager.Instance.Dimensions.x);
             QuadtreeTime = 0;
         }
 
+        /// <summary>
+        ///     Search Quadtree for 2x2 square
+        /// </summary>
+        /// <param name="sw_point">The South-West (Bottom-Left) point of the square</param>
         private void SearchForPoint(Vector2Int sw_point)
         {
-            //Debug.Log("QuadtreeManager - FindPoint " + sw_point);
-
-            // TODO: Performance: don't run whole quadtree on main thread! only GetPixel in GetMatType() in MapSquare.cs
+            // Execute from main thread
             ThreadQueuer.Instance.QueueMainThreadAction(() =>
             {
                 var s = new Stopwatch();
@@ -73,21 +120,19 @@ namespace Algorithm.Quadtree
                 for (var y = sw_point.y; y < sw_point.y + 2; y++)
                 {
                     var point = new Vector2Int(x, y);
-                    //Debug.Log("Loop point: " + point);
                     var isChecked = false;
 
                     foreach (var updatedSquare in updatedSquares)
-                        if (updatedSquare.TouchesPoint(point))
+                        if (updatedSquare.ContainsPoint(point))
                         {
-                            //Debug.Log(point + " already searched");
                             isChecked = true;
                             break;
                         }
 
                     if (isChecked) continue;
 
-                    var square = _rootNode.FindPoint(point);
-                    //Debug.Log("Added square SW " + square.SW_Point + " NE " + square.NE_Point);
+                    var square = RootNode.FindPoint(point);
+
                     updatedSquares.Add(square);
                 }
 
@@ -100,8 +145,13 @@ namespace Algorithm.Quadtree
             });
         }
 
+        /// <summary>
+        ///     Checks a 2x2 <see cref="MapSquare" /> outside of the Quadtree
+        /// </summary>
+        /// <param name="sw_point">The South-West (Bottom-Left) point of the square</param>
         private void CheckSpecialSquare(Vector2Int sw_point)
         {
+            // Execute from main thread
             ThreadQueuer.Instance.QueueMainThreadAction(() =>
             {
                 var isWalkable = true;
@@ -124,15 +174,15 @@ namespace Algorithm.Quadtree
                     pixels.Add(pixel);
                 }
 
-                var specialSquare = new MapSquare(sw_point, 2) {MapType = MapTypes.GROUND};
+                var specialSquare = new MapSquare(sw_point, 2) {MapType = MapTypes.Ground};
 
                 foreach (var pixel in pixels)
                 {
                     var pixelType = pixel.GetMapType();
 
-                    if (pixelType == MapTypes.WATER && !containsWater)
+                    if (pixelType == MapTypes.Water && !containsWater)
                         containsWater = true;
-                    else if (pixelType != MapTypes.WATER && !containsLand)
+                    else if (pixelType != MapTypes.Water && !containsLand)
                         containsLand = true;
                     if (containsWater && containsLand)
                         break;
@@ -140,7 +190,7 @@ namespace Algorithm.Quadtree
 
                 if (!containsLand && containsWater)
                 {
-                    specialSquare.MapType = MapTypes.WATER;
+                    specialSquare.MapType = MapTypes.Water;
                     isWalkable = false;
                 }
 
@@ -151,6 +201,10 @@ namespace Algorithm.Quadtree
             });
         }
 
+        /// <summary>
+        ///     Invokes the <see cref="CreatedNode" /> event
+        /// </summary>
+        /// <param name="mapSquare">The <see cref="CreatedNode" />'s parameter</param>
         public void RegisterNewNode(MapSquare mapSquare)
         {
             if (CreatedNode != null)

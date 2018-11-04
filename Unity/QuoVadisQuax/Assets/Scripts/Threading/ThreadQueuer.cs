@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class ThreadQueuer : MonoBehaviour
 {
+    private readonly int _mainThreadActionsMultipleMaxSize = 100;
     private List<Action> _mainThreadActions;
     private List<Action> _mainThreadActionsMultiple;
-    private readonly int _mainThreadActionsMultipleMaxSize = 100;
 
     /// <summary>
     ///     The Singleton Instance

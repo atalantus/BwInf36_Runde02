@@ -1,5 +1,6 @@
 ﻿namespace Algorithm.Quadtree
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Represents the possible smallest Quadtree Node
     /// </summary>
@@ -17,12 +18,16 @@
             MapSquare = new MapSquare(swPoint, width);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         public override MapSquare FindPoint(Vector2Int point)
         {
-            if (MapSquare.MapType == MapTypes.UNKNOWN)
+            if (MapSquare.MapType == MapTypes.Unknown)
                 MapSquare.GetMapTyp();
 
-            //Debug.Log("Reached EndNode SW " + MapSquare.SW_Point + " NE " + MapSquare.NE_Point + " MapType: " + MapSquare.MapType);
             return MapSquare;
         }
 

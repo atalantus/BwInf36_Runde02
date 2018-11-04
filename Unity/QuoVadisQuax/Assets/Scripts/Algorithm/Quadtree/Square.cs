@@ -49,22 +49,11 @@ namespace Algorithm.Quadtree
         }
 
         /// <summary>
-        ///     Checks if this Square touches a <see cref="Square" />
+        ///     Checks if this Square touches a <see cref="Vector2Int" />
         /// </summary>
-        /// <param name="other">The other <see cref="Square" /></param>
-        /// <returns>True if this Square touches the other <see cref="Square" /></returns>
-        public bool TouchesSquare(Square other)
-        {
-            return !(other.SW_Point.x > NE_Point.x || other.SW_Point.y > NE_Point.y ||
-                     other.NE_Point.x < SW_Point.x || other.NE_Point.y < SW_Point.y);
-        }
-
-        /// <summary>
-        ///     Checks if this Square touches a <see cref="PixelPoint" />
-        /// </summary>
-        /// <param name="other">The <see cref="PixelPoint" /></param>
-        /// <returns>True if this Square touches the <see cref="PixelPoint" /></returns>
-        public bool TouchesPoint(Vector2Int other)
+        /// <param name="other">The <see cref="Vector2Int" /></param>
+        /// <returns>True if this Square touches the <see cref="Vector2Int" /></returns>
+        public bool ContainsPoint(Vector2Int other)
         {
             return !(other.x > NE_Point.x || other.y > NE_Point.y ||
                      other.x < SW_Point.x || other.y < SW_Point.y);

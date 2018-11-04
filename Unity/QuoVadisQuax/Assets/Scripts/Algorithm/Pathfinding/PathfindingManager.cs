@@ -112,11 +112,11 @@ namespace Algorithm.Pathfinding
 
             var isWalkable = true;
 
-            if (updatedSquares.TrueForAll(s => s.MapType == MapTypes.GROUND))
+            if (updatedSquares.TrueForAll(s => s.MapType == MapTypes.Ground))
             {
                 isWalkable = true;
             }
-            else if (updatedSquares.TrueForAll(s => s.MapType == MapTypes.WATER))
+            else if (updatedSquares.TrueForAll(s => s.MapType == MapTypes.Water))
             {
                 isWalkable = false;
             }

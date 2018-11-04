@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Algorithm.Quadtree
 {
+    /// <inheritdoc />
     /// <summary>
     ///     Represents a Quadtree Node
     /// </summary>
@@ -13,7 +14,7 @@ namespace Algorithm.Quadtree
         /// <summary>
         ///     The Child Nodes of this Node
         /// </summary>
-        public NodeElement[] ChildNodes { get; set; }
+        private NodeElement[] ChildNodes { get; set; }
 
         #endregion
 
@@ -29,51 +30,48 @@ namespace Algorithm.Quadtree
             MapSquare = new MapSquare(swPoint, width);
         }
 
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        /// <exception cref="T:System.Exception"></exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"></exception>
         public override MapSquare FindPoint(Vector2Int point)
         {
-            if (MapSquare.MapType == MapTypes.UNKNOWN)
+            // If the the map type is still unknown, get the map type
+            if (MapSquare.MapType == MapTypes.Unknown)
                 MapSquare.GetMapTyp();
 
-            if (!TouchesPoint(point))
+            if (!ContainsPoint(point))
             {
-                //Debug.LogWarning("Point " + point + " is outside of Quadtree bounds.");
-                var extraMapSquare = new MapSquare(point, 1);
-                extraMapSquare.MapType = MapTypes.WATER;
+                // Point is outside of the quadtree boundaries
+                var extraMapSquare = new MapSquare(point, 1) {MapType = MapTypes.Water};
                 return extraMapSquare;
             }
 
             switch (MapSquare.MapType)
             {
-                case MapTypes.WATER:
+                case MapTypes.Water:
                     return MapSquare;
-                case MapTypes.GROUND:
+                case MapTypes.Ground:
                     return MapSquare;
-                case MapTypes.MIXED:
+                case MapTypes.Mixed:
+                    // If child nodes doesn't exist yet, create them
                     if (ChildNodes == null)
                         CalculateChildNodes();
 
                     NodeElement targetNode = null;
-                    for (var i = 0; i < ChildNodes.Length; i++)
-                        if (ChildNodes[i].TouchesPoint(point))
-                            targetNode = ChildNodes[i];
 
-                    if (targetNode == null)
-                    {
-                        foreach (var node in ChildNodes)
-                        {
-                            //Debug.LogWarning("Node: SW " + node.MapSquare.SW_Point + " | NE " + node.MapSquare.NE_Point);
-                        }
+                    // Find a child node that contains the point
+                    foreach (var childNode in ChildNodes)
+                        if (childNode.ContainsPoint(point))
+                            targetNode = childNode;
 
-                        //Debug.LogWarning("Point " + point + " is outside of Quadtree bounds.");
-                        var extraMapSquare = new MapSquare(point, 1);
-                        extraMapSquare.MapType = MapTypes.WATER;
-                        return extraMapSquare;
-                    }
+                    if (targetNode != null) return targetNode.FindPoint(point);
 
-                    //Debug.LogWarning("Touching Node: SW " + targetNode.MapSquare.SW_Point + " | NE " + targetNode.MapSquare.NE_Point + " | Width " + targetNode.MapSquare.Width + " | Height " + targetNode.MapSquare.Height);
-                    //Debug.LogWarning("Touches Point: " + point);
-
-                    return targetNode.FindPoint(point);
+                    throw new Exception("Can't search for point " + point +
+                                        " in the quadtree because it doesn't lay inside it's boundaries");
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -86,17 +84,18 @@ namespace Algorithm.Quadtree
         private void CalculateChildNodes()
         {
             var newWidth = Mathf.CeilToInt(MapSquare.Width / 2f);
-            //Debug.Log(newWidth);
 
             if (newWidth < 2)
                 throw new Exception("New width is " + newWidth + " | (" + MapSquare.Width + "/2)");
-            NodeElement[] childNodes;
 
             if (MapSquare.Width / 2 == newWidth)
             {
-                // kein überlappen
+                /**
+                 * Child nodes won't overlap
+                 */
+
                 if (newWidth > 2)
-                    childNodes = new[]
+                    ChildNodes = new[]
                     {
                         new Node(
                             new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
@@ -108,7 +107,7 @@ namespace Algorithm.Quadtree
                             new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth), newWidth)
                     };
                 else
-                    childNodes = new[]
+                    ChildNodes = new[]
                     {
                         new EndNode(
                             new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
@@ -122,9 +121,12 @@ namespace Algorithm.Quadtree
             }
             else
             {
-                // überlappen
+                /**
+                 * Child nodes are going to overlap
+                 */
+
                 if (newWidth > 2)
-                    childNodes = new[]
+                    ChildNodes = new[]
                     {
                         new Node(
                             new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
@@ -137,7 +139,7 @@ namespace Algorithm.Quadtree
                             new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth - 1), newWidth)
                     };
                 else
-                    childNodes = new[]
+                    ChildNodes = new[]
                     {
                         new EndNode(
                             new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
@@ -150,9 +152,6 @@ namespace Algorithm.Quadtree
                             new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth - 1), newWidth)
                     };
             }
-
-
-            ChildNodes = childNodes;
         }
 
         #endregion
