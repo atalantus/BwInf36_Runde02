@@ -85,6 +85,8 @@ public class OptionsManager : MonoBehaviour
 
         _guiCoordinates[2].text = MapDataManager.Instance.CityPosition.x.ToString();
         _guiCoordinates[3].text = MapDataManager.Instance.CityPosition.y.ToString();
+        
+        UpdateAlgorithmResults("-", "-", "-");
     }
 
     private void UpdateAlgorithmResults(string foundPath, string flights, string time)
@@ -109,6 +111,8 @@ public class OptionsManager : MonoBehaviour
         };
 
         _quaxPosOverlayTexture.ClearTexture(markQuax);
+        
+        UpdateAlgorithmResults("-", "-", "-");
     }
 
     public void StartAlgorithm()
