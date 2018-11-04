@@ -546,19 +546,62 @@ vielen Flügen führt? Falls nein, erkläre warum nicht. Falls ja, gib ein Beisp
 und erkläre, worin das Problem besteht.
 \end{enumerate}
 
+\subsection{Auslegung der Aufgabe}
+% SPEZIALFALL
+
 \subsection{Lösungsidee}
 
 \subsection{Teilaufgabe (a)}
+% A*
 
 \subsection{Teilaufgabe (b)}
+% QUADTREE
+% ZUSAMMENSPIEL QUADTREE UND A*
 
 \subsection{Teilaufgabe (c)}
 \subsubsection{Implementierung}
+% WIESO UNITY
+% MULTITHREADING UND EVENTS
+% A*
+% QUADTREE
 \subsubsection{Optimierungsmöglichkeiten}
+Auch bei diesem Algorithmus gibt es noch viele Optimierungsmöglichkeiten zur Verbesserung der Laufzeit oder Verringerung der benötigten Quadcopter Flüge:
+\\[0.4cm]
+\textbf{Multithreading}
+
+Nicht alle Bestandteile des Algorithmus nutzen das Prinzip des Multithreadings optimal aus und können noch erheblich verbessert werden.
+\\[0.4cm]
+\textbf{A* Pathfinding}
+
+A* ist ein Pathfinding-Algorithmus zum Finden eines kürzesten oder zumindest möglichst kurzen Weges. Jedoch ist für diese Aufgabenstellung die Länge des Weges irrelevant und viele der Quadcopter Flüge zum Erkunden sehr kleiner Gebiete sind nicht unbedingt notwendig. Um dieses Verhalten des A*-Algorithmus zumindest abzuschwächen, könnte man noch Heuristiken implementieren.
+\\[0.4cm]
+\textbf{Speichern von Pathfinding Zuständen}
+
+Das bereits implementierte Caching für eine Wegfindung, bei der noch unbekannte Nodes als nicht-betretbar angenommen werden, hat die Laufzeit erheblich minimiert.
+
+Nun ist es aber noch möglich Zustände für die Wegfindung, bei der unbekannte Nodes als betretbar angenommen werden, zu speichern, so dass dieser Algorithmus nicht jedes mal von der Startposition bis zur Zielposition suchen muss, sondern auf vorher durchgeführte Suchergebnisse zurückgreifen kann.
+\\[0.4cm]
+\textbf{Bidirektionale Suche}
+
+% TODO: QUELLE BIDIREKTIONALE SUCHE
+Mit Hilfe einer „Bidirektionale Suche“, könnte sich sowohl die Laufzeit, als auch die benötigte Anzahl an Quadcopter Flügen weiter verbessern.
+\\[0.4cm]
+\textbf{Unity Implementierung}
+
+Die Wahl einer Game-Engine als Entwicklungsumgebung hat auch einen großen Einfluss auf die Laufzeit, durch viele für dieses Programm unnötige Hintergrundprozesse. Auch das einzelne Darstellen von Flügen auf der Map-Textur verbraucht viele Ressourcen.
+
+Eine simplere Konsolen-Anwendung, die dem Benutzer die Flüge am Ende in eine PNG-Datei einträgt, würde zum Beispiel nochmals deutlich effizienter laufen.
+
+
 \subsubsection{Beispiele}
+% TODO: BEISPIELE
 
 \subsection{Teilaufgabe (d)}
+Mit einer eher unnatürlichen Verteilung von Flüssen und Seen wie zum Beispiel einem Schachbrettmuster (siehe Abbildung ||||), einem verzweigten Labyrinth (siehe Abbildung ||||) oder eine Anordnung mehrerer schmaler Wasser und Land streifen (siehe Abbildung ||||), können kaum noch größere Flächen eindeutig eingeteilt werden.
 
+Dies sorgt schnell für einen sehr umfangreichen Quaternärbaum und damit auch für viele Quadcopter Flüge.
+\\[0.4cm]
+Der hier besprochene Algorithmus läuft am effizientesten, bei eher natürlichen Landschaften, mit größeren Wasser- und Landflächen. Dabei kann der Quadcopter den Typ größere Gebiete mit nur einem Flug identifizieren.
 
 %===================================================================================
 %---------------------------------- FAZIT ------------------------------------------
@@ -566,24 +609,8 @@ und erkläre, worin das Problem besteht.
 
 \newpage
 \section{FAZIT}
-
-
-
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur lorem, imperdiet dignissim est auctor a. Vivamus convallis, leo et iaculis egestas, nunc massa porttitor tellus, id faucibus urna justo eget massa. Praesent quis feugiat odio. Nullam quis mattis enim. Fusce volutpat odio in enim sodales venenatis. Mauris consequat.
 
-%===================================================================================
-%--------------------------- ABBILDUNGSVERZEICHNIS ---------------------------------
-%===================================================================================
-
-\newpage
-\section{ABBILDUNGSVERZEICHNIS}
-Alle enthaltenen Abbildungen, außer die in den Aufgabenstellungs-Kapiteln, wurden mithilfe von folgenden Tools selbstständig erstellt:
-\begin{itemize}
-\item Microsoft PowerPoint
-\item Grafikrechner - GeoGebra
-\item UMLet
-\item Adobe Photoshop CC 2018 
-\end{itemize}
 
 %===================================================================================
 %--------------------------- LITERATURVERZEICHNIS ----------------------------------
@@ -676,11 +703,32 @@ Alle enthaltenen Abbildungen, außer die in den Aufgabenstellungs-Kapiteln, wurd
 \endgroup
 
 %===================================================================================
+%--------------------------- ABBILDUNGSVERZEICHNIS ---------------------------------
+%===================================================================================
+
+\newpage
+\section{ABBILDUNGSVERZEICHNIS}
+Alle enthaltenen Abbildungen wurden entweder selbst mit unten aufgelisteten Tools erstellt oder von unten genannten Programmen/Quellen gescreenshottet.
+\begin{itemize}
+\item Microsoft PowerPoint
+\item Grafikrechner - GeoGebra
+\item UMLet
+\item Adobe Photoshop CC 2018
+% TODO: QUELLEN REFERENZIEREN 
+\item BwInf36 Runde 2 Aufgabenstellung
+\item Windows 10 Konsole
+\end{itemize}
+
+%===================================================================================
 %--------------------------- CD-VERZEICHNIS ----------------------------------
 %===================================================================================
 
 \newpage
 \section{CD-VERZEICHNIS}
+
+\begin{figure}[H]
+    \includegraphics[width=.7\linewidth]{Bilder/Sonstiges/CDVerzeichnis.png}
+\end{figure}
 
 %===================================================================================
 %--------------------------- ANHANG ----------------------------------
@@ -688,14 +736,14 @@ Alle enthaltenen Abbildungen, außer die in den Aufgabenstellungs-Kapiteln, wurd
 
 \newpage
 \section{ANHANG}
-\subsection{Aufgabe 1}
-\subsubsection{Quelltext}
-\subsubsection{Dokumentationen}
-\subsubsection{Installationshinweise}
+Aufgrund der Länge des Quellcodes beider Aufgaben, werden die einzelnen Klassen hier nicht weiter aufgelistet.
 
-\subsection{Aufgabe 3}
-\subsubsection{Quelltext}
-\subsubsection{Installationshinweise}
+Die einzelnen Quellcode-Dateien befinden sich auf der beigelegten CD.
+
+\subsection{Installationshinweise}
+Die Programme beider Aufgaben wurden kompiliert und befinden sich als ausführbare .exe Dateien auf der beigelegten CD.
+
+Für beide Aufgaben wurden jeweils für Windows 64bit und 86bit Dateien erstellt.
 
 %===================================================================================
 %------------------------- ERKLÄRUNG DES VERFASSERS --------------------------------
