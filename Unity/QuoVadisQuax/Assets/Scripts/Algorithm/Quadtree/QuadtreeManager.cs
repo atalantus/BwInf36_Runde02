@@ -10,15 +10,10 @@ namespace Algorithm.Quadtree
     {
         #region Properties
 
-        private static QuadtreeManager _instance;
-
         /// <summary>
-        /// The Singleton Instance
+        ///     The Singleton Instance
         /// </summary>
-        public static QuadtreeManager Instance
-        {
-            get { return _instance; }
-        }
+        public static QuadtreeManager Instance { get; private set; }
 
         [SerializeField] private OptionsManager _optionsManager;
 
@@ -42,9 +37,9 @@ namespace Algorithm.Quadtree
 
         private void Awake()
         {
-            if (_instance == null)
-                _instance = this;
-            else if (_instance != this)
+            if (Instance == null)
+                Instance = this;
+            else if (Instance != this)
                 Destroy(gameObject);
         }
 
@@ -72,32 +67,28 @@ namespace Algorithm.Quadtree
                 var s = new Stopwatch();
                 s.Start();
 
-                List<MapSquare> updatedSquares = new List<MapSquare>();
+                var updatedSquares = new List<MapSquare>();
 
-                for (int x = sw_point.x; x < sw_point.x + 2; x++)
+                for (var x = sw_point.x; x < sw_point.x + 2; x++)
+                for (var y = sw_point.y; y < sw_point.y + 2; y++)
                 {
-                    for (int y = sw_point.y; y < sw_point.y + 2; y++)
-                    {
-                        var point = new Vector2Int(x, y);
-                        //Debug.Log("Loop point: " + point);
-                        bool isChecked = false;
+                    var point = new Vector2Int(x, y);
+                    //Debug.Log("Loop point: " + point);
+                    var isChecked = false;
 
-                        foreach (var updatedSquare in updatedSquares)
+                    foreach (var updatedSquare in updatedSquares)
+                        if (updatedSquare.TouchesPoint(point))
                         {
-                            if (updatedSquare.TouchesPoint(point))
-                            {
-                                //Debug.Log(point + " already searched");
-                                isChecked = true;
-                                break;
-                            }
+                            //Debug.Log(point + " already searched");
+                            isChecked = true;
+                            break;
                         }
 
-                        if (isChecked) continue;
+                    if (isChecked) continue;
 
-                        var square = _rootNode.FindPoint(point);
-                        //Debug.Log("Added square SW " + square.SW_Point + " NE " + square.NE_Point);
-                        updatedSquares.Add(square);
-                    }
+                    var square = _rootNode.FindPoint(point);
+                    //Debug.Log("Added square SW " + square.SW_Point + " NE " + square.NE_Point);
+                    updatedSquares.Add(square);
                 }
 
                 s.Stop();
@@ -118,21 +109,19 @@ namespace Algorithm.Quadtree
                 var containsWater = false;
                 var containsLand = false;
 
-                List<Color> pixels = new List<Color>();
+                var pixels = new List<Color>();
 
-                for (int x = sw_point.x; x < sw_point.x + 2; x++)
+                for (var x = sw_point.x; x < sw_point.x + 2; x++)
+                for (var y = sw_point.y; y < sw_point.y + 2; y++)
                 {
-                    for (int y = sw_point.y; y < sw_point.y + 2; y++)
-                    {
-                        Color pixel;
-                        if (MapDataManager.Instance.MapTexture.width > x &&
-                            MapDataManager.Instance.MapTexture.height > y)
-                            pixel = MapDataManager.Instance.MapTexture.GetPixel(x, y);
-                        else
-                            pixel = new Color(1, 1, 1, 1);
-                        
-                        pixels.Add(pixel);
-                    }
+                    Color pixel;
+                    if (MapDataManager.Instance.MapTexture.width > x &&
+                        MapDataManager.Instance.MapTexture.height > y)
+                        pixel = MapDataManager.Instance.MapTexture.GetPixel(x, y);
+                    else
+                        pixel = new Color(1, 1, 1, 1);
+
+                    pixels.Add(pixel);
                 }
 
                 var specialSquare = new MapSquare(sw_point, 2) {MapType = MapTypes.GROUND};

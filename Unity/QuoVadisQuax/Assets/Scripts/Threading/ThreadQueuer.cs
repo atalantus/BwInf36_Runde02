@@ -1,30 +1,24 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Threading;
-using System;
-using System.Linq;
+using UnityEngine;
 
 public class ThreadQueuer : MonoBehaviour
 {
-    private static ThreadQueuer _instance;
-    /// <summary>
-    /// The Singleton Instance
-    /// </summary>
-    public static ThreadQueuer Instance
-    {
-        get { return _instance; }
-    }
-
     private List<Action> _mainThreadActions;
     private List<Action> _mainThreadActionsMultiple;
-    private int _mainThreadActionsMultipleMaxSize = 100;
+    private readonly int _mainThreadActionsMultipleMaxSize = 100;
+
+    /// <summary>
+    ///     The Singleton Instance
+    /// </summary>
+    public static ThreadQueuer Instance { get; private set; }
 
     private void Awake()
     {
-        if (_instance == null)
-            _instance = this;
-        else if (_instance != this)
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
             Destroy(gameObject);
 
         _mainThreadActions = new List<Action>();
@@ -36,18 +30,18 @@ public class ThreadQueuer : MonoBehaviour
         if (_mainThreadActionsMultiple.Count > 0)
         {
             var clearList = true;
-            
-            List<Action> mainThreadActions = _mainThreadActionsMultiple;
+
+            var mainThreadActions = _mainThreadActionsMultiple;
 
             if (_mainThreadActionsMultiple.Count > _mainThreadActionsMultipleMaxSize)
             {
                 mainThreadActions = _mainThreadActionsMultiple.GetRange(0, _mainThreadActionsMultipleMaxSize);
                 clearList = false;
             }
-            
+
             //Debug.LogWarning("MainThreadActionsMultiple: " + mainThreadActions.Count);
-            
-            for (int i = 0; i < mainThreadActions.Count; i++)
+
+            for (var i = 0; i < mainThreadActions.Count; i++)
             {
                 var a = mainThreadActions[i];
                 a();
@@ -55,10 +49,10 @@ public class ThreadQueuer : MonoBehaviour
 
             if (clearList) _mainThreadActionsMultiple.Clear();
             else _mainThreadActionsMultiple.RemoveRange(0, _mainThreadActionsMultipleMaxSize);
-            
+
             //Debug.LogWarning(1f/Time.deltaTime);
         }
-        
+
         if (_mainThreadActions.Count > 0)
         {
             var a = _mainThreadActions[0];
@@ -71,10 +65,7 @@ public class ThreadQueuer : MonoBehaviour
     public void StartThreadedAction(Action threadedAction, Action callback = null)
     {
         var action = new ThreadStart(threadedAction);
-        if (callback != null)
-        {
-            action += () => { callback(); };
-        }
+        if (callback != null) action += () => { callback(); };
 
         var t = new Thread(new ThreadStart(threadedAction));
         t.Start();
@@ -86,7 +77,7 @@ public class ThreadQueuer : MonoBehaviour
         if (callback != null)
             _mainThreadActions.Add(callback);
     }
-    
+
     public void QueueMainThreadActionMultiple(Action mainThreadAction)
     {
         _mainThreadActionsMultiple.Add(mainThreadAction);

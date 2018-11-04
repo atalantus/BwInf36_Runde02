@@ -2,107 +2,101 @@ using System;
 
 namespace Algorithm.Pathfinding
 {
-    public class Heap<T> where T : IHeapItem<T> {
-	
-        T[] items;
-        int currentItemCount;
-	
-        public Heap(int maxHeapSize) {
+    public class Heap<T> where T : IHeapItem<T>
+    {
+        private readonly T[] items;
+
+        public Heap(int maxHeapSize)
+        {
             items = new T[maxHeapSize];
         }
-	
-        public void Add(T item) {
-            item.HeapIndex = currentItemCount;
-            items[currentItemCount] = item;
+
+        public int Count { get; private set; }
+
+        public void Add(T item)
+        {
+            item.HeapIndex = Count;
+            items[Count] = item;
             SortUp(item);
-            currentItemCount++;
+            Count++;
         }
 
-        public T RemoveFirst() {
-            T firstItem = items[0];
-            currentItemCount--;
-            items[0] = items[currentItemCount];
+        public T RemoveFirst()
+        {
+            var firstItem = items[0];
+            Count--;
+            items[0] = items[Count];
             items[0].HeapIndex = 0;
             SortDown(items[0]);
             return firstItem;
         }
 
-        public void UpdateItem(T item) {
+        public void UpdateItem(T item)
+        {
             SortUp(item);
         }
 
-        public int Count {
-            get {
-                return currentItemCount;
-            }
-        }
-
-        public bool Contains(T item) {
+        public bool Contains(T item)
+        {
             return Equals(items[item.HeapIndex], item);
         }
 
-        void SortDown(T item) {
-            while (true) {
-                int childIndexLeft = item.HeapIndex * 2 + 1;
-                int childIndexRight = item.HeapIndex * 2 + 2;
-                int swapIndex = 0;
+        private void SortDown(T item)
+        {
+            while (true)
+            {
+                var childIndexLeft = item.HeapIndex * 2 + 1;
+                var childIndexRight = item.HeapIndex * 2 + 2;
+                var swapIndex = 0;
 
-                if (childIndexLeft < currentItemCount) {
+                if (childIndexLeft < Count)
+                {
                     swapIndex = childIndexLeft;
 
-                    if (childIndexRight < currentItemCount) {
-                        if (items[childIndexLeft].CompareTo(items[childIndexRight]) < 0) {
+                    if (childIndexRight < Count)
+                        if (items[childIndexLeft].CompareTo(items[childIndexRight]) < 0)
                             swapIndex = childIndexRight;
-                        }
-                    }
 
-                    if (item.CompareTo(items[swapIndex]) < 0) {
-                        Swap (item,items[swapIndex]);
-                    }
-                    else {
+                    if (item.CompareTo(items[swapIndex]) < 0)
+                        Swap(item, items[swapIndex]);
+                    else
                         return;
-                    }
-
                 }
-                else {
+                else
+                {
                     return;
                 }
-
             }
         }
-	
-        void SortUp(T item) {
-            int parentIndex = (item.HeapIndex-1)/2;
-		
-            while (true) {
-                T parentItem = items[parentIndex];
-                if (item.CompareTo(parentItem) > 0) {
-                    Swap (item,parentItem);
-                }
-                else {
+
+        private void SortUp(T item)
+        {
+            var parentIndex = (item.HeapIndex - 1) / 2;
+
+            while (true)
+            {
+                var parentItem = items[parentIndex];
+                if (item.CompareTo(parentItem) > 0)
+                    Swap(item, parentItem);
+                else
                     break;
-                }
 
-                parentIndex = (item.HeapIndex-1)/2;
+                parentIndex = (item.HeapIndex - 1) / 2;
             }
         }
-	
-        void Swap(T itemA, T itemB) {
+
+        private void Swap(T itemA, T itemB)
+        {
             items[itemA.HeapIndex] = itemB;
             items[itemB.HeapIndex] = itemA;
-            int itemAIndex = itemA.HeapIndex;
+            var itemAIndex = itemA.HeapIndex;
             itemA.HeapIndex = itemB.HeapIndex;
             itemB.HeapIndex = itemAIndex;
         }
-	
-	
-	
     }
 
-    public interface IHeapItem<T> : IComparable<T> {
-        int HeapIndex {
-            get;
-            set;
-        }
+    public interface IHeapItem<T> : IComparable<T>
+    {
+        int HeapIndex { get; set; }
     }
 }

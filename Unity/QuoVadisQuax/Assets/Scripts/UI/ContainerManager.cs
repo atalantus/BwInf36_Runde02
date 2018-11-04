@@ -1,27 +1,24 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
-/// Manages the main container GUI
+///     Manages the main container GUI
 /// </summary>
 public class ContainerManager : MonoBehaviour
 {
+    private static readonly string PROCESSING_IMG_MSG_ID = "processing_img";
+    private static readonly string ERROR_LOADING_MAP_MSG_ID = "error_loading_map";
     [SerializeField] private LoadImageManager _loadImage;
-    [SerializeField] private OptionsManager _options;
-    [SerializeField] private MapGUIManager _mapManager;
-    [SerializeField] private GameObject _noContentPanel;
     [SerializeField] private GameObject _mapContentPanel;
+    [SerializeField] private MapGUIManager _mapManager;
     [SerializeField] private GameObject _messagePanel;
     [SerializeField] private GameObject _messagePrefab;
 
     private List<InfoMessage> _messages;
-
-    private static readonly string PROCESSING_IMG_MSG_ID = "processing_img";
-    private static readonly string ERROR_LOADING_MAP_MSG_ID = "error_loading_map";
+    [SerializeField] private GameObject _noContentPanel;
+    [SerializeField] private OptionsManager _options;
 
     private void Awake()
     {
@@ -64,7 +61,7 @@ public class ContainerManager : MonoBehaviour
 
     public void CreateMessage(string msg, string id, bool spinnerIcon = false, float livetime = -1f)
     {
-        var newMsgObj = GameObject.Instantiate(_messagePrefab, _messagePanel.transform);
+        var newMsgObj = Instantiate(_messagePrefab, _messagePanel.transform);
         var infoMsg = newMsgObj.GetComponent<InfoMessage>();
         _messages.Add(infoMsg);
         infoMsg.DestroyingMsg += On_DestroyingMsg;
@@ -77,10 +74,7 @@ public class ContainerManager : MonoBehaviour
     public void DestroyMessage(string id)
     {
         var messages = _messages.Where(m => m.ID == id).ToArray();
-        foreach (var t in messages)
-        {
-            Destroy(t.gameObject);
-        }
+        foreach (var t in messages) Destroy(t.gameObject);
     }
 
     private void On_DestroyingMsg(string id)

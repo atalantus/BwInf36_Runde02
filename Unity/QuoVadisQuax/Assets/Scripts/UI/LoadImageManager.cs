@@ -1,16 +1,14 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using Algorithm.Pathfinding;
 using Algorithm.Quadtree;
 using Crosstales.FB;
 using UnityEngine;
 using UnityEngine.UI;
+using Grid = Algorithm.Pathfinding.Grid;
 
 /// <summary>
-/// Manages the LoadImage GUI
+///     Manages the LoadImage GUI
 /// </summary>
 public class LoadImageManager : MonoBehaviour
 {
@@ -32,12 +30,12 @@ public class LoadImageManager : MonoBehaviour
     private IntPtr _hWndUnity;
 
     /// <summary>
-    /// Is the LoadImage GUI open
+    ///     Is the LoadImage GUI open
     /// </summary>
     public bool IsOpen { get; private set; }
 
     /// <summary>
-    /// The world position when the LoadImage GUI is open
+    ///     The world position when the LoadImage GUI is open
     /// </summary>
     private Vector3 _openPos;
 
@@ -47,7 +45,7 @@ public class LoadImageManager : MonoBehaviour
     [SerializeField] private GameObject _toggleIcon;
 
     /// <summary>
-    /// The map texture
+    ///     The map texture
     /// </summary>
     public Texture2D MapTexture { get; private set; }
 
@@ -87,13 +85,13 @@ public class LoadImageManager : MonoBehaviour
             }
 
             _isProcessingImg = false;
-            
+
             _isMapValid = false;
         }
     }
 
     /// <summary>
-    /// Load an selected image file
+    ///     Load an selected image file
     /// </summary>
     public void OpenFile()
     {
@@ -116,7 +114,7 @@ public class LoadImageManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Toggles the LoadImage GUI
+    ///     Toggles the LoadImage GUI
     /// </summary>
     public void ToggleGUI()
     {
@@ -129,7 +127,7 @@ public class LoadImageManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Processes a selected image file
+    ///     Processes a selected image file
     /// </summary>
     /// <param name="imagePath">The file path</param>
     private void ProcessImage(string imagePath)
@@ -153,7 +151,7 @@ public class LoadImageManager : MonoBehaviour
 
                 // Check if map is valid and search city and quax positions
                 var pixels = MapTexture.GetPixels32();
-                _pathfindingManager.PathfindingGrid = new Algorithm.Pathfinding.Grid(imgWidth,imgHeight);
+                _pathfindingManager.PathfindingGrid = new Grid(imgWidth, imgHeight);
                 ThreadQueuer.Instance.StartThreadedAction(() => { CheckMapPixels(pixels, imgWidth); });
 
                 // Resize map
@@ -165,7 +163,7 @@ public class LoadImageManager : MonoBehaviour
 
                 if (MapTexture.width <= 2 && MapTexture.height <= 2)
                     throw new Exception("Image is to small");
-                    
+
                 // Set GUI text
                 _imageDimensionsText.text = imgWidth + "x" + imgHeight;
                 _filePathText.text = imagePath;
@@ -187,8 +185,8 @@ public class LoadImageManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Checks if the map only contains black, white, red or green pixels and
-    /// searches for city and quax positions
+    ///     Checks if the map only contains black, white, red or green pixels and
+    ///     searches for city and quax positions
     /// </summary>
     /// <param name="pixels">The image pixels starting bottom left</param>
     /// <param name="width">The image width</param>
@@ -230,7 +228,7 @@ public class LoadImageManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Converts an pixel index (starting bottom left) to a 2D position
+    ///     Converts an pixel index (starting bottom left) to a 2D position
     /// </summary>
     /// <param name="i">The index of the pixel</param>
     /// <param name="width">The width of the image</param>

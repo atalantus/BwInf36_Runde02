@@ -1,18 +1,17 @@
 ﻿using System;
-using UnityEngine;
 using Util;
 
 namespace Algorithm.Quadtree
 {
     /// <summary>
-    /// Represents a square cutout of the map
+    ///     Represents a square cutout of the map
     /// </summary>
     public class MapSquare : Square
     {
         #region Properties
 
         /// <summary>
-        /// The Map Type of the map's cutout
+        ///     The Map Type of the map's cutout
         /// </summary>
         public MapTypes MapType { get; set; }
 
@@ -21,7 +20,7 @@ namespace Algorithm.Quadtree
         #region Methods
 
         /// <summary>
-        /// Instantiates a new <see cref="MapSquare"/> object
+        ///     Instantiates a new <see cref="MapSquare" /> object
         /// </summary>
         /// <param name="swPoint">The South-West (Bottom-Left) point of the Node`s Square</param>
         /// <param name="width">The width of the Node`s Square</param>
@@ -31,7 +30,7 @@ namespace Algorithm.Quadtree
         }
 
         /// <summary>
-        /// Get`s the <see cref="MapType"/> of the map's cutout
+        ///     Get`s the <see cref="MapType" /> of the map's cutout
         /// </summary>
         /// <returns>The Map Type</returns>
         public MapTypes GetMapTyp()
@@ -40,7 +39,7 @@ namespace Algorithm.Quadtree
             var containsLand = false;
 
             //Debug.LogWarning("SW " + SW_Point + " | NE " + NE_Point + " | Width " + Width);
-            
+
             var pixels = MapDataManager.Instance.MapTexture.GetPixels(SW_Point.x, SW_Point.y, Width, Height);
 
             var pixelsSize = pixels.Length;
@@ -58,21 +57,10 @@ namespace Algorithm.Quadtree
                 //Debug.LogWarning("Get Pixel " + i + " type: " + pixelType + " color: " + pixels[i]);
 
                 if (pixelType == MapTypes.WATER && !containsWater)
-                {
-                    //Debug.Log("----- FOUND WATER on " + (float)j /pixelsSize * 100 + "% -----");
                     containsWater = true;
-                }
-                else if (pixelType != MapTypes.WATER && !containsLand)
-                {
-                    //Debug.Log("----- FOUND LAND on " + (float)j /pixelsSize * 100 + "% -----");
-                    containsLand = true;
-                }
+                else if (pixelType != MapTypes.WATER && !containsLand) containsLand = true;
 
-                if (containsWater && containsLand)
-                {
-                    //Debug.Log("----- STOP FOUND BOTH WATER AND LAND on " + (float)j /pixelsSize * 100 + "% -----");
-                    break;
-                }
+                if (containsWater && containsLand) break;
 
                 i = (i + prime) % pixelsSize;
             }

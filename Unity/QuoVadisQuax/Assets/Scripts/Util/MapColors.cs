@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Algorithm.Quadtree;
+﻿using Algorithm.Quadtree;
 using UnityEngine;
 
 public static class MapColors
@@ -15,13 +13,14 @@ public static class MapColors
             return MapTypes.QUAX;
         if (color.r <= ColorFilterThreshold && color.g >= 255 - ColorFilterThreshold && color.b <= ColorFilterThreshold)
             return MapTypes.CITY;
-        if (color.r >= 255 - ColorFilterThreshold && color.g >= 255 - ColorFilterThreshold && color.b >= 255 - ColorFilterThreshold)
+        if (color.r >= 255 - ColorFilterThreshold && color.g >= 255 - ColorFilterThreshold &&
+            color.b >= 255 - ColorFilterThreshold)
             return MapTypes.WATER;
         if (color.r <= ColorFilterThreshold && color.g <= ColorFilterThreshold && color.b <= ColorFilterThreshold)
             return MapTypes.GROUND;
         return MapTypes.UNKNOWN;
     }
-    
+
     public static MapTypes GetMapType(this Color colorA)
     {
         return GetMapType(colorA.ToColor32());

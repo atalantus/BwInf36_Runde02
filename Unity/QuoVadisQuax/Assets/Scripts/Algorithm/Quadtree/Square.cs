@@ -3,29 +3,29 @@
 namespace Algorithm.Quadtree
 {
     /// <summary>
-    /// Defines a Square
+    ///     Defines a Square
     /// </summary>
     public class Square
     {
         #region Properties
 
         /// <summary>
-        /// The South-West (Bottom-Left) point of the square
+        ///     The South-West (Bottom-Left) point of the square
         /// </summary>
         public Vector2Int SW_Point { get; private set; }
 
         /// <summary>
-        /// The North-East (Top-Right) point of the square
+        ///     The North-East (Top-Right) point of the square
         /// </summary>
         public Vector2Int NE_Point { get; private set; }
 
         /// <summary>
-        /// The width of the square
+        ///     The width of the square
         /// </summary>
         public int Width { get; private set; }
 
         /// <summary>
-        /// The height of the square
+        ///     The height of the square
         /// </summary>
         public int Height
         {
@@ -37,7 +37,7 @@ namespace Algorithm.Quadtree
         #region Methods
 
         /// <summary>
-        /// Instantiates a new <see cref="Square"/> object
+        ///     Instantiates a new <see cref="Square" /> object
         /// </summary>
         /// <param name="swPoint">The South-West (Bottom-Left) point</param>
         /// <param name="width">The width of the square</param>
@@ -49,10 +49,10 @@ namespace Algorithm.Quadtree
         }
 
         /// <summary>
-        /// Checks if this Square touches a <see cref="Square"/>
+        ///     Checks if this Square touches a <see cref="Square" />
         /// </summary>
-        /// <param name="other">The other <see cref="Square"/></param>
-        /// <returns>True if this Square touches the other <see cref="Square"/></returns>
+        /// <param name="other">The other <see cref="Square" /></param>
+        /// <returns>True if this Square touches the other <see cref="Square" /></returns>
         public bool TouchesSquare(Square other)
         {
             return !(other.SW_Point.x > NE_Point.x || other.SW_Point.y > NE_Point.y ||
@@ -60,10 +60,10 @@ namespace Algorithm.Quadtree
         }
 
         /// <summary>
-        /// Checks if this Square touches a <see cref="PixelPoint"/>
+        ///     Checks if this Square touches a <see cref="PixelPoint" />
         /// </summary>
-        /// <param name="other">The <see cref="PixelPoint"/></param>
-        /// <returns>True if this Square touches the <see cref="PixelPoint"/></returns>
+        /// <param name="other">The <see cref="PixelPoint" /></param>
+        /// <returns>True if this Square touches the <see cref="PixelPoint" /></returns>
         public bool TouchesPoint(Vector2Int other)
         {
             return !(other.x > NE_Point.x || other.y > NE_Point.y ||

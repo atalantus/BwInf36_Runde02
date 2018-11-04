@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public static class TextureUtil
 {
-    public static void DrawSquare(this Texture2D texture, Vector2Int bottomLeft, int width, Color32 color, Action callback = null)
+    public static void DrawSquare(this Texture2D texture, Vector2Int bottomLeft, int width, Color32 color,
+        Action callback = null)
     {
-        var startPoint = new Vector2Int(Mathf.Clamp(bottomLeft.x, 0, texture.width), Mathf.Clamp(bottomLeft.y, 0, texture.height));
+        var startPoint = new Vector2Int(Mathf.Clamp(bottomLeft.x, 0, texture.width),
+            Mathf.Clamp(bottomLeft.y, 0, texture.height));
 
         var offset = new Vector2Int(Mathf.Abs(startPoint.x - bottomLeft.x), Mathf.Abs(startPoint.y - bottomLeft.y));
 
-        var dimensions = new Vector2Int(Mathf.Clamp(width - offset.x, 0, texture.width - startPoint.x), Mathf.Clamp(width - offset.y, 0, texture.height - startPoint.y));
+        var dimensions = new Vector2Int(Mathf.Clamp(width - offset.x, 0, texture.width - startPoint.x),
+            Mathf.Clamp(width - offset.y, 0, texture.height - startPoint.y));
 
         var pixels = texture.GetPixels(startPoint.x, startPoint.y, dimensions.x, dimensions.y).ToColor32();
 
@@ -68,15 +69,13 @@ public static class TextureUtil
             texture.Apply();
         };
 
-        ThreadQueuer.Instance.StartThreadedAction(() => { ColorPixels(ref pixels, Color.clear, applyPixels, callback); });
+        ThreadQueuer.Instance.StartThreadedAction(
+            () => { ColorPixels(ref pixels, Color.clear, applyPixels, callback); });
     }
 
     public static void ColorPixels(ref Color32[] pixels, Color32 color, Action applyPixels, Action callback = null)
     {
-        for (var i = 0; i < pixels.Length; i++)
-        {
-            pixels[i] = color;
-        }
+        for (var i = 0; i < pixels.Length; i++) pixels[i] = color;
 
         if (applyPixels != null)
             ThreadQueuer.Instance.QueueMainThreadAction(applyPixels);
@@ -91,10 +90,7 @@ public static class TextureUtil
     {
         var colors32 = new Color32[colors.Length];
 
-        for (var i = 0; i < colors.Length; i++)
-        {
-            colors32[i] = colors[i];
-        }
+        for (var i = 0; i < colors.Length; i++) colors32[i] = colors[i];
 
         return colors32;
     }
@@ -103,10 +99,7 @@ public static class TextureUtil
     {
         var colors = new Color[colors32.Length];
 
-        for (var i = 0; i < colors32.Length; i++)
-        {
-            colors[i] = colors32[i];
-        }
+        for (var i = 0; i < colors32.Length; i++) colors[i] = colors32[i];
 
         return colors;
     }

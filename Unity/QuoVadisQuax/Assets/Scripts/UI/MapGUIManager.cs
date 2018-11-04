@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using Algorithm;
 using Algorithm.Pathfinding;
@@ -9,53 +7,62 @@ using Algorithm.Quadtree;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Debug = UnityEngine.Debug;
 using Node = Algorithm.Pathfinding.Node;
 
 /// <summary>
-/// Manages the Map GUI
+///     Manages the Map GUI
 /// </summary>
 public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public static readonly string COLORING_OVERLAY_MSG_ID = "coloring_overlay";
+    [SerializeField] private AlgorithmManager _algorithmManager;
+    private Thread _clearOverlayTextureThread;
+
+    private Queue<Action> _colorSquareOverlayActions;
+    [SerializeField] private ContainerManager _containerManager;
+    private float _defaultZoomLevel;
+
+    private bool _hasFocus;
+    private bool _isColoringOverlayPixels;
+    private bool _isColoringSquareOverlay;
+
     /// <summary>
-    /// Container for the map and the overlay
-    /// This gets moved and scaled for user interaction
+    ///     Container for the map and the overlay
+    ///     This gets moved and scaled for user interaction
     /// </summary>
     [SerializeField] private RectTransform _mapContainer;
 
     [SerializeField] private RawImage _mapRawImage;
-    [SerializeField] private RawImage _overlayRawImage;
-    [SerializeField] private ContainerManager _containerManager;
-    [SerializeField] private OptionsManager _optionsManager;
-    [SerializeField] private AlgorithmManager _algorithmManager;
-
-    private bool _hasFocus;
-    private float _defaultZoomLevel;
     private float _maxZoomLevel;
     private float _minZoomLevel;
+    [SerializeField] private OptionsManager _optionsManager;
+    [SerializeField] private RawImage _overlayRawImage;
 
     private Texture2D _overlayTexture;
-    private bool _isColoringOverlayPixels;
-    private Thread _clearOverlayTextureThread;
-
-    public static readonly string COLORING_OVERLAY_MSG_ID = "coloring_overlay";
-
-    private Queue<Action> _colorSquareOverlayActions;
-    private bool _isColoringSquareOverlay;
-    private bool _readyToColorPath;
     private List<Node> _path;
+    private bool _readyToColorPath;
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        _hasFocus = true;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        _hasFocus = false;
+    }
 
     private void Start()
     {
         _colorSquareOverlayActions = new Queue<Action>();
-        
+
         _optionsManager.StartedAlgorithm += SetUpOverlayTexture;
         PathfindingManager.Instance.FinishedPathfinding += (path, foundPath) =>
         {
             //Debug.LogWarning("MapGUIManager - ColorPath");
 
             _path = foundPath ? path : new List<Node>();
-            
+
             _readyToColorPath = true;
         };
         QuadtreeManager.Instance.CreatedNode += ColorQuadtreeNode;
@@ -64,26 +71,26 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private void ColorQuadtreeNode(MapSquare mapSquare)
     {
         if (!_optionsManager.ShowNodes) return;
-        
+
         Color32 color;
 
         switch (mapSquare.MapType)
         {
             case MapTypes.WATER:
-                color = new Color32(255,0,0,100);
+                color = new Color32(255, 0, 0, 100);
                 break;
             case MapTypes.GROUND:
-                color = new Color32(0,255,0,100);
+                color = new Color32(0, 255, 0, 100);
                 break;
             case MapTypes.MIXED:
-                color = new Color32(200,150,50,50);
+                color = new Color32(200, 150, 50, 50);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
-        
+
         //Debug.Log("Queue: SW " + mapSquare.SW_Point + " NE " + mapSquare.NE_Point);
-        
+
         _colorSquareOverlayActions.Enqueue(() =>
         {
             _overlayTexture.DrawSquare(mapSquare.SW_Point, mapSquare.Width, color, () =>
@@ -92,7 +99,6 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 _isColoringSquareOverlay = false;
             });
         });
-        
     }
 
     private void ColorPath()
@@ -109,24 +115,24 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 _overlayTexture.SetPixel(posX, posY, Color.magenta);
             });
         }
-        
+
         ThreadQueuer.Instance.QueueMainThreadActionMultiple(() =>
         {
             //Debug.LogWarning("----- APPLY -----");
             _overlayTexture.Apply();
             _algorithmManager.FinishAlgorithm();
         });
-        
+
         //Debug.Log("Colored Path");
     }
 
-    void SetUpOverlayTexture(Vector2Int quaxPos, Vector2Int cityPos)
+    private void SetUpOverlayTexture(Vector2Int quaxPos, Vector2Int cityPos)
     {
         _overlayTexture.ClearTexture(() => _algorithmManager.StartAlgorithm(quaxPos, cityPos));
     }
 
     /// <summary>
-    /// Sets up the map-container, the map and the overlay object
+    ///     Sets up the map-container, the map and the overlay object
     /// </summary>
     /// <param name="texture">The map texture</param>
     public void SetMap(Texture2D texture)
@@ -165,7 +171,7 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 ThreadQueuer.Instance.StartThreadedAction(ColorPath);
             }
         }
-        
+
         /**
          * Check for scroll wheel input
          */
@@ -199,7 +205,7 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 // Zoom out
                 _mapContainer.transform.localScale /= zoomDelta;
                 // Center image when zooming out
-                _mapContainer.transform.localPosition -= (_mapContainer.transform.localPosition / 5);
+                _mapContainer.transform.localPosition -= _mapContainer.transform.localPosition / 5;
 
                 // Clamp to min zoom level
                 if (_mapContainer.transform.localScale.x < _minZoomLevel)
@@ -209,7 +215,7 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
 
     /// <summary>
-    /// Calculates the default, max and min zoom level based on the map dimensions
+    ///     Calculates the default, max and min zoom level based on the map dimensions
     /// </summary>
     /// <param name="dimensions">The map dimensions</param>
     private void CalculateZoomLevels(Vector2 dimensions)
@@ -228,15 +234,5 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         _maxZoomLevel = z * x * 0.15f;
         // Calculate the minimum zoom level
         _minZoomLevel = z / 3;
-    }
-
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        _hasFocus = true;
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        _hasFocus = false;
     }
 }

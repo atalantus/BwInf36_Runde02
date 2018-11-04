@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading;
 using Algorithm.Quadtree;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Debug = UnityEngine.Debug;
 
 namespace Algorithm.Pathfinding
@@ -13,15 +11,10 @@ namespace Algorithm.Pathfinding
     {
         #region Properties
 
-        private static PathfindingManager _instance;
-
         /// <summary>
-        /// The Singleton Instance
+        ///     The Singleton Instance
         /// </summary>
-        public static PathfindingManager Instance
-        {
-            get { return _instance; }
-        }
+        public static PathfindingManager Instance { get; private set; }
 
         public delegate void RequestMapTileEventHandler(Vector2Int tilePos);
 
@@ -58,9 +51,9 @@ namespace Algorithm.Pathfinding
 
         private void Awake()
         {
-            if (_instance == null)
-                _instance = this;
-            else if (_instance != this)
+            if (Instance == null)
+                Instance = this;
+            else if (Instance != this)
                 Destroy(gameObject);
         }
 
@@ -120,9 +113,13 @@ namespace Algorithm.Pathfinding
             var isWalkable = true;
 
             if (updatedSquares.TrueForAll(s => s.MapType == MapTypes.GROUND))
+            {
                 isWalkable = true;
+            }
             else if (updatedSquares.TrueForAll(s => s.MapType == MapTypes.WATER))
+            {
                 isWalkable = false;
+            }
             else
             {
                 //Debug.LogWarning(sw_point + " nicht eindeutig!");
@@ -251,28 +248,21 @@ namespace Algorithm.Pathfinding
                     if (canWalkUnknown)
                     {
                         // Get the first unknown node in the path
-                        for (int i = 0; i < path.Count; i++)
-                        {
+                        for (var i = 0; i < path.Count; i++)
                             //Debug.LogWarning("Checking Path Node " + path[i].Position + " Type: " + path[i].NodeType);
                             if (path[i].NodeType == NodeTypes.UNKNOWN)
                             {
                                 // cache last path node
                                 if (i - 1 < 0)
-                                {
-                                    //Debug.LogWarning("SET CACHED NODE TO START NODE");
                                     _cachedLastPathNode = startNode;
-                                }
                                 else
-                                {
                                     _cachedLastPathNode = path[i - 1];
-                                }
 
                                 // Request map information about this node
                                 if (RequestedMapTile != null)
                                     RequestedMapTile.Invoke(path[i].Position);
                                 break;
                             }
-                        }
                     }
                     else
                     {
@@ -286,12 +276,9 @@ namespace Algorithm.Pathfinding
 
                 foreach (var neighbour in PathfindingGrid.GetNeighbours(currentNode))
                 {
-                    if (!neighbour.IsWalkable(canWalkUnknown) || closedSet.Contains(neighbour))
-                    {
-                        continue;
-                    }
+                    if (!neighbour.IsWalkable(canWalkUnknown) || closedSet.Contains(neighbour)) continue;
 
-                    int newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour);
+                    var newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour);
                     if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
                     {
                         neighbour.gCost = newMovementCostToNeighbour;
@@ -320,12 +307,12 @@ namespace Algorithm.Pathfinding
             }
         }
 
-        List<Node> RetracePath(Node startNode, Node endNode)
+        private List<Node> RetracePath(Node startNode, Node endNode)
         {
             //Debug.Log("PathfindingManager - RetracePath");
 
-            List<Node> path = new List<Node>();
-            Node currentNode = endNode;
+            var path = new List<Node>();
+            var currentNode = endNode;
 
             while (currentNode != startNode)
             {
@@ -338,12 +325,12 @@ namespace Algorithm.Pathfinding
             return path;
         }
 
-        int GetDistance(Node nodeA, Node nodeB)
+        private int GetDistance(Node nodeA, Node nodeB)
         {
             //Debug.Log("PathfindingManager - GetDistance");
 
-            int dstX = Mathf.Abs(nodeA.Position.x - nodeB.Position.x);
-            int dstY = Mathf.Abs(nodeA.Position.y - nodeB.Position.y);
+            var dstX = Mathf.Abs(nodeA.Position.x - nodeB.Position.x);
+            var dstY = Mathf.Abs(nodeA.Position.y - nodeB.Position.y);
 
             if (dstX > dstY)
                 return 14 * dstY + 10 * (dstX - dstY);

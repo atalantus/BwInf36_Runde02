@@ -1,35 +1,31 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Holds information about the Map
-/// SINGLETON
+///     Holds information about the Map
+///     SINGLETON
 /// </summary>
 public class MapDataManager : MonoBehaviour
 {
-    private static MapDataManager _instance;
     /// <summary>
-    /// The Singleton Instance
+    ///     The Singleton Instance
     /// </summary>
-    public static MapDataManager Instance
-    {
-        get { return _instance; }
-    }
+    public static MapDataManager Instance { get; private set; }
 
     /// <summary>
-    /// The dimensions of the loaded image
+    ///     The dimensions of the loaded image
     /// </summary>
     public Vector2Int Dimensions { get; set; }
+
     public List<Vector2Int> QuaxPositions { get; set; }
     public Vector2Int CityPosition { get; set; }
     public Texture2D MapTexture { get; set; }
 
     private void Awake()
     {
-        if (_instance == null)
-            _instance = this;
-        else if (_instance != this)
+        if (Instance == null)
+            Instance = this;
+        else if (Instance != this)
             Destroy(gameObject);
 
         QuaxPositions = new List<Vector2Int>();
