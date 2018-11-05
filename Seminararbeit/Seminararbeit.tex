@@ -91,7 +91,7 @@ Unterschrift des Seminarleiters: & ...........................................  
 
 
 
-Der aus drei Runden bestehende Bundeswettbewerb Informatik (BwInf) ist einer von vier bundesweiten Informatikwettbewerben. Mit dem 36. BwInf wurde für die erste Runde mit \textbf{1463} Teilnehmern eine so hohe Teilnahme wie seit 1993 nicht mehr geschafft \cite{bwinf_runde1_ergebnis}. Von den ursprünglich 1463 Teilnehmern der ersten Runde haben es \textbf{828} Teilnehmende geschafft, sich für die zweite Runde zu qualifizieren \cite{bwinf_runde2_ergebnis}. Von diesen haben jedoch nur noch \textbf{154} Teilnehmer der zweiten Runde Lösungen für zwei Aufgaben ihrer Wahl eingereicht. Dies liegt nicht zuletzt an der stark gestiegenen Komplexität der Aufgaben gegenüber der ersten Runde. Zu der letzten dritten Runde des Bundeswettbewerbs Informatik werden schlussendlich nur noch \textbf{25} Teilnehmer eingeladen. Das sind im Falle des BwInfs von 2017 nur rund \textbf{1,7\%} der ursprünglichen Teilnehmer.
+Der aus drei Runden bestehende Bundeswettbewerb Informatik (BwInf) ist einer von vier bundesweiten Informatikwettbewerben. Mit dem 36. BwInf 2017 gab es für die erste Runde mit \textbf{1463} Teilnehmern eine so hohe Teilnahme wie seit 1993 nicht mehr \cite{bwinf_runde1_ergebnis}. Von den ursprünglich 1463 Teilnehmern der ersten Runde haben es \textbf{828} Teilnehmende geschafft, sich für die zweite Runde zu qualifizieren \cite{bwinf_runde2_ergebnis}. Von diesen haben jedoch nur noch \textbf{154} Teilnehmer der zweiten Runde Lösungen für zwei Aufgaben ihrer Wahl eingereicht. Dies lag nicht zuletzt an der stark gestiegenen Komplexität der Aufgaben gegenüber der ersten Runde. Zu der letzten dritten Runde des Bundeswettbewerbs Informatik wurden schlussendlich nur noch \textbf{25} Teilnehmer eingeladen. Das waren im Falle des BwInfs von 2017 nur rund \textbf{1,7\%} der ursprünglichen Teilnehmer.
 \\[0.4cm]
 Im Folgenden wird eine eingereichte Lösung zu der ersten und dritten Aufgabe der zweiten Runde des 36. Bundeswettbewerbs Informatik erläutert.
 
@@ -202,7 +202,7 @@ Um nun aber von der Länge der Mauer auf $f_{Mauer}$ zu schließen, muss man noc
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.4\linewidth]{Bilder/Aufgabe1/Definition_Fugenstellen_Reihe.png}
-    \caption{Eine Reihe bei $n = 3$ besetzt $n-1 = 2$ freie Fugen.}
+    \caption{Eine Reihe bei $n = 3$ besetzt $n-1 = 2$ freie Fugen}
 \end{figure}
 
 Daraus ergibt sich die fertige Formel für die Anzahl der Reihen $h$ in einer maximal hohen Mauer in Abhängigkeit von $n$.
@@ -286,7 +286,7 @@ Der offensichtlichere ist die Bauart \textbf{„Von unten nach oben“}. Bei die
 \end{figure}
 
 Eine andere Möglichkeit ist, wenn man die Anzahl der Reihen ($h$) für eine Mauer der maximalen Höhe bereits weiß, die Mauer \textbf{„von links nach rechts“} aufzubauen.
-Man kann die Aufgabe auch so formulieren, dass das \textbf{Ziel ist, möglichst alle Fugenposition in der Mauer zu füllen}. Nun bietet es sich an, anstatt wie bei \textbf{„von unten nach oben“} immer ein Klötzchen zu setzen und \textbf{dann} zu schauen, ob die jeweilige Fugenposition noch frei ist, von den \textbf{Fugenpositionen auszugehen} und diese jeweils zu versuchen, \textbf{mit einem Klötzchen zu füllen} (siehe Abbildung 12).
+Man kann die Aufgabe auch so formulieren, dass das \textbf{Ziel ist, möglichst alle Fugenpositionen in der Mauer zu füllen}. Nun bietet es sich an, anstatt wie bei \textbf{„von unten nach oben“} immer ein Klötzchen zu setzen und \textbf{dann} zu schauen, ob die jeweilige Fugenposition noch frei ist, von den \textbf{Fugenpositionen auszugehen} und diese jeweils zu versuchen, \textbf{mit einem Klötzchen zu füllen} (siehe Abbildung 12).
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Definition_Mauerbauart_02.png}
@@ -316,7 +316,7 @@ Mit diesem Algorithmus kommt man bis zu $n = 8$. Dort tritt ein weiteres Problem
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Problem_Mauerbauart_02_Kein_Klotz.png}
-    \caption{Bei $n = 8$ tritt das Problem auf, dass die \textbf{29. Fuge} (rot markiert), durch \textbf{kein einziges mögliches Klötzchen besetzt werden kann}. Da $n$ jedoch eine \textbf{gerade Zahl} ist, wissen wir, dass für eine Mauer der maximalen Höhe \textbf{alle Fugen besetzt werden müssen}. Das untere Bild zeigt noch mal den hinteren Ausschnitt der Mauer mit allen noch möglichen Klötzchen für jede Reihe an. Keines davon würde die nächste Lücke füllen.}
+    \caption{Bei $n = 8$ tritt das Problem auf, dass die \textbf{29. Fuge} (rot markiert) durch \textbf{kein einziges mögliches Klötzchen besetzt werden kann}. Da $n$ jedoch eine \textbf{gerade Zahl} ist, wissen wir, dass für eine Mauer der maximalen Höhe \textbf{alle Fugen besetzt werden müssen}. Das untere Bild zeigt noch mal den hinteren Ausschnitt der Mauer mit allen noch möglichen Klötzchen für jede Reihe an. Keines davon würde die nächste Lücke füllen.}
 \end{figure}
 %TODO: Quelle für Backtracking
 Um dennoch eine Lösung zu bekommen, wird \textbf{Backtracking} verwendet. Backtracking erlaubt es, \textbf{zur letzten Entscheidung zurückzugehen} und eben \textbf{eine andere} zu \textbf{treffen}. Mit „Entscheidung“ ist die Wahl eines Klötzchens, um eine freie Fuge zu besetzen, wenn es mehrere Möglichkeiten gibt, gemeint (siehe Abbildung 16).
@@ -325,13 +325,13 @@ Um dennoch eine Lösung zu bekommen, wird \textbf{Backtracking} verwendet. Backt
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Backtracking_01.png}
     \caption{Bei einer Mauer von $n = 4$ tritt das vorher schon besprochene Problem auf, dass es zwei mögliche Klötzchen gibt, die die \textbf{3. Fuge} besetzen können. Der Baum auf der linken Seite veranschaulicht die möglichen Klötzchen pro Fuge. Die \textbf{Tiefe des Baumes} entspricht dabei einer \textbf{jeweiligen Fugenposition} und die \textbf{Knoten dieser Tiefe} stehen für die \textbf{möglichen Klötzchen}.}
 \end{figure}
-Wird nun das Klötzchen der kürzesten Reihe (das 3er-Klötzchen in der obersten, neuen Reihe) gewählt und \textbf{davon ausgegangen, dass die 4. Fuge danach nicht mehr gefüllt werden kann} (siehe Abbildung 17).
+Nun wird das Klötzchen der kürzesten Reihe (das 3er-Klötzchen in der obersten, neuen Reihe) gewählt und \textbf{davon ausgegangen, dass die 4. Fuge danach nicht mehr gefüllt werden kann} (siehe Abbildung 17).
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Backtracking_02.png}
     \caption{Angenommen, nach der Entscheidung, das 3. Klötzchen einzusetzen, kann die 4. freie Fuge nicht besetzt werden. Theoretisch könnte in der untersten Reihe ein 3er-Klötzchen die 4. Fuge füllen. Zur Vereinfachung der Darstellung wird dies jedoch außer Acht gelassen.}
 \end{figure}
-So wird \textbf{einen Schritt zurück zur letzten Entscheidung} gegangen und \textbf{dort das andere Klötzchen} gewählt (siehe Abbildung 18).
+Daraufhin wird \textbf{einen Schritt zurück zur letzten Entscheidung} gegangen und \textbf{dort das andere Klötzchen} gewählt (siehe Abbildung 18).
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Backtracking_03_04.png}
@@ -341,48 +341,48 @@ So wird \textbf{einen Schritt zurück zur letzten Entscheidung} gegangen und \te
 
 Damit ist der grundlegende Algorithmus vollständig.
 \subsection{Implementierung}
-Das Programm wurde in der Sprache C\# als Konsolen Applikation mit dem .NET Framework 4.7.1 geschrieben.
-Das am Ende des Kapitels in Abbildung 21 gezeigte Klassendiagramm zeigt die Grundstruktur des Programms.
+Das Programm wurde in der Sprache C\# als Konsolen-Applikation mit dem .NET Framework 4.7.1 geschrieben.
+Das am Ende des Kapitels in Abbildung 21 stehende Klassendiagramm zeigt die Grundstruktur des Programms.
 \\[0.4cm]
-Im Folgenden soll nur die Implementierung der für den Algorithmus wichtigsten Methode erklärt werden. Auf der beigelegten CD befindet sich zusätzlich eine vollständige Dokumentation aller Methoden und Attribute einmal in Form eines PDFs und einer HTML-Website.
+Im Folgenden soll nur die Implementierung der für den „Von links nach rechts“-Algorithmus wichtigsten Methode erklärt werden. Auf der beigelegten CD befindet sich zusätzlich eine vollständige Dokumentation aller Methoden und Attribute einmal in Form eines PDFs und einer HTML-Website.
 \\[0.4cm]
 Die Klasse \code{WallBuilder} ist für den Algorithmus die wichtigste Klasse. Sie baut die Mauer. Die für diesen Vorgang verantwortliche Methode ist \code{FillNextGap} (siehe Abbildung 20), die als Eingabeparameter einen Integer \code{nextGap}, ein \code{Wall} Objekt \code{curWall} und einen weiteren Integer \code{freeGaps} erwartet und ein Objekt der Klasse \code{Wall} zurückgibt.
 \\[0.4cm]
-Die Methode ist \textbf{direkt Rekursiv} und teilt somit die Problemstellung, eine komplette Mauer zu bauen in mehrere kleinere Probleme auf. Diese sind für die jeweils nächste Fuge ein Klötzchen zu finden, der sie besetzt.
+Die Methode ist \textbf{direkt rekursiv} und teilt somit die Problemstellung, eine komplette Mauer zu bauen, in mehrere kleinere Probleme auf. Diese sind, für die jeweils nächste Fuge ein Klötzchen zu finden, das sie besetzt.
 \\[0.4cm]
 % TODO: Quelle für LINQ
-Als erstes wird mit der Abbruchbedingung in Zeile 4 kontrolliert, ob die Mauer vollständig gebaut ist. Durch das Programmiermodell \textbf{LINQ} wird überprüft ob die Summe aller platzierten Klötzchen jedes \code{Row} Objekts der übergebenen \code{Wall} Instanz \code{curWall}, mit der Länge einer vollständigen Mauer übereinstimmt.
+Als Erstes wird mit der Abbruchbedingung in Zeile 4 kontrolliert, ob die Mauer vollständig gebaut ist. Durch das Programmiermodell \textbf{LINQ} wird überprüft, ob die Summe aller platzierten Klötzchen jedes \code{Row} Objekts der übergebenen \code{Wall} Instanz \code{curWall} mit der Länge einer vollständigen Mauer übereinstimmt.
 Ist die Abbruchbedingung \code{true}, so kommt es zu einem Rekursionsende und das fertige \code{Wall} Objekt wird zurückgegeben.
 \\[0.4cm]
 % TODO: Quelle für Reference-Type
-Ansonsten wird das übergebene \code{Wall} Objekt 'kopiert', denn es ist sehr wichtig, dass am übergebenen \code{curWall} Objekt nichts geändert wird. Objekte der Klassen \code{Wall} und \code{Row} sind nämlich sogenannte Referenz Typen (engl. Reference Types). Anders als bei Werte Typen (engl. Value Types), bei denen bei einer erneuten Zuweisung der gespeicherte Wert kopiert und die Variable dann auf diesen kopierten Wert verweist, wird bei einer erneuten Zuweisung eines Referenz Typs \textbf{nur der Verweis} (engl. Pointer) \textbf{kopiert}. Die Variable greift jedoch auf das \textbf{gleiche Objekt im Systemspeicher} zu wie die vorherige Variable.
+Ansonsten wird das übergebene \code{Wall} Objekt „kopiert“, denn es ist sehr wichtig, dass am übergebenen \code{curWall} Objekt nichts geändert wird. Objekte der Klassen \code{Wall} und \code{Row} sind nämlich sogenannte Referenz-Typen (engl. Reference Types). Anders als bei Werte-Typen (engl. Value Types), bei denen bei einer erneuten Zuweisung der gespeicherte Wert kopiert und die Variable dann auf diesen kopierten Wert verweist, wird bei einer erneuten Zuweisung eines Referenz-Typs \textbf{nur der Verweis} (engl. Pointer) \textbf{kopiert}. Die Variable greift jedoch auf das \textbf{gleiche Objekt im Systemspeicher} zu wie die vorherige Variable.
 
-Dies hätte zu Folge, dass wenn an dem übergebenen \code{Wall} Objekt zu späterem Zeitpunkt irgendwelche Änderungen vorgenommen werden, sich auch das \code{Wall} Objekt der Aufrufer-Methode ändert. Dies würde das Backtracking erheblich erschweren, da nicht mehr auf den Zustand der Mauer \textbf{vor einer Klötzchen Entscheidung} zurückgegriffen werden könnte.
+Dies hätte zur Folge, dass wenn an dem übergebenen \code{Wall} Objekt zu späterem Zeitpunkt irgendwelche Änderungen vorgenommen werden, sich auch das \code{Wall} Objekt der Aufrufer-Methode ändert. Dies würde das Backtracking erheblich erschweren, da nicht mehr auf den Zustand der Mauer \textbf{vor einer Klötzchen-Entscheidung} zurückgegriffen werden könnte.
 \\[0.4cm]
-In Zeile 10 bis 14 wird dann die, für den aktuellen Schritt, zu befüllende Fugenposition gewählt. Der Parameter \code{nextGap} beschreibt also die \textbf{zuletzt gefüllte Fuge}.
+In Zeile 10 bis 14 wird dann die für den aktuellen Schritt zu befüllende Fugenposition gewählt. Der Parameter \code{nextGap} beschreibt also die \textbf{zuletzt gefüllte Fuge}.
 
-Es wird überprüft, ob es nach \code{nextGap} überhaupt noch eine Fuge gibt. Ist dem so wird die Variable \code{nextGapPos} mit dem Wert \code{nextGap + 1}, also der Position der nächsten Fuge, initialisiert. Es kann jedoch auch sein, dass die Mauer schon am Ende angelangt ist und im letzten Schritt bereits die letzte 'Fugenposition' und damit ist hierbei das Ende der Mauer gemeint, gefüllt wurde (siehe Abbildung 19). Wichtig hierbei ist, dass dies nicht direkt heißt, dass die Mauer fertig ist. Es muss nämlich jede andere Reihe auch noch die letzte 'Fuge' erreichen.
+Es wird überprüft, ob es nach \code{nextGap} überhaupt noch eine Fuge gibt. Ist dem so, wird die Variable \code{nextGapPos} mit dem Wert \code{nextGap + 1}, also der Position der nächsten Fuge, initialisiert. Es kann jedoch auch sein, dass die Mauer schon am Ende angelangt ist und im letzten Schritt bereits die letzte „Fugenposition“ und damit ist hierbei das Ende der Mauer gemeint, gefüllt wurde (siehe Abbildung 19). Wichtig ist, dass dies nicht direkt heißt, dass die Mauer fertig ist. Es muss nämlich jede andere Reihe auch noch die letzte „Fuge“ erreichen.
 \begin{figure}[H]
     \centering
     \includegraphics[width=.6\linewidth]{Bilder/Aufgabe1/Code_Algorithmus_01.png}
-    \caption{Bei dieser Mauer von $n = 4$ hat die unterste Reihe die letzte 'Fugenposition' bereits gefüllt. Diese End-'Fuge' darf und muss jedoch mehrmals besetzt werden, um jede Reihe abzuschließen.}
+    \caption{Bei dieser Mauer von $n = 4$ hat die unterste Reihe die letzte „Fugenposition“ bereits gefüllt. Diese End-„Fuge“ darf und muss jedoch mehrmals besetzt werden, um jede Reihe abzuschließen.}
 \end{figure}
 Deshalb wird in diesem Fall die Variable \code{nextGapPos} mit dem gleichen Wert wie \code{nextGap} initialisiert.
 \\[0.4cm]
 % TODO: QUELLE für LINQ
 Im nächsten Ausdruck, der sich von Zeile 17 bis 19 erstreckt, werden wieder mittels \textbf{LINQ} alle \code{Row} Objekte der aktuellen \code{Wall} Instanz, die durch ein noch verfügbares Klötzchen die gewünschte Fugenposition befüllen können, in einem Array gesammelt.
 \\[0.4cm]
-Von Zeile 22 bis 34 wird nun geprüft, ob es keine einzige Reihe gibt, die die nächste Fuge besetzen kann. Hier wird auf den Sonderfall geschaut, dass der Parameter \code{freeGaps} größer als 0 ist. Dies kann nämlich der Fall sein, wenn $n$ \textbf{ungerade} ist. Bei ungeraden $n$ kann es ja zu vollständigen Mauern kommen, \textbf{ohne}, dass \textbf{alle} Fugen besetzt sind. In der Tat kann man auch relativ einfach ausrechnen, wie viele Fugen für ein ungerades $n$ frei bleiben können (siehe Methode \code{CalculateWallProperties} der Klasse \code{WallBuilder}. Somit kann es passieren, dass wenn kein Klötzchen in keiner Reihe zum Besetzen einer freien Fuge gefunden wurde und der 'freie Fugen Puffer' der aktuellen Mauer noch größer als 0 ist, dass diese freie Fuge \textbf{nicht besetzt} und einfach \textbf{übersprungen} werden kann.
-Deshalb findet in Zeile 26, wenn \code{freeGaps} noch größere als 0 ist, einfach der rekursive Aufruf statt mit dem \code{freeGaps} Parameter um 1 verringert. Der Rückgabewert dieses rekursiven Aufrufs wird in der Variable \code{result} gespeichert. Ist \code{result} ein \code{Wall} Objekt, wird dieses weiter zurückgegeben, ansonsten wird der restliche Code bis zum Rekursionsende in Zeile 51 ausgeführt.
+Von Zeile 22 bis 34 wird nun geprüft, ob es keine einzige Reihe gibt, die die nächste Fuge besetzen kann. Hier wird der Sonderfall berücksichtigt, dass der Parameter \code{freeGaps} größer als 0 ist. Dies kann nämlich der Fall sein, wenn $n$ \textbf{ungerade} ist. Bei ungeraden $n$ kann es ja zu vollständigen Mauern kommen, \textbf{ohne}, dass \textbf{alle} Fugen besetzt sind. In der Tat kann man auch relativ einfach ausrechnen, wie viele Fugen für ein ungerades $n$ frei bleiben können (siehe Methode \code{CalculateWallProperties} der Klasse \code{WallBuilder}. Somit kann es passieren, wenn kein Klötzchen in keiner Reihe zum Besetzen einer freien Fuge gefunden wurde und der „freie Fugen-Puffer“ der aktuellen Mauer noch größer als 0 ist, dass diese freie Fuge \textbf{nicht besetzt} und einfach \textbf{übersprungen} werden kann.
+Deshalb findet in Zeile 26, wenn \code{freeGaps} noch größere als 0 ist, einfach der rekursive Aufruf statt, mit dem \code{freeGaps} Parameter um 1 verringert. Der Rückgabewert dieses rekursiven Aufrufs wird in der Variable \code{result} gespeichert. Ist \code{result} ein \code{Wall} Objekt, wird dieses weiter zurückgegeben, ansonsten wird der restliche Code bis zum Rekursionsende in Zeile 51 ausgeführt.
 Tritt der Sonderfall \code{freeGaps > 0} nicht ein wird \code{null} zurückgegeben.
 \\[0.4cm]
-In Zeile 37 wird das Array der \code{Row} Objekte, die die nächste Fuge füllen können nach ihrer \code{RowSum} sortiert. Mit \code{RowSum} ist hierbei einfach die Summe aller in der Reihe platzierten Klötzchen gemeint.
-Nach dem Sortieren, ist das erste Objekt des \code{possibleRows} Arrays also die \textbf{kürzeste Reihe} und das letzte Objekt die bereits \textbf{längste Reihe}.
+In Zeile 37 wird das Array der \code{Row} Objekte, die die nächste Fuge füllen können, nach ihrer \code{RowSum} sortiert. Mit \code{RowSum} ist hierbei einfach die Summe aller in der Reihe platzierten Klötzchen gemeint.
+Nach dem Sortieren ist das erste Objekt des \code{possibleRows} Arrays also die \textbf{kürzeste Reihe} und das letzte Objekt die bereits \textbf{längste Reihe}.
 \\[0.4cm]
 In der For-Schleife von Zeile 40 bis 48 werden nun die \code{Row} Objekte des \code{possibleRows} Array einzeln iteriert.
-Zuerst wird in Zeile 42 das Klötzchen platziert, dass die gesuchte Fuge füllt. (Das Klötzchen wurde in der vorher aufgerufenen Methode \code{ContainsPossibleRowSum} der Klasse \code{WallBuilder} herausgefiltert.)
+Zuerst wird in Zeile 42 das Klötzchen platziert, das die gesuchte Fuge füllt. (Das Klötzchen wurde in der vorher aufgerufenen Methode \code{ContainsPossibleRowSum} der Klasse \code{WallBuilder} herausgefiltert.)
 
-Danach kommt ein rekursive Aufruf, dessen Rückgabewert in der lokalen Variabel \code{result} gespeichert wird. In der Abbruchbedingung von Zeile 44 wird wieder überprüft, ob \code{result} ein \code{Wall} Objekt ist. Ist dies der Fall, wird es weiter zurückgegeben.
+Danach kommt ein rekursiver Aufruf, dessen Rückgabewert in der lokalen Variabel \code{result} gespeichert wird. In der Abbruchbedingung von Zeile 44 wird wieder überprüft, ob \code{result} ein \code{Wall} Objekt ist. Ist dies der Fall, wird es weiter zurückgegeben.
 
 Ist im Gegensatz dazu \code{result} gleich \code{null}, heißt das, dass mit dieser Klötzchen-Entscheidung keine fertige Mauer gebaut werden konnte und deshalb bis zu dieser Entscheidung zurückgegangen wurde, um dort ein anderes Klötzchen zu wählen (\textbf{Backtracking}).
 
@@ -394,7 +394,7 @@ Als letzte Anweisung der Methode wird mit einem Rekursionsende \code{null} zurü
 \begin{figure}[H]
     \centering
     \includegraphics[width=.86\linewidth]{Bilder/Aufgabe1/Code.png}
-    \caption{Quellcode der Methode \code{FillNextGap} der Klasse \code{WallBuilder}.}
+    \caption{Quellcode der Methode \code{FillNextGap} der Klasse \code{WallBuilder}}
 \end{figure}
 \begin{figure}[H]
     \centering
@@ -406,7 +406,7 @@ Als letzte Anweisung der Methode wird mit einem Rekursionsende \code{null} zurü
 Mit der Implementierung dieses Algorithmus können maximale Mauern bis zu $n = 17$ in wenigen Sekunden erzeugt werden. Jedoch steigt die durchschnittliche Algorithmuslaufzeit ab $n = 17$ sehr stark an. Für $n = 18$ dauert das Finden einer Mauer schon mehrere Minuten.
 \\[0.4cm]
 % TODO: QUELLE FÜR BWINF LÖSUNGEN
-Dieser Algorithmus lässt sich jedoch noch um einiges optimieren. In den vom Bundeswettbewerb Informatik offiziell veröffentlichten Lösungshinweisen werden zur ersten Aufgabe noch mehrere Optimierungsmöglichkeiten genannt:
+Dieser Algorithmus lässt sich jedoch noch wesentlich optimieren. In den vom Bundeswettbewerb Informatik offiziell veröffentlichten Lösungshinweisen werden zur ersten Aufgabe noch mehrere Optimierungsmöglichkeiten genannt:
 \begin{itemize}
 \item Randomized Algorithm
 \item Kopplung und Spiegelung einer halben Mauer
@@ -416,7 +416,7 @@ Dieser Algorithmus lässt sich jedoch noch um einiges optimieren. In den vom Bun
 
 Mithilfe dieser Optimierungen kann der Algorithmus so erweitert werden, dass er bis $n = 110$ eine Mauer wenigen Minuten generieren kann.
 
-Dies ist vor allem Eindrucksvoll, wenn man bedenkt, dass es für $n = 100$ schon
+Dies ist vor allem eindrucksvoll, wenn man bedenkt, dass es für $n = 100$ schon
 \begin{center}
 \begin{Large}
 \[100!^{51} \approx 2,95\mathrm{e}{+8,056}\]
@@ -424,16 +424,16 @@ Dies ist vor allem Eindrucksvoll, wenn man bedenkt, dass es für $n = 100$ schon
 \end{center}
 unterschiedliche Mauern der maximalen Höhe gibt.
 
-Eine Zahl mit \textbf{über 8057 Stellen}.
+Das ist eine Zahl mit \textbf{8057 Stellen}.
 
 \subsection{Beispiele}
-Wie bereits erwähnt kann der Algorithmus Mauern von $n = 2$ bis $n = 17$ in wenigen Sekunden erstellen. Test mit größeren $n$ wurden nach mehreren Minuten abgebrochen.
+Wie bereits erwähnt, kann der Algorithmus Mauern von $n = 2$ bis $n = 17$ in wenigen Sekunden erstellen. Weitere Test mit größeren $n$ wurden nach mehreren Minuten abgebrochen.
 \\[0.4cm]
-Außerdem können Mauern von $n = 2$ bis $n = 7$ komplett \textbf{ohne Backtracking} generiert werden. Dies sorgt dafür, dass die Algorithmuslaufzeit für diese $n$ in etwa gleich niedrig sind.
+Außerdem können Mauern von $n = 2$ bis $n = 7$ komplett \textbf{ohne Backtracking} generiert werden. Dies sorgt dafür, dass die Algorithmuslaufzeiten für diese $n$ in etwa gleich sind.
 \\[0.4cm]
-Weiterhin erwähnenswert ist, dass das Finden von Mauern für ungerade $n$ meist kürzer dauert, als das Generieren der $n - 1$ Mauer, da dort Fugen freigelassen werden können und es dadurch deutlich mehr mögliche Mauerkombinationen gibt.
+Weiterhin erwähnenswert ist, dass das Finden von Mauern für ungerade $n$ meist kürzer dauert als das Generieren der $n - 1$ Mauer, da dort Fugen freigelassen werden können und es dadurch deutlich mehr mögliche Mauerkombinationen gibt.
 \\[0.4cm]
-Im Folgenden sind die durchschnittlichen Algorithmuslaufzeiten für die verschiedenen $n$ in einer Tabelle aufgelistet. Außerdem werden in Abbildung 22 bis 24 Konsolen-Ausgaben des Programms für verschiedene $n$ gezeigt.
+Im Folgenden sind die durchschnittlichen Algorithmuslaufzeiten für die verschiedenen $n$ in einer Tabelle aufgelistet.
 \vspace{0.4cm}
 \begin{table}[H]
 \begin{center}
@@ -461,22 +461,27 @@ n  & Algorithmuslaufzeit \\ \hline
 \end{table}
 
 Die linke Spalte gibt den eingegeben Wert für $n$ an, die rechte die durchschnittliche Algorithmuslaufzeit in Millisekunden.
-
+\\[0.4cm]
+Außerdem zeigen Abbildung 22 bis 24 Konsolen-Ausgaben des Programms für verschiedene $n$.
+Die Mauerlösung ist dabei die hellblaue Ausgabe. Die verschiedenen Klötzchen einer Reihe werden mit dem Trennstrich (\code{|}) abgetrennt. Die Zahl innerhalb der Trennstriche steht für die Länge eines Klötzchens.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Programm_17.png}
-    \caption{Programm-Ausgabe für $n = 17$.}
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Programm_6.png}
+    \caption{Programm-Ausgabe für $n = 6$ mit vorherigen fehlerhaften Eingaben für $n$ (1 und abc)}
 \end{figure}
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Programm_10.png}
-    \caption{Programm-Ausgabe für $n = 10$.}
+    \caption{Programm-Ausgabe für $n = 10$}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Programm_6.png}
-    \caption{Programm-Ausgabe für $n = 6$ mit vorherigen fehlerhaften Eingaben für $n$ (1 und abc).}
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe1/Programm_17.png}
+    \caption{Programm-Ausgabe für $n = 17$}
 \end{figure}
+
+
+
 
 
 %===================================================================================
@@ -591,7 +596,7 @@ Diese Datenstruktur eignet sich hervorragend für die Unterteilung der Karte. Ei
 \begin{figure}[H]
 \centering
     \includegraphics[width=0.5\linewidth]{Bilder/Aufgabe3/Quadtree_Einfach.png}
-    \caption{Das größere Quadrat wird in jeweils 4 gleichgroße, kleinere Quadrate unterteilt. Das große Quadrat Objekt, hält dabei eine Referenz auf die kleineren.}
+    \caption{Das größere Quadrat wird in jeweils 4 gleichgroße, kleinere Quadrate unterteilt. Das große Quadrat Objekt, hält dabei eine Referenz auf die Kleineren.}
 \end{figure}
 
 Man teilt ein Quadrat immer dann auf, wenn der jeweilige Inhalt nicht eindeutig als Land oder Wasser bestimmt werden kann, und das Quadrat noch größer als 20x20 ist.
