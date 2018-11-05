@@ -54,8 +54,11 @@ Runde 2\par
 Aufgabe 1 und 3\par 
 }
 
+\begin{figure}[H]
+    \includegraphics[width=1\linewidth]{Bilder/Sonstiges/Titelbild.png}
+\end{figure}
 
-\vspace{2cm}
+\vspace{1cm}
 
 
 \begin{large}
@@ -693,11 +696,15 @@ Bei der Durchführung des ersten A* Algorithmus wird nun ein Weg aus nur „Walk
 Der Schlüssel zu einem möglichst effizienten Algorithmus, welcher nur wenige Quadcopter-Flüge benötigt, ist die Koordinierung zwischen dem A* Pathfinding und der Quadtree Datenstruktur.
 \\[0.4cm]
 Das A* Grid wird nur mit den nötigsten „Informationen versorgt“.
-Der Quadtree muss vorbereitet sein vom A* Pathfinding aus eine Anforderung für das Scannen eines Bereiches zu bekommen. Dieser Bereich muss dann identifiziert werden und zurück an das Pathfinding System gegeben werden, welches mit dem Resultat das eigene A* Grid aktualisiert und die Wegsuche neu startet.
+Der Quadtree muss darauf vorbereitet sein vom A* Pathfinding aus eine Anforderung für das Scannen eines Bereiches zu bekommen. Dieser Bereich muss dann identifiziert werden und zurück an das Pathfinding System gegeben werden, welches mit dem Resultat das eigene A* Grid aktualisiert und die Wegsuche neu startet.
 \\[0.4cm]
-Ein weiterer nicht zu vernachlässigender Aspekt ist das Umgehen mit dem Sonderfall, dass Quax über ein 20x20 Wasser-Quadrat drüber kommt durch zwei aneinanderliegende, gemischte 20x20 Quadrate.
-Um dies zu verhindern ist 
-Das A* Grid wird zwar aus 10x10 breiten Nodes bestehen, jedoch wird auf den Sonderfall dadurch geachtet, dass der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20 Map-Quadrats entspricht, dessen linke, untere Ecke die gleichen Koordinaten hat wie die Grid-Node (siehe Abbildung 37).
+Ein weiterer nicht zu vernachlässigender Aspekt ist das Umgehen mit dem Sonderfall, dass Quax über ein 20x20 Wasser-Quadrat, durch zwei aneinanderliegende, gemischte 20x20 Quadrate, drüber kommt.
+\\[0.4cm]
+Dieses Problem ist deshalb so kompliziert, weil man bei einem Quadtree nicht davon ausgehen kann, dass sich Quadrate immer überlappen. Bei einem perfekten Quadtree würden sich alle Quadrate nur berühren. Jedoch muss sich ja auch nicht jedes Quadrat überlappen, sondern nur die 3 20x20 Quadrate bei einem Sonderfall.
+\\[0.4cm]
+Da das A* Grid nun eine Node Größe von 10x10 hat müssen wir unseren Algorithmus zum Aktualisieren des Pathfinding Grids ändern. Der Status des Map-Ausschnitts kann nicht einfach auf alle sich im Ausschnitt befindliche Grid-Nodes übertragen werden. Dies würde den Sonderfall missachten. Stattdessen muss jede 10x10 Grid-Node mit einem eigenen 20x20 Map-Ausschnitt assoziiert werden. 
+
+Entspricht der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20 Map-Quadrats, dessen linke, untere Ecke die gleichen Koordinaten hat wie die Grid-Node (siehe Abbildung 37), so ensteht letztendlich ein ein Geflecht aus überlappenden 20x20 Quadraten, welches wiederum den Sonderfall abdeckt (siehe Abbildung 38).
 
 \begin{figure}[H]
 \centering
@@ -705,13 +712,15 @@ Das A* Grid wird zwar aus 10x10 breiten Nodes bestehen, jedoch wird auf den Sond
     \caption{Der blaue Pixel repräsentiert eine Node im A*-Grid. Der Status dieser Node wird jedoch über den Map-Typ des gelben Quadrats definiert. Beinhaltet dieses zum Beispiel nur Land, ist die Grid-Node „Walkable“.}
 \end{figure}
 
-Dadurch entsteht letztendlich ein Geflecht aus überlappenden 20x20 Quadraten, welches wiederum den Sonderfall abdeckt (siehe Abbildung 38).
-
 \begin{figure}[H]
 \centering
     \includegraphics[width=.8\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/AStar_Grid_02.png}
     \caption{Ein Geflecht aus Grid-Nodes und den jeweils dazugehörigen Map-Quadraten. Die 2x2 Map-Quadrate überlappen sich sichern somit den Sonderfall ab.}
 \end{figure}
+
+Die Schnittstelle zwischen den beiden Systemen Pathfinding und Quadtree bildet also eine Methode im Quadtree, die von der Pathfinding Klasse mit einem Bestimmten Punkt im A*-Grid aufgerufen wird, von dem sie den Status will.
+
+Die Methode sucht dann im Quadtree nach dem Punkt und beachtet dabei auch noch nach den zusätzlichen 3 weiteren Punkten zu suchen, so dass man am Ende den Map-Typ oder auch die Map-Typen des mit dem übergebenen Punktes assoziierten Map-Quadrats hat.
 
 \subsection{Teilaufgabe (c)}
 \subsubsection{Implementierung}
