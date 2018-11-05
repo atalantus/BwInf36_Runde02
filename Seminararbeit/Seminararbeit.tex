@@ -620,20 +620,20 @@ Jetzt gibt es aber auch beim Quadtree den Sonderfall, dass ein Quadrat mit unger
     \caption{Bei einer Aufteilung eines Quadrats mit ungerader Größe überlappen sich die inneren Quadrate.}
 \end{figure}
 
-Um dies zu verhindern könnte man die Karte nicht einfach nur quadratisch machen, sondern auf eine Größe bringen, so dass die Breite und Höhe der Map einer Zweierpotenz entsprechen. Dadurch könnte jede Aufteilung bis zum kleinst-möglichen 20x20 Quadrat ohne Überlappungen durchgeführt werden.
+Um dies zu verhindern, könnte man die Karte nicht einfach nur quadratisch machen, sondern auf eine Größe bringen, die Breite und Höhe der Map einer Zweierpotenz entsprechen. Dadurch könnte jede Aufteilung bis zum kleinstmöglichen 20x20-Quadrat ohne Überlappungen durchgeführt werden.
 \\[0.4cm]
-Der Nachteil dieser Skalierung ist jedoch eine ziemliche Vergrößerung der Karte im Vergleich zur ersten Methode (siehe Abbildung 31).
+Der Nachteil dieser Skalierung ist jedoch eine Vergrößerung der Karte im Vergleich zur ersten Methode (siehe Abbildung 31).
 \begin{figure}[H]
 \centering
     \includegraphics[width=.9\linewidth]{Bilder/Aufgabe3/Erweiterung_Karte.png}
-    \caption{Links die einfache Umformung der Map zu einem Quadrat so dass Breite = Höhe. Rechts die Umformung zu einer Zweierpotenz-Größe. Der blau markierte Bereich zeigt jeweils die zusätzlich hinzugefügten Gebiete an.}
+    \caption{Links die einfache Umformung der Map zu einem Quadrat, sodass Breite = Höhe. Rechts die Umformung zu einer Zweierpotenz-Größe. Der blau markierte Bereich zeigt jeweils die zusätzlich hinzugefügten Gebiete an.}
 \end{figure}
 
-Für noch größere Karten steigt der Unterschied zwischen den beiden Methoden noch mehr und je größer die Karte, desto mehr Quadcopter Flüge bis man das eigentliche Gebiet erreicht hat.
+Für noch größere Karten steigt der Unterschied zwischen den beiden Methoden noch mehr und je größer die Karte, desto mehr Quadcopter-Flüge werden benötigt, bis man das eigentliche Gebiet erreicht hat.
 \\[0.4cm]
-Um nun auch auf den Sonderfall der zwei angrenzenden, gemischten 20x20 Quadrate, zwischen denen ein 20x20 Wasser Quadrat liegt, Rücksicht zu nehmen, darf der Weg zur Stadt nicht aus 20x20 aneinanderliegenden Quadraten bestehen, sondern aus 20x20 überlappenden Quadraten.
+Um nun auch auf den Sonderfall der zwei angrenzenden, gemischten 20x20-Quadrate, zwischen denen ein 20x20-Wasser-Quadrat liegt, Rücksicht zu nehmen, darf der Weg zur Stadt nicht aus 20x20 aneinanderliegenden Quadraten bestehen, sondern aus 20x20 überlappenden Quadraten.
 
-Auf diese Weise kann sichergestellt werden, dass keine 20x20 Wasser-Quadrate, die zwischen zwei 20x20 gemischten Quadraten liegen übersprungen werden.
+Auf diese Weise kann sichergestellt werden, dass keine 20x20-Wasser-Quadrate, die zwischen zwei 20x20 gemischten Quadraten liegen, übersprungen werden.
 
 \subsection{Teilaufgabe (a)}
 Ein Quadrat in der Landschaft kann für Quax drei mögliche Zustände Wasser („W“), Land („L“) oder Unbekannt („U“) haben.
@@ -648,7 +648,7 @@ Als Wegfindungs-Algorithmus wird \textbf{A* (A-Star)} verwendet. A* ist eine Var
 
 Die generelle Funktionsweise des A* Algorithmus soll hier nur kurz erklärt werden. Für eine umfassendere Erklärung werden die zu diesem Thema im Literaturverzeichnis angegebenen Quellen empfohlen.
 \\[0.4cm]
-Der A* Algorithmus beginnt mit einer Start-Node (\code{S}), einer Target-Node (\code{T}), einem \code{openSet} und einem \code{closedSet}. Jede Node hat dabei entweder den Status „Walkable“ oder „Unwalkable“. Es werden zuerst alle Nachbar-Nodes von \code{S} mit dem Zustand „Walkable“ zum \code{openSet} hinzugefügt. Für sie werden jeweils 3 Werte berechnet. \code{G-Cost} beschreibt die Entfernung zu \code{S}. \code{H-Cost} beschreibt die Entfernung zu \code{T}. \code{F-Cost} entspricht \code{G-Cost} + \code{H-Cost}. (Für die Berechnung dieser \code{F-Cost} gibt es mehrere Varianten. Hier wird die sogenannte „Manhatten-Distanz“ verwendet.)
+Der A* Algorithmus beginnt mit einer Start-Node (\code{S}), einer Target-Node (\code{T}), einem \code{openSet} und einem \code{closedSet}. Jede Node hat dabei entweder den Status „Walkable“ oder „Unwalkable“. Es werden zuerst alle Nachbar-Nodes von \code{S} mit dem Zustand „Walkable“ zum \code{openSet} hinzugefügt. Für sie werden jeweils 3 Werte berechnet. \code{G-Cost} beschreibt die Entfernung zu \code{S}. \code{H-Cost} beschreibt die Entfernung zu \code{T}. \code{F-Cost} entspricht \code{G-Cost} + \code{H-Cost}. (Für die Berechnung dieser \code{F-Cost} gibt es mehrere Varianten. Hier wird die sogenannte „Manhattan-Distanz“ verwendet.)
 \\[0.4cm]
 Als nächstes wird die Node im \code{openSet} mit der geringsten \code{F-Cost} aus dem \code{openSet} entfernt und dem \code{closedSet} hinzugefügt. Für diese Node werden wieder alle Nachbarn mit dem Status „Walkable“ entweder in das \code{openSet} aufgenommen und ihre Werte berechnet oder, falls sie schon im \code{openSet} vorhanden sind, werden ihre Werte aktualisiert.
 \\[0.4cm]
@@ -656,7 +656,7 @@ Dieser Vorgang wiederholt sich so lange, bis \code{T} erreicht wurde.
 \\[0.4cm]
 Das hier auftretende Problem ist, dass bei einem normalen A* Algorithmus vorher schon das gesamte Grid definiert sein muss. Der Algorithmus muss wissen, welche Nodes „Walkable“ und welche „Unwalkable“ sind um einen Pfad zu finden.
 
-Da das Scannen der gesamten Map jedoch auch mit der Quadtree Struktur viel zu viele letztendlich Quadcopter Flüge beanspruchen würde, gibt es bei der hier verwendeten A* Variante noch den dritten möglichen Node Status „Unknown“.
+Da das Scannen der gesamten Map jedoch auch mit der Quadtree-Struktur viel zu viele letztendlich Quadcopter-Flüge beanspruchen würde, gibt es bei der hier verwendeten A* Variante noch den dritten möglichen Node Status „Unknown“.
 
 Wie genau der Algorithmus mit einem dritten Status abläuft, wird nun an einem kleinen Beispiel veranschaulicht.
 \\[0.4cm]
@@ -674,7 +674,7 @@ Nun wird der erste Flug durchgeführt und die Grid-Nodes dementsprechend aktuali
 \end{figure}
 Danach wird zuerst der A* Pathfinding Algorithmus normal durchgeführt. Das heißt, dass nur Nodes mit dem Status „Walkable“ auch als tatsächlich begehbar angenommen werden. Die restlichen Nodes mit dem Status „Unknown“ oder „Unwalkable“ gelten als nicht begehbar.
 \\[0.4cm]
-Wird so ein Weg zum Ziel gefunden ist der Algorithmus fertig und es steht fest, dass es einen Pfad zur Stadt gibt. Umgekehrt heißt jedoch nicht, dass wenn kein Weg gefunden wurde es keinen Weg gibt. Stattdessen führt man eine zweite A* Suche durch bei der diesmal nicht nur Nodes des Status „Walkable“, sondern auch die des Status „Unknown“ als begehbar betrachtet werden.
+Wird so ein Weg zum Ziel gefunden, ist der Algorithmus fertig und es steht fest, dass es einen Pfad zur Stadt gibt. Umgekehrt heißt das jedoch nicht, dass es, wenn kein Weg gefunden wurde, es auch überhaupt keinen Weg gibt. Stattdessen führt man eine zweite A*-Suche durch, bei der diesmal nicht nur Nodes des Status „Walkable“, sondern auch die des Status „Unknown“ als begehbar betrachtet werden.
 \\[0.4cm]
 Findet diese Suche wiederum einen Pfad zum Ziel, bedeutet das, dass noch weitere Flüge zur Erkundung dieser „Unknown“-Nodes notwendig sind, um sagen zu können, ob es einen Pfad gibt oder nicht.
 Findet dagegen auch die zweite Suche keinen Weg zur Stadt, so bedeutet das, dass es auch wirklich keinen Weg gibt.
@@ -689,22 +689,22 @@ Bei der Durchführung des ersten A* Algorithmus wird nun ein Weg aus nur „Walk
 \begin{figure}[H]
 \centering
     \includegraphics[width=.5\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/Beispiel_04.png}
-    \caption{Die Vollständige Map. Der Pfad zur Stadt ist pink eingezeichnet.}
+    \caption{Die vollständige Map. Der Pfad zur Stadt ist pink eingezeichnet.}
 \end{figure}
 
 \subsection{Teilaufgabe (b)}
-Der Schlüssel zu einem möglichst effizienten Algorithmus, welcher nur wenige Quadcopter-Flüge benötigt, ist die Koordinierung zwischen dem A* Pathfinding und der Quadtree Datenstruktur.
+Der Schlüssel zu einem möglichst effizienten Algorithmus, welcher nur wenige Quadcopter-Flüge benötigt, ist die Koordinierung zwischen dem A*-Pathfinding und der Quadtree-Datenstruktur.
 \\[0.4cm]
 Das A* Grid wird nur mit den nötigsten „Informationen versorgt“.
-Der Quadtree muss darauf vorbereitet sein vom A* Pathfinding aus eine Anforderung für das Scannen eines Bereiches zu bekommen. Dieser Bereich muss dann identifiziert werden und zurück an das Pathfinding System gegeben werden, welches mit dem Resultat das eigene A* Grid aktualisiert und die Wegsuche neu startet.
+Der Quadtree muss darauf vorbereitet sein vom A* Pathfinding aus eine Anforderung für das Scannen eines Bereiches zu bekommen. Dieser Bereich muss dann identifiziert werden und zurück an das Pathfinding-System gegeben werden, welches mit dem Resultat das eigene A* Grid aktualisiert und die Wegsuche neu startet.
 \\[0.4cm]
-Ein weiterer nicht zu vernachlässigender Aspekt ist das Umgehen mit dem Sonderfall, dass Quax über ein 20x20 Wasser-Quadrat, durch zwei aneinanderliegende, gemischte 20x20 Quadrate, drüber kommt.
+Ein weiterer nicht zu vernachlässigender Aspekt ist der Sonderfall, dass Quax über ein 20x20-Wasser-Quadrat, durch zwei aneinanderliegende, gemischte 20x20-Quadrate, hinüberkommt.
 \\[0.4cm]
-Dieses Problem ist deshalb so kompliziert, weil man bei einem Quadtree nicht davon ausgehen kann, dass sich Quadrate immer überlappen. Bei einem perfekten Quadtree würden sich alle Quadrate nur berühren. Jedoch muss sich ja auch nicht jedes Quadrat überlappen, sondern nur die 3 20x20 Quadrate bei einem Sonderfall.
+Dieses Problem ist deshalb so kompliziert, weil man bei einem Quadtree nicht davon ausgehen kann, dass sich Quadrate immer überlappen. Bei einem perfekten Quadtree würden sich alle Quadrate nur berühren. Jedoch muss sich ja auch nicht jedes Quadrat überlappen, sondern nur die 3 20x20-Quadrate bei einem Sonderfall.
 \\[0.4cm]
-Da das A* Grid nun eine Node Größe von 10x10 hat müssen wir unseren Algorithmus zum Aktualisieren des Pathfinding Grids ändern. Der Status des Map-Ausschnitts kann nicht einfach auf alle sich im Ausschnitt befindliche Grid-Nodes übertragen werden. Dies würde den Sonderfall missachten. Stattdessen muss jede 10x10 Grid-Node mit einem eigenen 20x20 Map-Ausschnitt assoziiert werden. 
+Da das A* Grid nun eine Node Größe von 10x10 hat müssen wir unseren Algorithmus zum Aktualisieren des Pathfinding-Grids ändern. Der Status des Map-Ausschnitts kann nicht einfach auf alle sich im Ausschnitt befindliche Grid-Nodes übertragen werden. Dies würde den Sonderfall missachten. Stattdessen muss jede 10x10-Grid-Node mit einem eigenen 20x20-Map-Ausschnitt assoziiert werden. 
 
-Entspricht der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20 Map-Quadrats, dessen linke, untere Ecke die gleichen Koordinaten hat wie die Grid-Node (siehe Abbildung 37), so ensteht letztendlich ein ein Geflecht aus überlappenden 20x20 Quadraten, welches wiederum den Sonderfall abdeckt (siehe Abbildung 38).
+Entspricht der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20-Map-Quadrats, dessen linke, untere Ecke die gleichen Koordinaten hat wie die Grid-Node (siehe Abbildung 37), so ensteht letztendlich ein ein Geflecht aus überlappenden 20x20-Quadraten, welches wiederum den Sonderfall abdeckt (siehe Abbildung 38).
 
 \begin{figure}[H]
 \centering
@@ -715,7 +715,7 @@ Entspricht der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20
 \begin{figure}[H]
 \centering
     \includegraphics[width=.8\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/AStar_Grid_02.png}
-    \caption{Ein Geflecht aus Grid-Nodes und den jeweils dazugehörigen Map-Quadraten. Die 2x2 Map-Quadrate überlappen sich sichern somit den Sonderfall ab.}
+    \caption{Ein Geflecht aus Grid-Nodes und den jeweils dazugehörigen Map-Quadraten. Die 20x20-Map-Quadrate überlappen sich sichern somit den Sonderfall ab.}
 \end{figure}
 
 Die Schnittstelle zwischen den beiden Systemen Pathfinding und Quadtree bildet also eine Methode im Quadtree, die von der Pathfinding Klasse mit einem Bestimmten Punkt im A*-Grid aufgerufen wird, von dem sie den Status will.
@@ -841,11 +841,11 @@ Befindet sich ein Punkt in einer 20x20 Node, gilt der Punkt als gefunden, denn m
 \end{figure}
 
 \subsubsection{Optimierungsmöglichkeiten}
-Die Algorithmuslaufzeit der aktuelle Implementierung ist gerade für größere Maps sehr schlecht. Dabei überrascht, dass die einzelnen Komponente eigentlich gar nicht viel Zeit verbrauchen. Das Suchen im Quadtree, das Aktualisieren des A* Grids und die erste Wegsuche verbrauchen alle zusammen nur wenige Millisekunden pro Durchgang. 
+Die Algorithmuslaufzeit der aktuelle Implementierung ist gerade für größere Maps sehr schlecht. Dabei überrascht, dass die einzelnen Komponente eigentlich gar nicht viel Zeit verbrauchen. Das Suchen im Quadtree, das Aktualisieren des A*-Grids und die erste Wegsuche verbrauchen alle zusammen nur wenige Millisekunden pro Durchgang. 
 \\[0.4cm]
-Das was am meisten Zeit verbraucht ist die zweite Wegsuche. Nicht zuletzt, weil sie noch nicht durch Caching optimiert ist. Allerdings erklärt auch die Laufzeit des zweiten Pathfinding-Algorithmus nicht die Länge der Gesamtlaufzeit. Die Wahl einer Game-Engine als Entwicklungsumgebung hat die Performance letztendlich durch Hintergrundprozesse doch eher um einiges verschlechtert als verbessert.
+Was am meisten Zeit verbraucht, ist die zweite Wegsuche. Nicht zuletzt, weil sie noch nicht durch Caching optimiert ist. Allerdings erklärt auch die Laufzeit des zweiten Pathfinding-Algorithmus nicht die Länge der Gesamtlaufzeit. Die Wahl einer Game-Engine als Entwicklungsumgebung hat die Performance letztendlich durch Hintergrundprozesse eher um einiges verschlechtert als verbessert.
 \\[0.4cm]
-Mögliche Optimierungsmöglichkeiten zur Verbesserung der Laufzeit oder Verringerung der benötigten Quadcopter Flüge wären:
+Mögliche Optimierungsmöglichkeiten zur Verbesserung der Laufzeit oder Verringerung der benötigten Quadcopter-Flüge wären:
 \\[0.4cm]
 \textbf{Multithreading}
 
@@ -857,22 +857,22 @@ A* ist ein Pathfinding-Algorithmus zum Finden eines kürzesten oder zumindest m�
 \\[0.4cm]
 \textbf{Speichern von Pathfinding Zuständen}
 
-Das bereits implementierte Caching für eine Wegfindung, bei der noch unbekannte Nodes als nicht-betretbar angenommen werden, hat die Laufzeit erheblich minimiert.
+Das bereits implementierte Caching für eine Wegfindung, bei der noch unbekannte Nodes als nicht betretbar angenommen werden, hat die Laufzeit erheblich minimiert.
 
-Nun ist es aber noch möglich Zustände für die Wegfindung, bei der unbekannte Nodes als betretbar angenommen werden, zu speichern, so dass dieser Algorithmus nicht jedes mal von der Startposition bis zur Zielposition suchen muss, sondern auf vorher durchgeführte Suchergebnisse zurückgreifen kann.
+Nun ist es aber möglich, Zustände für die Wegfindung, bei der unbekannte Nodes als betretbar angenommen werden, zu speichern, sodass dieser Algorithmus nicht jedes mal von der Startposition bis zur Zielposition suchen muss, sondern auf vorher durchgeführte Suchergebnisse zurückgreifen kann.
 \\[0.4cm]
 \textbf{Verbindung beider A* Suchen}
 
-Eine Alternative zum Speichern des aktuellen Zustandes der zweiten A* Suche, wäre auch eine Integration dieser in die schon vorherige A* Suche. Indem man alle unbekannten Nachbar-Nodes in einem zweiten \code{openSet} speichert und nach fehlgeschlagener ersten Suche eine Zweite mit dem zusätzlich erstellten \code{openSet} und der Bedingung, unbekannte Nodes begehbar sind, lässt einiges an Laufzeit einsparen.
+Eine Alternative zum Speichern des aktuellen Zustandes der zweiten A* Suche, wäre auch eine Integration dieser in die schon vorherige A* Suche. Indem man alle unbekannten Nachbar-Nodes in einem zweiten \code{openSet} speichert und nach fehlgeschlagener ersten Suche eine zweite mit dem zusätzlich erstellten \code{openSet} und der Bedingung, unbekannte Nodes begehbar sind, lässt einiges an Laufzeit einsparen.
 \\[0.4cm]
 \textbf{Bidirektionale Suche}
 
 % TODO: QUELLE BIDIREKTIONALE SUCHE
-Mit Hilfe einer „Bidirektionale Suche“, könnte sich sowohl die Laufzeit, als auch die benötigte Anzahl an Quadcopter Flügen weiter verbessern.
+Mit Hilfe einer „Bidirektionale Suche“ könnte sich sowohl die Laufzeit als auch die benötigte Anzahl an Quadcopter-Flügen weiter verbessern.
 \\[0.4cm]
 \textbf{Unity Implementierung}
 
-Die Wahl einer Game-Engine als Entwicklungsumgebung hat auch einen sehr großen Einfluss auf die Laufzeit, durch viele für dieses Programm unnötige Hintergrundprozesse. Auch das einzelne Darstellen von Flügen auf der Map-Textur verbraucht viele Ressourcen. Die Laufzeit des puren Algorithmus ist daher wesentlich geringer als die Zeit, die das Programm für die fertige Abbildung des Weges benötigt.
+Die Wahl einer Game-Engine als Entwicklungsumgebung hat auch einen sehr großen Einfluss auf die Laufzeit, weil diese durch viele für dieses Programm unnötige Hintergrundprozesse verlängert wird. Auch das einzelne Darstellen von Flügen auf der Map-Textur verbraucht viele Ressourcen. Die Laufzeit des puren Algorithmus ist daher wesentlich geringer als die Zeit, die das Programm für die fertige Abbildung des Weges benötigt.
 
 Eine simplere Konsolen-Anwendung, die dem Benutzer die Flüge am Ende in eine PNG-Datei einträgt, würde zum Beispiel nochmals deutlich effizienter laufen.
 
@@ -913,7 +913,7 @@ Die Abbildungen 47 bis 52 stellen Programmausgaben für verschiedene Quax Positi
 \subsection{Teilaufgabe (d)}
 Mit einer eher unnatürlichen Verteilung von Flüssen und Seen wie zum Beispiel einem Schachbrettmuster (siehe Abbildung 53), einem verzweigten Labyrinth (siehe Abbildung 54) oder eine Anordnung mehrerer schmaler Wasser und Land streifen (siehe Abbildung 55), können kaum noch größere Flächen eindeutig eingeteilt werden.
 
-Dies sorgt schnell für einen sehr umfangreichen Quadtree und damit auch für viele Quadcopter Flüge.
+Dies sorgt schnell für einen sehr umfangreichen Quadtree und damit auch für viele Quadcopter-Flüge.
 \\[0.4cm]
 Der hier besprochene Algorithmus läuft am effizientesten, bei eher natürlichen Landschaften, mit größeren Wasser- und Landflächen. Dabei kann der Quadcopter den Typ größere Gebiete mit nur einem Flug identifizieren.
 
