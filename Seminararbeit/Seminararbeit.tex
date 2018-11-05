@@ -745,7 +745,7 @@ Bei Spielen gilt es allgemein als „Good-Practice“ viel mit \textbf{Events} z
 
 \code{PathfindingManager} ist die Haupt-Klasse des A* Algorithmus. Sie kontrolliert welche Art Pathfinding durchgeführt wird und aktualisiert das A*-Grid.
 
-Im Folgenden soll nur auf die Haupt-Methode (\code{FindPath}) der \code{PathfindingManager} Klasse eingegangen werden. Ein Klassendiagramm des gesamten Pathfinding-Systems mit den jeweils wichtigsten Methoden und Attributen ist am Ende des Kapitels in Abbildung |||| abgebildet.
+Im Folgenden soll nur auf die Haupt-Methode (\code{FindPath}) der \code{PathfindingManager} Klasse eingegangen werden. Ein Klassendiagramm des gesamten Pathfinding-Systems mit den jeweils wichtigsten Methoden und Attributen ist am Ende des Abschnitts in Abbildung 42 abgebildet.
 \\[0.4cm]
 Die \code{FindPath} Methode ist verantwortlich für das Suchen eines Pfades von der Start-Node zur Target-Node. Der Parameter des Typs \code{Boolean} gibt dabei an, ob Nodes des Status „Unknown“ auch als „Walkable“ betrachtet werden.
 \\[0.4cm]
@@ -787,9 +787,58 @@ Im anderen Fall wird eben dann die zweite Pathfinding Variante gestartet.
     \caption{Erweitertes Klassendigramm der wichtigsten Pathfinding Klassen. Die Haupt-Methode des A* Algorithmus wurden in der Klasse \code{PathfindingManager} hervorgehoben.}
 \end{figure}
 
-
 \textbf{Quadtree}
-% QUADTREE
+
+Im Folgenden soll nur auf die wichtigsten Methoden zur Durchsuchung des Quadtrees nach einem Punkt eingegangen werden. Ein Klassendiagramm des gesamten Quadtree-Systems mit den jeweils wichtigsten Methoden und Attributen ist am Ende des Abschnitts in Abbildung 46 abgebildet.
+\\[0.4cm]
+Die Klasse \code{QuadtreeManager} ist Ausgangspunkt der Suche. Sie referenziert den Wurzel-Knoten und nimmt mit der Methode \code{SearchForPoint} (siehe Abbildung 43) den angeforderten Punkt des Pathfinding-Systems entgegen.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Quadtree_01.png}
+    \caption{Die \code{SearchForPoint} Methode der Klasse \code{QuadtreeManager}}
+\end{figure}
+
+Mit zwei ineinander verschachtelten \code{For-Schleifen} werden dann jeweils die Pixel des zum gesuchten Punktes gehörigen 20x20 Map-Quadrat durchgegangen.
+\\[0.4cm]
+Zuerst wird überprüft, ob der Pixel bereits in einem schon vorher überprüftem Map-Square liegt. Ist dem so, muss der Pixel nicht erneut im Quadtree gesucht werden. Andererseits wird in Zeile 20 mit dem Aufruf der Methode \code{FindPoint} des Wurzel-Knotens das \code{MapQuadrat} Objekt gesucht und der Liste \code{updatedSquares} hinzugefügt.
+\\[0.4cm]
+Wurde jeder Pixel durchgegangen, ist die Suche beendet und das A* Grid kann aktualisiert werden.
+\\[0.4cm]
+Nun werden noch kurz die Implementierungen der abstrakten Methode \code{FindPoint} der Klasse \code{NodeElement} erklärt.
+\\[0.4cm]
+Die Implementierung der Klasse \code{Node}, die für quadratische Ausschnitte größer als 20x20 verwendet wird ist in Abbildung 44 zu sehen.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Quadtree_02.png}
+    \caption{Die \code{FindPoint} Methode der Klasse \code{Node}}
+\end{figure}
+
+Die indirekt Rekursive Methode prüft als erstes ob ihr Map-Typ schon bekannt ist. Wenn nicht wird dieser mit der Methode \code{GetMapTyp} herausgefunden. (Der Aufruf dieser Methode entspricht einem Flug des Quadcopters.) Als nächstes wird überprüft, ob der Ausschnitt auch wirklich den gesuchten Punkt enthält. Dies ist nicht der Fall, wenn der vom Pathfinding-System angeforderte Punkt zum Beispiel am oberen Rand der Map liegt. Dadurch liegen dann mindestens die zwei oberen Punkte des dazugehörigen 20x20 Map-Quadrats außerhalb der Map und somit auch außerhalb des vom Quadtrees erfassten Bereichs.
+
+Da alles außerhalb der definierten Map als Wasser zählt, wird in diesem Fall ein neu erstelltes 1 Pixel großes Map-Quadrat mit dem Typ „Water“ zurückgegeben.
+\\[0.4cm]
+Ansonsten wird je nach Map-Typ des Ausschnitts entschieden. Ist der Map-Typ eindeutig („Water“ oder „Ground“) wird ist der Punkt gefunden und das aktuelle Map-Quadrat wird zurückgegeben.
+
+Ist der Map-Typ jedoch „Mixed“, bedeutet das, dass der Point in einem der Child-Quadrate weiter gesucht werden muss. Dafür werden die Child-Quadrate, wenn noch nicht vorhanden, zuerst bestimmt und dann durch iteriert. Bei dem Child-Quadrat, dass den Point enthält, kommt der rekursive Aufruf der implementierten Methode \code{FindPoint}. Der Rückgabewert dieses Aufrufs, wird weiter zurückgegeben.
+\\[0.4cm]
+Die Implementierung der \code{FindPoint} Methode in der Klasse \code{EndNode} (siehe Abbildung 45) ist wesentlich kürzer, da Map-Quadrate der Größe 20x20 keine Child-Nodes besitzen können.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Quadtree_03.png}
+    \caption{Die \code{FindPoint} Methode der Klasse \code{EndNode}}
+\end{figure}
+
+Hier wird nur der Map-Typ überprüft und wenn nicht vorhanden ermittelt. Dann wird das aktuelle Map-Quadrat zurückgegeben.
+\\[0.4cm]
+Befindet sich ein Punkt in einer 20x20 Node, gilt der Punkt als gefunden, denn man kann nicht noch tiefer gehen als 20x20.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Klassendiagramm_Quadtree.png}
+    \caption{Erweitertes Klassendigramm der wichtigsten Quadtree Klassen}
+\end{figure}
 
 \subsubsection{Optimierungsmöglichkeiten}
 Die Algorithmuslaufzeit der aktuelle Implementierung ist gerade für größere Maps sehr schlecht. Dabei überrascht, dass die einzelnen Komponente eigentlich gar nicht viel Zeit verbrauchen. Das Suchen im Quadtree, das Aktualisieren des A* Grids und die erste Wegsuche verbrauchen alle zusammen nur wenige Millisekunden pro Durchgang. 
@@ -829,10 +878,40 @@ Eine simplere Konsolen-Anwendung, die dem Benutzer die Flüge am Ende in eine PN
 
 
 \subsubsection{Beispiele}
-% TODO: BEISPIELE
+Die Abbildungen 47 bis 52 stellen Programmausgaben für verschiedene Quax Positionen auf verschiedenen Maps dar.
+\begin{figure}[H]
+\centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/eigen_08.png}
+    \caption{Ausgabe für eine eigens erstellte Test-Map}
+\end{figure}
+\begin{figure}[H]
+\centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/quax1_02.png}
+    \caption{Ausgabe die 2. Quax Position der BwInf Map „quax1.png“}
+\end{figure}
+\begin{figure}[H]
+\centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/quax1_03.png}
+    \caption{Ausgabe die 3. Quax Position der BwInf Map „quax1.png“}
+\end{figure}
+\begin{figure}[H]
+\centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/quax2_03.png}
+    \caption{Ausgabe die 3. Quax Position der BwInf Map „quax2.png“}
+\end{figure}
+\begin{figure}[H]
+\centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/quax3_03.png}
+    \caption{Ausgabe die 3. Quax Position der BwInf Map „quax3.png“}
+\end{figure}
+\begin{figure}[H]
+\centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/quax3_06.png}
+    \caption{Ausgabe die 6. Quax Position der BwInf Map „quax3.png“}
+\end{figure}
 
 \subsection{Teilaufgabe (d)}
-Mit einer eher unnatürlichen Verteilung von Flüssen und Seen wie zum Beispiel einem Schachbrettmuster (siehe Abbildung ||||), einem verzweigten Labyrinth (siehe Abbildung ||||) oder eine Anordnung mehrerer schmaler Wasser und Land streifen (siehe Abbildung ||||), können kaum noch größere Flächen eindeutig eingeteilt werden.
+Mit einer eher unnatürlichen Verteilung von Flüssen und Seen wie zum Beispiel einem Schachbrettmuster (siehe Abbildung 53), einem verzweigten Labyrinth (siehe Abbildung 54) oder eine Anordnung mehrerer schmaler Wasser und Land streifen (siehe Abbildung 55), können kaum noch größere Flächen eindeutig eingeteilt werden.
 
 Dies sorgt schnell für einen sehr umfangreichen Quadtree und damit auch für viele Quadcopter Flüge.
 \\[0.4cm]
@@ -861,7 +940,11 @@ Der hier besprochene Algorithmus läuft am effizientesten, bei eher natürlichen
 
 \newpage
 \section{FAZIT}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur lorem, imperdiet dignissim est auctor a. Vivamus convallis, leo et iaculis egestas, nunc massa porttitor tellus, id faucibus urna justo eget massa. Praesent quis feugiat odio. Nullam quis mattis enim. Fusce volutpat odio in enim sodales venenatis. Mauris consequat.
+Auch wenn die zweite Runde des Bundeswettbewerbs Informatik nicht gerade das einfachste und kürzeste Seminararbeits-Thema ist, war die Teilnahme und die intensive Beschäftigung mit den Aufgaben eine sehr wertvolle Erfahrung für mich.
+\\[0.4cm]
+Auch wenn ich an beide Aufgaben zunächst falsch herangegangen bin, was mich unglaublich viel Zeit gekostet hat, konnte ich sehr viel daraus lernen.
+\\[0.4cm]
+Die Teilnahme am Bundeswettbewerb Informatik ist jedem interessierten Schüler zu empfehlen, der gerne mal an Rätseln knobelt und zumindest ein bisschen Informatik begeistert ist.
 
 
 %===================================================================================
@@ -976,6 +1059,9 @@ Sonstige Bildquellen:
 \item https://upload.wikimedia.org/wikipedia/commons/d/df/ZweiWegeIrrgarten.png
 \item https://de.wikipedia.org/wiki/Datei:Pathfinding\_A\_Star.svg
 \end{itemize}
+
+\vspace{1cm}
+Alle Bilder befinden sich auch auf der beigelegten CD.
 
 %===================================================================================
 %--------------------------- CD-VERZEICHNIS ----------------------------------
