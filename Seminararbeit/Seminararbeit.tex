@@ -736,7 +736,7 @@ Die Game-Engine Unity wurde deshalb als Entwicklungsumgebung gewählt, da sie be
 \textbf{Programmier-Stil}
 
 % TODO: QUELLE MULTITHREADING
-Um das Programm außerdem noch möglichst performant zu gestalten, wurde ein System zum Multithreading implementiert. Dieses ermöglicht es bestimmte Prozesse parallel laufen zu lassen und die erhöht die Performance.
+Um das Programm außerdem noch möglichst performant zu gestalten, wurde ein System zum Multithreading implementiert. Dieses ermöglicht es bestimmte Prozesse parallel laufen zu lassen und die erhöht die Performance. Allerdings erhöht es auch die Code-Komplexität, da Unity einige Methoden hat, die nur auf dem Main-Thread ausgeführt werden dürfen.
 \\[0.4cm]
 % TODO: C# QUELLE EVENTS
 Bei Spielen gilt es allgemein als „Good-Practice“ viel mit \textbf{Events} zu arbeiten, um die verschiedenen Systeme möglichst modular miteinander interagieren zu lassen. Diese Philosophie wurde auch bei dieser Implementierung verfolgt, da Events auch gut als Kommunikationsmittel zwischen verschiedenen Threads genutzt werden können.
@@ -772,21 +772,24 @@ Entspricht die \code{currentNode} nicht der Target-Node, so werden alle angrenze
 \\[0.4cm]
 Ist dem so, wird die \code{G-Cost} der Nachbar-Node über die \code{currentNode} berechnet. Ist diese \code{G-Cost} kleiner als die aktuelle \code{G-Cost} der Nachbar-Node oder die Nachbar-Node ist noch nicht im \code{openSet}, werden die Attribute der Nachbar-Node aktualisiert und die Node wird, wenn noch nicht vorhanden, in das \code{openSet} aufgenommen.
 \\[0.4cm]
-Wurden alle Nodes im \code{openSet} überprüft und trotzdem kein Weg zur Target-Node gefunden, bedeutet das, dass es für den momentanen Durchlauf keinen Pfad zur Target-Node gibt. Hier wieder abermals zwischen den zwei Pathfinding-Arten unterschieden. Wurden auch „Unknown“-Nodes als „Walkable“ betrachtet und eben trotzdem kein Weg gefunden, bedeutet das, dass es auch keinen Weg zur Target-Node gibt. Der Algorithmus ist abgeschlossen. Im anderen Fall wird eben dann die zweite Pathfinding Variante gestartet.
+Wurden alle Nodes im \code{openSet} überprüft und trotzdem kein Weg zur Target-Node gefunden, bedeutet das, dass es für den momentanen Durchlauf keinen Pfad zur Target-Node gibt. Hier wieder abermals zwischen den zwei Pathfinding-Arten unterschieden. Wurden auch „Unknown“-Nodes als „Walkable“ betrachtet und eben trotzdem kein Weg gefunden, bedeutet das, dass es auch keinen Weg zur Target-Node gibt. Der Algorithmus ist abgeschlossen. 
+
+Im anderen Fall wird eben dann die zweite Pathfinding Variante gestartet.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Pathfinding_03.png}
     \caption{Dritter Teil der \code{FindPath} Methode. Suche nach einem Pfad und Behandeln des Falls, dass kein Pfad gefunden wurde.}
 \end{figure}
 
-\textbf{Quadtree}
-% QUADTREE
-
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Klassendiagramm_Pathfinding.png}
     \caption{Erweitertes Klassendigramm der wichtigsten Pathfinding Klassen. Die Haupt-Methode des A* Algorithmus wurden in der Klasse \code{PathfindingManager} hervorgehoben.}
 \end{figure}
+
+
+\textbf{Quadtree}
+% QUADTREE
 
 \subsubsection{Optimierungsmöglichkeiten}
 Die Algorithmuslaufzeit der aktuelle Implementierung ist gerade für größere Maps sehr schlecht. Dabei überrascht, dass die einzelnen Komponente eigentlich gar nicht viel Zeit verbrauchen. Das Suchen im Quadtree, das Aktualisieren des A* Grids und die erste Wegsuche verbrauchen alle zusammen nur wenige Millisekunden pro Durchgang. 
