@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>580</y>
+      <w>620</w>
+      <h>240</h>
+    </coordinates>
+    <panel_attributes>PathfindingManager
+--
+public event RequestMapTileEventHandler RequestedMapTile
+public event RequestSpecialSquareEventHandler RequestSpecialSquare
+public event FinishedPathfindingEventHandler FinishedPathfinding
+public Grid PathfindingGrid
+private Node _startNode
+private Node _targetNode
+private Heap&lt;Node&gt; _cachedOpenSet
+private HashSet&lt;Node&gt; _cachedClosedSet
+private Node _cachedLastPathNode
+--
+public void UpdateGrid(List&lt;MapSquare&gt; updatedSquares, Vector2Int sw_point, ref bool updated)
+**public void FindPath(bool canWalkUnknown)**
+private List&lt;Node&gt; RetracePath(Node startNode, Node targetNode)
+private int GetDistance(Node nodeA, Node nodeB)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>410</y>
+      <w>120</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enumeration&gt;&gt;
+NodeTypes
+--
+Walkable,
+Unwalkable,
+Unknown</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>370</x>
+      <y>260</y>
+      <w>390</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>Node
+--
+public int GCost
+public int HCost
+private int FCost
+public Node Parent
+public NodeTypes NodeType
+public Vector2Int Position
+--
+public Node(Vector2Int position)
+public bool IsWalkable(bool canWalkUnknown)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>490</x>
+      <y>150</y>
+      <w>140</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+IHeapItem&lt;T&gt;
+--
+int HeapIndex
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>550</x>
+      <y>200</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>750</x>
+      <y>290</y>
+      <w>190</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0,1
+hat als Parent &gt;</panel_attributes>
+    <additional_attributes>10.0;150.0;70.0;150.0;70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>190</x>
+      <y>450</y>
+      <w>200</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m2=1
+&lt; hat als Node Type</panel_attributes>
+    <additional_attributes>10.0;20.0;180.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>550</x>
+      <y>480</y>
+      <w>300</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0,2,3
+hat als Start-, End- und letzter Pfad-Node &gt;</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>950</x>
+      <y>630</y>
+      <w>240</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>Heap&lt;T&gt;
+--
+public int Count
+--
+public Heap(int maxHeapSize)
+public void Add(T item)
+public T RemoveFirst()
+public void UpdateItem(T item)
+public bool Contains(T item)
+private void SortDown(T item)
+private void SortUp(T item)
+private void Swap(T itemA, T itemB)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>480</x>
+      <y>40</y>
+      <w>160</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+IComparable&lt;T&gt;
+--
+int CompareTo(T other)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>80</x>
+      <y>130</y>
+      <w>300</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>Grid
+--
+Node[,] NodeGrid
+--
+public List&lt;Node&gt; Get Neighbours(Node node)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>220</x>
+      <y>200</y>
+      <w>170</w>
+      <h>170</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0,n
+hat als Nodes &gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0;150.0;150.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>550</x>
+      <y>90</y>
+      <w>30</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>690</x>
+      <y>700</y>
+      <w>280</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0,1
+hat als cached Open Set &gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;260.0;20.0</additional_attributes>
+  </element>
+</diagram>

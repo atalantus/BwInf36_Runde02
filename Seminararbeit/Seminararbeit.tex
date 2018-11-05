@@ -724,10 +724,70 @@ Die Methode sucht dann im Quadtree nach dem Punkt und beachtet dabei auch noch n
 
 \subsection{Teilaufgabe (c)}
 \subsubsection{Implementierung}
-% WIESO UNITY
-% MULTITHREADING UND EVENTS
-% A*
+% TODO: QUELLE UNITY
+Das Programm wurde in der Game-Engine Unity entwickelt und die Skripte in der Sprache C\# mit .NET 3.5 geschrieben.
+\\[0.4cm]
+Auf der beigelegten CD befindet sich eine vollständige Dokumentation aller Klassen in Form einer HTML-Website.
+\\[0.4cm]
+\textbf{Verwendung einer Game-Engine}
+
+Die Game-Engine Unity wurde deshalb als Entwicklungsumgebung gewählt, da sie bereits Klassen und Methoden besitzt, um mit größeren Bildern schnell und effizient zu arbeiten.
+\\[0.4cm]
+\textbf{Programmier-Stil}
+
+% TODO: QUELLE MULTITHREADING
+Um das Programm außerdem noch möglichst performant zu gestalten, wurde ein System zum Multithreading implementiert. Dieses ermöglicht es bestimmte Prozesse parallel laufen zu lassen und die erhöht die Performance.
+\\[0.4cm]
+% TODO: C# QUELLE EVENTS
+Bei Spielen gilt es allgemein als „Good-Practice“ viel mit \textbf{Events} zu arbeiten, um die verschiedenen Systeme möglichst modular miteinander interagieren zu lassen. Diese Philosophie wurde auch bei dieser Implementierung verfolgt, da Events auch gut als Kommunikationsmittel zwischen verschiedenen Threads genutzt werden können.
+\\[0.4cm]
+\textbf{A* Pathfinding}
+
+\code{PathfindingManager} ist die Haupt-Klasse des A* Algorithmus. Sie kontrolliert welche Art Pathfinding durchgeführt wird und aktualisiert das A*-Grid.
+
+Im Folgenden soll nur auf die Haupt-Methode (\code{FindPath}) der \code{PathfindingManager} Klasse eingegangen werden. Ein Klassendiagramm des gesamten Pathfinding-Systems mit den jeweils wichtigsten Methoden und Attributen ist am Ende des Kapitels in Abbildung |||| abgebildet.
+\\[0.4cm]
+Die \code{FindPath} Methode ist verantwortlich für das Suchen eines Pfades von der Start-Node zur Target-Node. Der Parameter des Typs \code{Boolean} gibt dabei an, ob Nodes des Status „Unknown“ auch als „Walkable“ betrachtet werden.
+\\[0.4cm]
+Zuerst (siehe Abbildung 39) werden die für das Pathfinding notwendigen Variablen \code{openSet} und \code{closedSet} deklariert. Diese werden je nachdem welche Art Pathfinding vorliegt initialisiert. Außerdem wird dem \code{openSet} entweder die gespeicherte letzte Path-Node oder die Start-Node hinzugefügt. Dies bestimmt die eigentliche Start-Node der momentanen Wegsuche. Durch die Fortsetzung des Weges von der letzten „Walkable“-Node des letzten Weges zur Stadt wird Laufzeit eingespart.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Pathfinding_01.png}
+    \caption{Erste Teil der \code{FindPath} Methode. Deklaration und Initialisierung wichtige Variablen.}
+\end{figure}
+
+Nun kommt eine bedingte Wiederholung (siehe Abbildung 40), die sich so lange wiederholt bis keine Nodes mehr im \code{openSet} vorhanden sind.
+Im Körper der Wiederholung wird zuerst die oberste Node des \code{openSet} in der Variable \code{currentNode} gespeichert. Diese Node wird dann aus dem \code{openSet} entfernt und dem \code{closedSet} hinzugefügt.
+\\[0.4cm]
+Als nächstes wird geprüft, ob \code{currentNode} der Target-Node entspricht. Ist dem so wurde ein Pfad zur Target-Node gefunden. Dieser Pfad wird in Zeile 32 in der Variable \code{path} gespeichert. \code{path} ist damit eine Liste von \code{Node} Objekten.
+\\[0.4cm]
+Nun wird wieder unterschieden zwischen den zwei Pathfinding Arten. Wurden „Unknown“-Nodes als „Unwalkable“ betrachtet, so besteht der Pfad definitiv nur aus „Walkable“-Nodes. Der Algorithmus ist abgeschlossen. Ansonsten wird der Pfad Node für Node nachverfolgt. Sobald man auf die erste „Unknown“-Node stößt, wird die vorherige „Walkable“-Node gespeichert und es wird die Überprüfung der „Unknown“-Node vom Quadtree gefordert.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Pathfinding_02.png}
+    \caption{Zweiter Teil der \code{FindPath} Methode. Verarbeiten eines gefundenen Pfads.}
+\end{figure}
+
+Entspricht die \code{currentNode} nicht der Target-Node, so werden alle angrenzenden Nachbar-Nodes der \code{currentNode} nach einander durch iteriert. Dabei wird überprüft, ob wird zuerst sichergestellt, dass die Nachbar-Node als „Walkable“ betrachtet wird und dass sie sich noch nicht im \code{closedSet} befindet.
+\\[0.4cm]
+Ist dem so, wird die \code{G-Cost} der Nachbar-Node über die \code{currentNode} berechnet. Ist diese \code{G-Cost} kleiner als die aktuelle \code{G-Cost} der Nachbar-Node oder die Nachbar-Node ist noch nicht im \code{openSet}, werden die Attribute der Nachbar-Node aktualisiert und die Node wird, wenn noch nicht vorhanden, in das \code{openSet} aufgenommen.
+\\[0.4cm]
+Wurden alle Nodes im \code{openSet} überprüft und trotzdem kein Weg zur Target-Node gefunden, bedeutet das, dass es für den momentanen Durchlauf keinen Pfad zur Target-Node gibt. Hier wieder abermals zwischen den zwei Pathfinding-Arten unterschieden. Wurden auch „Unknown“-Nodes als „Walkable“ betrachtet und eben trotzdem kein Weg gefunden, bedeutet das, dass es auch keinen Weg zur Target-Node gibt. Der Algorithmus ist abgeschlossen. Im anderen Fall wird eben dann die zweite Pathfinding Variante gestartet.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Pathfinding_03.png}
+    \caption{Dritter Teil der \code{FindPath} Methode. Suche nach einem Pfad und Behandeln des Falls, dass kein Pfad gefunden wurde.}
+\end{figure}
+
+\textbf{Quadtree}
 % QUADTREE
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Klassendiagramm_Pathfinding.png}
+    \caption{Erweitertes Klassendigramm der wichtigsten Pathfinding Klassen. Die Haupt-Methode des A* Algorithmus wurden in der Klasse \code{PathfindingManager} hervorgehoben.}
+\end{figure}
+
 \subsubsection{Optimierungsmöglichkeiten}
 Die Algorithmuslaufzeit der aktuelle Implementierung ist gerade für größere Maps sehr schlecht. Dabei überrascht, dass die einzelnen Komponente eigentlich gar nicht viel Zeit verbrauchen. Das Suchen im Quadtree, das Aktualisieren des A* Grids und die erste Wegsuche verbrauchen alle zusammen nur wenige Millisekunden pro Durchgang. 
 \\[0.4cm]
