@@ -551,9 +551,9 @@ und erkläre, worin das Problem besteht.
 \subsection{Auslegung der Aufgabe}
 Die Aufgabenstellung ist größtenteils sehr klar. Das grundlegende Problem ist eine Wegfindung. Jedoch reicht als Lösung kein einfacher Wegfindungs-Algorithmus, da es bestimmte Bedingungen gibt, wie das der Quadcopter minimal 20x20 Gebiete scannen kann. Beim Scannen eines Gebiets gibt es 3 Mögliche Resultate. Entweder das Gebiet besteht eindeutig aus Wasser oder aus Land, oder das Gebiet liefert den Wert gemischt und besitzt damit sowohl Wasser als auch Land.
 
-Das Endziel des Algorithmus ist nicht wie bei den meisten normalen Pathfinding Algorithmen möglichst schnell einen möglichst kurzen Weg zu finden, sondern mit \textbf{möglichst wenig Flügen} einen Pfad zur Stadt zu finden.
+Das Endziel des Algorithmus ist nicht wie bei den meisten normalen Pathfinding-Algorithmen möglichst schnell einen möglichst kurzen Weg zu finden, sondern mit \textbf{möglichst wenig Flügen} einen Pfad zur Stadt zu finden.
 
-Angenommen man verwendet einen auf einem 20x20 Gitter basierenden Wegfindungs-Algorithmus, so müsste der Quadcopter zuerst
+Angenommen man verwendet einen auf einem 20x20-Gitter basierenden Wegfindungs-Algorithmus, so müsste der Quadcopter zuerst
 \begin{center}
 \begin{Large}
 \[\lceil \frac{w}{2}\rceil \times \lceil \frac{h}{2}\rceil\]
@@ -639,17 +639,17 @@ Als Wegfindungs-Algorithmus wird \textbf{A* (A-Star)} \cite{astar} verwendet. A*
     \caption{Findung des kürzesten Wegs vom grünen zum blauen Quadrat durch A*. Hierbei ist nur der Weg markiert und nicht alle untersuchten Nodes. Die Zahlen geben die Entfernung in Nodes zum Ausgangspunkt an.}
 \end{figure}
 
-Die generelle Funktionsweise des A* Algorithmus soll hier nur kurz erklärt werden. Für eine umfassendere Erklärung werden die zu diesem Thema im Literaturverzeichnis angegebenen Quellen empfohlen.
+Die generelle Funktionsweise des A*-Algorithmus soll hier nur kurz erklärt werden. Für eine umfassendere Erklärung werden die zu diesem Thema im Literaturverzeichnis angegebenen Quellen empfohlen.
 \\[0.4cm]
-Der A* Algorithmus beginnt mit einer Start-Node (\code{S}), einer Target-Node (\code{T}), einem \code{openSet} und einem \code{closedSet}. Jede Node hat dabei entweder den Status „Walkable“ oder „Unwalkable“. Es werden zuerst alle Nachbar-Nodes von \code{S} mit dem Zustand „Walkable“ zum \code{openSet} hinzugefügt. Für sie werden jeweils 3 Werte berechnet. \code{G-Cost} beschreibt die Entfernung zu \code{S}. \code{H-Cost} beschreibt die Entfernung zu \code{T}. \code{F-Cost} entspricht \code{G-Cost} + \code{H-Cost}. (Für die Berechnung dieser \code{F-Cost} gibt es mehrere Varianten. Hier wird die sogenannte „Manhattan-Distanz“ verwendet.)
+Der A*-Algorithmus beginnt mit einer Start-Node (\code{S}), einer Target-Node (\code{T}), einem \code{openSet} und einem \code{closedSet}. Jede Node hat dabei entweder den Status „Walkable“ oder „Unwalkable“. Es werden zuerst alle Nachbar-Nodes von \code{S} mit dem Zustand „Walkable“ zum \code{openSet} hinzugefügt. Für sie werden jeweils 3 Werte berechnet. \code{G-Cost} beschreibt die Entfernung zu \code{S}. \code{H-Cost} beschreibt die Entfernung zu \code{T}. \code{F-Cost} entspricht \code{G-Cost} + \code{H-Cost}. (Für die Berechnung dieser \code{F-Cost} gibt es mehrere Varianten. Hier wird die sogenannte „Manhattan-Distanz“ verwendet.)
 \\[0.4cm]
 Als nächstes wird die Node im \code{openSet} mit der geringsten \code{F-Cost} aus dem \code{openSet} entfernt und dem \code{closedSet} hinzugefügt. Für diese Node werden wieder alle Nachbarn mit dem Status „Walkable“ entweder in das \code{openSet} aufgenommen und ihre Werte berechnet oder, falls sie schon im \code{openSet} vorhanden sind, werden ihre Werte aktualisiert.
 \\[0.4cm]
 Dieser Vorgang wiederholt sich so lange, bis \code{T} erreicht wurde.
 \\[0.4cm]
-Das hier auftretende Problem ist, dass bei einem normalen A* Algorithmus vorher schon das gesamte Grid definiert sein muss. Der Algorithmus muss wissen, welche Nodes „Walkable“ und welche „Unwalkable“ sind um einen Pfad zu finden.
+Das hier auftretende Problem ist, dass bei einem normalen A*-Algorithmus vorher schon das gesamte Grid definiert sein muss. Der Algorithmus muss wissen, welche Nodes „Walkable“ und welche „Unwalkable“ sind um einen Pfad zu finden.
 
-Da das Scannen der gesamten Map jedoch auch mit der Quadtree-Struktur viel zu viele letztendlich Quadcopter-Flüge beanspruchen würde, gibt es bei der hier verwendeten A* Variante noch den dritten möglichen Node Status „Unknown“.
+Da das Scannen der gesamten Map jedoch auch mit der Quadtree-Struktur viel zu viele letztendlich Quadcopter-Flüge beanspruchen würde, gibt es bei der hier verwendeten A*-Variante noch den dritten möglichen Node Status „Unknown“.
 
 Wie genau der Algorithmus mit einem dritten Status abläuft, wird nun an einem kleinen Beispiel veranschaulicht.
 \\[0.4cm]
@@ -665,7 +665,7 @@ Nun wird der erste Flug durchgeführt und die Grid-Nodes dementsprechend aktuali
     \includegraphics[width=.5\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/Beispiel_02.png}
     \caption{Durch den ersten Flug wurde der Status von einigen Nodes um Quax aufgedeckt. Schwarz steht für „Walkable“, Weiß für „Unwalkable“.}
 \end{figure}
-Danach wird zuerst der A* Pathfinding Algorithmus normal durchgeführt. Das heißt, dass nur Nodes mit dem Status „Walkable“ auch als tatsächlich begehbar angenommen werden. Die restlichen Nodes mit dem Status „Unknown“ oder „Unwalkable“ gelten als nicht begehbar.
+Danach wird zuerst der A*-Pathfinding-Algorithmus normal durchgeführt. Das heißt, dass nur Nodes mit dem Status „Walkable“ auch als tatsächlich begehbar angenommen werden. Die restlichen Nodes mit dem Status „Unknown“ oder „Unwalkable“ gelten als nicht begehbar.
 \\[0.4cm]
 Wird so ein Weg zum Ziel gefunden, ist der Algorithmus fertig und es steht fest, dass es einen Pfad zur Stadt gibt. Umgekehrt heißt das jedoch nicht, dass es, wenn kein Weg gefunden wurde, es auch überhaupt keinen Weg gibt. Stattdessen führt man eine zweite A*-Suche durch, bei der diesmal nicht nur Nodes des Status „Walkable“, sondern auch die des Status „Unknown“ als begehbar betrachtet werden.
 \\[0.4cm]
@@ -678,7 +678,7 @@ Abbildung 35 zeigt die notwendige Durchführung weiterer Flüge zur Findung eine
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/Beispiel_03.png}
     \caption{Da auch nach einem weiteren Flug (links) noch nicht offensichtlich ist, ob es einen Weg gibt oder nicht, wird ein dritter (rechts) durchgeführt.}
 \end{figure}
-Bei der Durchführung des ersten A* Algorithmus wird nun ein Weg aus nur „Walkable“-Nodes gefunden. Damit ist das Pathfinding abgeschlossen. Es wurde ein Weg gefunden (siehe Abbildung 36).
+Bei der Durchführung des ersten A*-Algorithmus wird nun ein Weg aus nur „Walkable“-Nodes gefunden. Damit ist das Pathfinding abgeschlossen. Es wurde ein Weg gefunden (siehe Abbildung 36).
 \begin{figure}[H]
 \centering
     \includegraphics[width=.5\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/Beispiel_04.png}
@@ -688,16 +688,16 @@ Bei der Durchführung des ersten A* Algorithmus wird nun ein Weg aus nur „Walk
 \subsection{Teilaufgabe (b)}
 Der Schlüssel zu einem möglichst effizienten Algorithmus, welcher nur wenige Quadcopter-Flüge benötigt, ist die Koordinierung zwischen dem A*-Pathfinding und der Quadtree-Datenstruktur.
 \\[0.4cm]
-Das A* Grid wird nur mit den nötigsten „Informationen versorgt“.
-Der Quadtree muss darauf vorbereitet sein vom A* Pathfinding aus eine Anforderung für das Scannen eines Bereiches zu bekommen. Dieser Bereich muss dann identifiziert werden und zurück an das Pathfinding-System gegeben werden, welches mit dem Resultat das eigene A* Grid aktualisiert und die Wegsuche neu startet.
+Das A*-Grid wird nur mit den nötigsten „Informationen versorgt“.
+Der Quadtree muss darauf vorbereitet sein vom A*-Pathfinding aus eine Anforderung für das Scannen eines Bereiches zu bekommen. Dieser Bereich muss dann identifiziert werden und zurück an das Pathfinding-System gegeben werden, welches mit dem Resultat das eigene A*-Grid aktualisiert und die Wegsuche neu startet.
 \\[0.4cm]
 Ein weiterer nicht zu vernachlässigender Aspekt ist der Sonderfall, dass Quax über ein 20x20-Wasser-Quadrat, durch zwei aneinanderliegende, gemischte 20x20-Quadrate, hinüberkommt.
 \\[0.4cm]
 Dieses Problem ist deshalb so kompliziert, weil man bei einem Quadtree nicht davon ausgehen kann, dass sich Quadrate immer überlappen. Bei einem perfekten Quadtree würden sich alle Quadrate nur berühren. Jedoch muss sich ja auch nicht jedes Quadrat überlappen, sondern nur die 3 20x20-Quadrate bei einem Sonderfall.
 \\[0.4cm]
-Da das A* Grid nun eine Node Größe von 10x10 hat müssen wir unseren Algorithmus zum Aktualisieren des Pathfinding-Grids ändern. Der Status des Map-Ausschnitts kann nicht einfach auf alle sich im Ausschnitt befindliche Grid-Nodes übertragen werden. Dies würde den Sonderfall missachten. Stattdessen muss jede 10x10-Grid-Node mit einem eigenen 20x20-Map-Ausschnitt assoziiert werden. 
+Da das A*-Grid nun eine Node-Größe von 10x10 hat, muss der Algorithmus zur Aktualisieren des Pathfinding-Grids geändert werden. Der Status des Map-Ausschnitts kann nicht einfach auf alle sich im Ausschnitt befindlichen Grid-Nodes übertragen werden. Dies würde den Sonderfall missachten. Stattdessen muss jede 10x10-Grid-Node mit einem eigenen 20x20-Map-Ausschnitt assoziiert werden. 
 
-Entspricht der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20-Map-Quadrats, dessen linke, untere Ecke die gleichen Koordinaten hat wie die Grid-Node (siehe Abbildung 37), so ensteht letztendlich ein ein Geflecht aus überlappenden 20x20-Quadraten, welches wiederum den Sonderfall abdeckt (siehe Abbildung 38).
+Entspricht der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20-Map-Quadrats, dessen linke, untere Ecke die gleichen Koordinaten hat wie die Grid-Node (siehe Abbildung 37), so entsteht letztendlich ein Geflecht aus überlappenden 20x20-Quadraten, welches wiederum den Sonderfall abdeckt (siehe Abbildung 38).
 
 \begin{figure}[H]
 \centering
@@ -708,12 +708,12 @@ Entspricht der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20
 \begin{figure}[H]
 \centering
     \includegraphics[width=.8\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/AStar_Grid_02.png}
-    \caption{Ein Geflecht aus Grid-Nodes und den jeweils dazugehörigen Map-Quadraten. Die 20x20-Map-Quadrate überlappen sich sichern somit den Sonderfall ab.}
+    \caption{Ein Geflecht aus Grid-Nodes und den jeweils dazugehörigen Map-Quadraten. Die 20x20-Map-Quadrate überlappen sich und sichern somit den Sonderfall ab.}
 \end{figure}
 
-Die Schnittstelle zwischen den beiden Systemen Pathfinding und Quadtree bildet also eine Methode im Quadtree, die von der Pathfinding Klasse mit einem Bestimmten Punkt im A*-Grid aufgerufen wird, von dem sie den Status will.
+Die Schnittstelle zwischen den beiden Systemen Pathfinding und Quadtree bildet also eine Methode im Quadtree, die von der Pathfinding-Klasse mit einem bestimmten Punkt im A*-Grid aufgerufen wird, von dem sie den Status wissen will.
 
-Die Methode sucht dann im Quadtree nach dem Punkt und beachtet dabei auch noch nach den zusätzlichen 3 weiteren Punkten zu suchen, so dass man am Ende den Map-Typ oder auch die Map-Typen des mit dem übergebenen Punktes assoziierten Map-Quadrats hat.
+Die Methode sucht dann im Quadtree nach dem Punkt und sucht dabei auch noch nach den zusätzlichen 3 weiteren Punkten, sodass man am Ende den Map-Typ oder auch die Map-Typen des mit dem übergebenen Punkt assoziierten Map-Quadrats hat.
 
 \subsection{Teilaufgabe (c)}
 \subsubsection{Implementierung}
@@ -727,54 +727,54 @@ Die Game-Engine Unity wurde deshalb als Entwicklungsumgebung gewählt, da sie be
 \\[0.4cm]
 \textbf{Programmier-Stil}
 
-Um das Programm außerdem noch möglichst performant zu gestalten, wurde ein System zum Multithreading \cite{csharp6} implementiert. Dieses ermöglicht es bestimmte Prozesse parallel laufen zu lassen und die erhöht die Performance. Allerdings erhöht es auch die Code-Komplexität, da Unity einige Methoden hat, die nur auf dem Main-Thread ausgeführt werden dürfen.
+Um das Programm außerdem noch möglichst performant zu gestalten, wurde ein System zum Multithreading \cite{csharp6} implementiert. Dieses ermöglicht es, bestimmte Prozesse parallel laufen zu lassen und erhöht die Performance. Allerdings erhöht es auch die Code-Komplexität, da Unity einige Methoden hat, die nur auf dem Main-Thread ausgeführt werden dürfen.
 \\[0.4cm]
 Bei Spielen gilt es allgemein als „Good-Practice“ viel mit \textbf{Events} \cite{csharp6} zu arbeiten, um die verschiedenen Systeme möglichst modular miteinander interagieren zu lassen. Diese Philosophie wurde auch bei dieser Implementierung verfolgt, da Events auch gut als Kommunikationsmittel zwischen verschiedenen Threads genutzt werden können.
 \\[0.4cm]
-\textbf{A* Pathfinding}
+\textbf{A*-Pathfinding}
 
-\code{PathfindingManager} ist die Haupt-Klasse des A* Algorithmus. Sie kontrolliert welche Art Pathfinding durchgeführt wird und aktualisiert das A*-Grid.
+\code{PathfindingManager} ist die Haupt-Klasse des A*-Algorithmus. Sie kontrolliert welche Art Pathfinding durchgeführt wird und aktualisiert das A*-Grid.
 
-Im Folgenden soll nur auf die Haupt-Methode (\code{FindPath}) der \code{PathfindingManager} Klasse eingegangen werden. Ein Klassendiagramm des gesamten Pathfinding-Systems mit den jeweils wichtigsten Methoden und Attributen ist am Ende des Abschnitts in Abbildung 42 abgebildet.
+Im Folgenden soll nur auf die Hauptmethode (\code{FindPath}) der \code{PathfindingManager} Klasse eingegangen werden. Ein Klassendiagramm des gesamten Pathfinding-Systems mit den jeweils wichtigsten Methoden und Attributen ist am Ende des Abschnitts in Abbildung 42 abgebildet.
 \\[0.4cm]
 Die \code{FindPath} Methode ist verantwortlich für das Suchen eines Pfades von der Start-Node zur Target-Node. Der Parameter des Typs \code{Boolean} gibt dabei an, ob Nodes des Status „Unknown“ auch als „Walkable“ betrachtet werden.
 \\[0.4cm]
-Zuerst (siehe Abbildung 39) werden die für das Pathfinding notwendigen Variablen \code{openSet} und \code{closedSet} deklariert. Diese werden je nachdem welche Art Pathfinding vorliegt initialisiert. Außerdem wird dem \code{openSet} entweder die gespeicherte letzte Path-Node oder die Start-Node hinzugefügt. Dies bestimmt die eigentliche Start-Node der momentanen Wegsuche. Durch die Fortsetzung des Weges von der letzten „Walkable“-Node des letzten Weges zur Stadt wird Laufzeit eingespart.
+Zuerst (siehe Abbildung 39) werden die für das Pathfinding notwendigen Variablen \code{openSet} und \code{closedSet} deklariert. Diese werden, je nachdem welche Art Pathfinding vorliegt, initialisiert. Außerdem wird dem \code{openSet} entweder die gespeicherte letzte Path-Node oder die Start-Node hinzugefügt. Dies bestimmt die eigentliche Start-Node der momentanen Wegsuche. Durch die Fortsetzung des Weges von der letzten „Walkable“-Node des letzten Weges zur Stadt wird Laufzeit eingespart.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Pathfinding_01.png}
-    \caption{Erste Teil der \code{FindPath} Methode. Deklaration und Initialisierung wichtige Variablen.}
+    \caption{Erster Teil der \code{FindPath} Methode. Deklaration und Initialisierung wichtige Variablen.}
 \end{figure}
 
-Nun kommt eine bedingte Wiederholung (siehe Abbildung 40), die sich so lange wiederholt bis keine Nodes mehr im \code{openSet} vorhanden sind.
+Nun kommt eine bedingte Wiederholung (siehe Abbildung 40), die sich so lange wiederholt, bis keine Nodes mehr im \code{openSet} vorhanden sind.
 Im Körper der Wiederholung wird zuerst die oberste Node des \code{openSet} in der Variable \code{currentNode} gespeichert. Diese Node wird dann aus dem \code{openSet} entfernt und dem \code{closedSet} hinzugefügt.
 \\[0.4cm]
-Als nächstes wird geprüft, ob \code{currentNode} der Target-Node entspricht. Ist dem so wurde ein Pfad zur Target-Node gefunden. Dieser Pfad wird in Zeile 32 in der Variable \code{path} gespeichert. \code{path} ist damit eine Liste von \code{Node} Objekten.
+Als Nächstes wird geprüft, ob \code{currentNode} der Target-Node entspricht. Ist dem so, wurde ein Pfad zur Target-Node gefunden. Dieser Pfad wird in Zeile 32 in der Variable \code{path} gespeichert. \code{path} ist damit eine Liste von \code{Node} Objekten.
 \\[0.4cm]
-Nun wird wieder unterschieden zwischen den zwei Pathfinding Arten. Wurden „Unknown“-Nodes als „Unwalkable“ betrachtet, so besteht der Pfad definitiv nur aus „Walkable“-Nodes. Der Algorithmus ist abgeschlossen. Ansonsten wird der Pfad Node für Node nachverfolgt. Sobald man auf die erste „Unknown“-Node stößt, wird die vorherige „Walkable“-Node gespeichert und es wird die Überprüfung der „Unknown“-Node vom Quadtree gefordert.
+Nun wird wieder unterschieden zwischen den zwei Pathfinding-Arten. Wurden „Unknown“-Nodes als „Unwalkable“ betrachtet, so besteht der Pfad definitiv nur aus „Walkable“-Nodes. Der Algorithmus ist abgeschlossen. Ansonsten wird der Pfad Node für Node nachverfolgt. Sobald man auf die erste „Unknown“-Node stößt, wird die vorherige „Walkable“-Node gespeichert und es wird die Überprüfung der „Unknown“-Node vom Quadtree gefordert.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Pathfinding_02.png}
     \caption{Zweiter Teil der \code{FindPath} Methode. Verarbeiten eines gefundenen Pfads.}
 \end{figure}
 
-Entspricht die \code{currentNode} nicht der Target-Node, so werden alle angrenzenden Nachbar-Nodes der \code{currentNode} nach einander durch iteriert. Dabei wird überprüft, ob wird zuerst sichergestellt, dass die Nachbar-Node als „Walkable“ betrachtet wird und dass sie sich noch nicht im \code{closedSet} befindet.
+Entspricht die \code{currentNode} nicht der Target-Node, so werden alle angrenzenden Nachbar-Nodes der \code{currentNode} nacheinander durchiteriert. Dabei wird zuerst sichergestellt, dass die Nachbar-Node als „Walkable“ betrachtet wird und dass sie sich noch nicht im \code{closedSet} befindet.
 \\[0.4cm]
-Ist dem so, wird die \code{G-Cost} der Nachbar-Node über die \code{currentNode} berechnet. Ist diese \code{G-Cost} kleiner als die aktuelle \code{G-Cost} der Nachbar-Node oder die Nachbar-Node ist noch nicht im \code{openSet}, werden die Attribute der Nachbar-Node aktualisiert und die Node wird, wenn noch nicht vorhanden, in das \code{openSet} aufgenommen.
+Ist dem so, wird die \code{G-Cost} der Nachbar-Node über die \code{currentNode} berechnet. Ist diese \code{G-Cost} kleiner als die aktuelle \code{G-Cost} der Nachbar-Node oder die Nachbar-Node noch nicht im \code{openSet}, werden die Attribute der Nachbar-Node aktualisiert und die Node wird, wenn noch nicht vorhanden, in das \code{openSet} aufgenommen.
 \\[0.4cm]
 Wurden alle Nodes im \code{openSet} überprüft und trotzdem kein Weg zur Target-Node gefunden, bedeutet das, dass es für den momentanen Durchlauf keinen Pfad zur Target-Node gibt. Hier wieder abermals zwischen den zwei Pathfinding-Arten unterschieden. Wurden auch „Unknown“-Nodes als „Walkable“ betrachtet und eben trotzdem kein Weg gefunden, bedeutet das, dass es auch keinen Weg zur Target-Node gibt. Der Algorithmus ist abgeschlossen. 
 
-Im anderen Fall wird eben dann die zweite Pathfinding Variante gestartet.
+Im anderen Fall wird eben dann die zweite Pathfinding-Variante gestartet.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Pathfinding_03.png}
-    \caption{Dritter Teil der \code{FindPath} Methode. Suche nach einem Pfad und Behandeln des Falls, dass kein Pfad gefunden wurde.}
+    \caption{Dritter Teil der \code{FindPath} Methode. Suche nach einem Pfad und das Behandeln des Falls, falls kein Pfad gefunden wurde.}
 \end{figure}
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Klassendiagramm_Pathfinding.png}
-    \caption{Erweitertes Klassendigramm der wichtigsten Pathfinding Klassen. Die Haupt-Methode des A* Algorithmus wurden in der Klasse \code{PathfindingManager} hervorgehoben.}
+    \caption{Erweitertes Klassendigramm der wichtigsten Pathfinding-Klassen. Die Hauptmethode des A*-Algorithmus wurden in der Klasse \code{PathfindingManager} hervorgehoben.}
 \end{figure}
 
 \textbf{Quadtree}
@@ -789,28 +789,28 @@ Die Klasse \code{QuadtreeManager} ist Ausgangspunkt der Suche. Sie referenziert 
     \caption{Die \code{SearchForPoint} Methode der Klasse \code{QuadtreeManager}}
 \end{figure}
 
-Mit zwei ineinander verschachtelten \code{For-Schleifen} werden dann jeweils die Pixel des zum gesuchten Punktes gehörigen 20x20 Map-Quadrat durchgegangen.
+Mit zwei ineinander verschachtelten \code{For-Schleifen} werden dann jeweils die Pixel des zum gesuchten Punktes gehörigen 20x20-Map-Quadrats durchgegangen.
 \\[0.4cm]
 Zuerst wird überprüft, ob der Pixel bereits in einem schon vorher überprüftem Map-Square liegt. Ist dem so, muss der Pixel nicht erneut im Quadtree gesucht werden. Andererseits wird in Zeile 20 mit dem Aufruf der Methode \code{FindPoint} des Wurzel-Knotens das \code{MapQuadrat} Objekt gesucht und der Liste \code{updatedSquares} hinzugefügt.
 \\[0.4cm]
-Wurde jeder Pixel durchgegangen, ist die Suche beendet und das A* Grid kann aktualisiert werden.
+Wurde jeder Pixel durchgegangen, ist die Suche beendet und das A*-Grid kann aktualisiert werden.
 \\[0.4cm]
 Nun werden noch kurz die Implementierungen der abstrakten Methode \code{FindPoint} der Klasse \code{NodeElement} erklärt.
 \\[0.4cm]
-Die Implementierung der Klasse \code{Node}, die für quadratische Ausschnitte größer als 20x20 verwendet wird ist in Abbildung 44 zu sehen.
+Die Implementierung der Klasse \code{Node}, die für quadratische Ausschnitte größer als 20x20 verwendet wird, ist in Abbildung 44 zu sehen.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Quadtree_02.png}
     \caption{Die \code{FindPoint} Methode der Klasse \code{Node}}
 \end{figure}
 
-Die indirekt Rekursive Methode prüft als erstes ob ihr Map-Typ schon bekannt ist. Wenn nicht wird dieser mit der Methode \code{GetMapTyp} herausgefunden. (Der Aufruf dieser Methode entspricht einem Flug des Quadcopters.) Als nächstes wird überprüft, ob der Ausschnitt auch wirklich den gesuchten Punkt enthält. Dies ist nicht der Fall, wenn der vom Pathfinding-System angeforderte Punkt zum Beispiel am oberen Rand der Map liegt. Dadurch liegen dann mindestens die zwei oberen Punkte des dazugehörigen 20x20 Map-Quadrats außerhalb der Map und somit auch außerhalb des vom Quadtrees erfassten Bereichs.
+Die indirekt rekursive Methode prüft als Erstes, ob ihr Map-Typ schon bekannt ist. Wenn nicht, wird dieser mit der Methode \code{GetMapTyp} herausgefunden. (Der Aufruf dieser Methode entspricht einem Flug des Quadcopters.) Als Nächstes wird überprüft, ob der Ausschnitt auch wirklich den gesuchten Punkt enthält. Dies ist nicht der Fall, wenn der vom Pathfinding-System angeforderte Punkt zum Beispiel am oberen Rand der Map liegt. Dadurch liegen dann mindestens die zwei oberen Punkte des dazugehörigen 20x20-Map-Quadrats außerhalb der Map und somit auch außerhalb des vom Quadtrees erfassten Bereichs.
 
 Da alles außerhalb der definierten Map als Wasser zählt, wird in diesem Fall ein neu erstelltes 1 Pixel großes Map-Quadrat mit dem Typ „Water“ zurückgegeben.
 \\[0.4cm]
-Ansonsten wird je nach Map-Typ des Ausschnitts entschieden. Ist der Map-Typ eindeutig („Water“ oder „Ground“) wird ist der Punkt gefunden und das aktuelle Map-Quadrat wird zurückgegeben.
+Ansonsten wird je nach Map-Typ des Ausschnitts entschieden. Ist der Map-Typ eindeutig („Water“ oder „Ground“), ist der Punkt gefunden und das aktuelle Map-Quadrat wird zurückgegeben.
 
-Ist der Map-Typ jedoch „Mixed“, bedeutet das, dass der Point in einem der Child-Quadrate weiter gesucht werden muss. Dafür werden die Child-Quadrate, wenn noch nicht vorhanden, zuerst bestimmt und dann durch iteriert. Bei dem Child-Quadrat, dass den Point enthält, kommt der rekursive Aufruf der implementierten Methode \code{FindPoint}. Der Rückgabewert dieses Aufrufs, wird weiter zurückgegeben.
+Ist der Map-Typ jedoch „Mixed“, bedeutet das, dass der Point in einem der Child-Quadrate weiter gesucht werden muss. Dafür werden die Child-Quadrate, wenn noch nicht vorhanden, zuerst bestimmt und dann durchiteriert. Bei dem Child-Quadrat, dass den Point enthält, kommt der rekursive Aufruf der implementierten Methode \code{FindPoint}. Der Rückgabewert dieses Aufrufs wird weiter zurückgegeben.
 \\[0.4cm]
 Die Implementierung der \code{FindPoint} Methode in der Klasse \code{EndNode} (siehe Abbildung 45) ist wesentlich kürzer, da Map-Quadrate der Größe 20x20 keine Child-Nodes besitzen können.
 
@@ -822,16 +822,16 @@ Die Implementierung der \code{FindPoint} Methode in der Klasse \code{EndNode} (s
 
 Hier wird nur der Map-Typ überprüft und wenn nicht vorhanden ermittelt. Dann wird das aktuelle Map-Quadrat zurückgegeben.
 \\[0.4cm]
-Befindet sich ein Punkt in einer 20x20 Node, gilt der Punkt als gefunden, denn man kann nicht noch tiefer gehen als 20x20.
+Befindet sich ein Punkt in einer 20x20-Node, gilt der Punkt als gefunden, denn man kann nicht noch tiefer gehen als 20x20.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_C/Klassendiagramm_Quadtree.png}
-    \caption{Erweitertes Klassendigramm der wichtigsten Quadtree Klassen}
+    \caption{Erweitertes Klassendigramm der wichtigsten Quadtree-Klassen}
 \end{figure}
 
 \subsubsection{Optimierungsmöglichkeiten}
-Die Algorithmuslaufzeit der aktuelle Implementierung ist gerade für größere Maps sehr schlecht. Dabei überrascht, dass die einzelnen Komponente eigentlich gar nicht viel Zeit verbrauchen. Das Suchen im Quadtree, das Aktualisieren des A*-Grids und die erste Wegsuche verbrauchen alle zusammen nur wenige Millisekunden pro Durchgang. 
+Die Algorithmuslaufzeit der aktuellen Implementierung ist gerade für größere Maps sehr schlecht. Dabei überrascht, dass die einzelnen Komponenten eigentlich gar nicht viel Zeit verbrauchen. Das Suchen im Quadtree, das Aktualisieren des A*-Grids und die erste Wegsuche verbrauchen alle zusammen nur wenige Millisekunden pro Durchgang. 
 \\[0.4cm]
 Was am meisten Zeit verbraucht, ist die zweite Wegsuche. Nicht zuletzt, weil sie noch nicht durch Caching optimiert ist. Allerdings erklärt auch die Laufzeit des zweiten Pathfinding-Algorithmus nicht die Länge der Gesamtlaufzeit. Die Wahl einer Game-Engine als Entwicklungsumgebung hat die Performance letztendlich durch Hintergrundprozesse eher um einiges verschlechtert als verbessert.
 \\[0.4cm]
@@ -839,27 +839,27 @@ Mögliche Optimierungsmöglichkeiten zur Verbesserung der Laufzeit oder Verringe
 \\[0.4cm]
 \textbf{Multithreading}
 
-Nicht alle Bestandteile des Algorithmus nutzen das Prinzip des Multithreadings optimal aus und können noch erheblich verbessert werden.
+Nicht alle Bestandteile des Algorithmus nutzen das Prinzip des Multithreadings optimal aus und können daher noch erheblich verbessert werden.
 \\[0.4cm]
-\textbf{A* Pathfinding}
+\textbf{A*-Pathfinding}
 
-A* ist ein Pathfinding-Algorithmus zum Finden eines kürzesten oder zumindest möglichst kurzen Weges. Jedoch ist für diese Aufgabenstellung die Länge des Weges irrelevant und viele der Quadcopter Flüge zum Erkunden sehr kleiner Gebiete sind nicht unbedingt notwendig. Um dieses Verhalten des A*-Algorithmus zumindest abzuschwächen, könnte man noch weitere Heuristiken implementieren.
+A* ist ein Pathfinding-Algorithmus zum Finden eines kürzesten oder zumindest möglichst kurzen Weges. Jedoch ist für diese Aufgabenstellung die Länge des Weges irrelevant und viele der Quadcopter-Flüge zum Erkunden sehr kleiner Gebiete sind nicht unbedingt notwendig. Um dieses Verhalten des A*-Algorithmus zumindest abzuschwächen, könnte man noch weitere Heuristiken implementieren.
 \\[0.4cm]
-\textbf{Speichern von Pathfinding Zuständen}
+\textbf{Speichern von Pathfinding-Zuständen}
 
 Das bereits implementierte Caching für eine Wegfindung, bei der noch unbekannte Nodes als nicht betretbar angenommen werden, hat die Laufzeit erheblich minimiert.
 
-Nun ist es aber möglich, Zustände für die Wegfindung, bei der unbekannte Nodes als betretbar angenommen werden, zu speichern, sodass dieser Algorithmus nicht jedes mal von der Startposition bis zur Zielposition suchen muss, sondern auf vorher durchgeführte Suchergebnisse zurückgreifen kann.
+Nun ist es aber möglich, Zustände für die Wegfindung, bei der unbekannte Nodes als betretbar angenommen werden, zu speichern, sodass dieser Algorithmus nicht jedes Mal von der Startposition bis zur Zielposition suchen muss, sondern auf vorher durchgeführte Suchergebnisse zurückgreifen kann.
 \\[0.4cm]
-\textbf{Verbindung beider A* Suchen}
+\textbf{Verbindung beider A*-Suchen}
 
-Eine Alternative zum Speichern des aktuellen Zustandes der zweiten A* Suche, wäre auch eine Integration dieser in die schon vorherige A* Suche. Indem man alle unbekannten Nachbar-Nodes in einem zweiten \code{openSet} speichert und nach fehlgeschlagener ersten Suche eine zweite mit dem zusätzlich erstellten \code{openSet} und der Bedingung, unbekannte Nodes begehbar sind, lässt einiges an Laufzeit einsparen.
+Eine Alternative zum Speichern des aktuellen Zustandes der zweiten A*-Suche, wäre auch eine Integration dieser in die schon vorherige A* Suche. Indem man alle unbekannten Nachbar-Nodes in einem zweiten \code{openSet} speichert und nach fehlgeschlagener erster Suche eine zweite mit dem zusätzlich erstellten \code{openSet} und der Bedingung, dass unbekannte Nodes begehbar sind, lässt einiges an Laufzeit einsparen.
 \\[0.4cm]
 \textbf{Bidirektionale Suche}
 
-Mit Hilfe einer „Bidirektionale Suche“ \cite{bidi_search} könnte sich sowohl die Laufzeit als auch die benötigte Anzahl an Quadcopter-Flügen weiter verbessern.
+Mit Hilfe einer „Bidirektionalen Suche“ \cite{bidi_search} könnte sich sowohl die Laufzeit als auch die benötigte Anzahl an Quadcopter-Flügen weiter verbessern.
 \\[0.4cm]
-\textbf{Unity Implementierung}
+\textbf{Unity-Implementierung}
 
 Die Wahl einer Game-Engine als Entwicklungsumgebung hat auch einen sehr großen Einfluss auf die Laufzeit, weil diese durch viele für dieses Programm unnötige Hintergrundprozesse verlängert wird. Auch das einzelne Darstellen von Flügen auf der Map-Textur verbraucht viele Ressourcen. Die Laufzeit des puren Algorithmus ist daher wesentlich geringer als die Zeit, die das Programm für die fertige Abbildung des Weges benötigt.
 
@@ -867,7 +867,7 @@ Eine simplere Konsolen-Anwendung, die dem Benutzer die Flüge am Ende in eine PN
 
 
 \subsubsection{Beispiele}
-Die Abbildungen 47 bis 52 stellen Programmausgaben für verschiedene Quax Positionen auf verschiedenen Maps dar.
+Die Abbildungen 47 bis 52 stellen Programmausgaben für verschiedene Quax-Positionen auf verschiedenen Maps dar.
 \begin{figure}[H]
 \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/eigen_08.png}
@@ -876,35 +876,35 @@ Die Abbildungen 47 bis 52 stellen Programmausgaben für verschiedene Quax Positi
 \begin{figure}[H]
 \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/quax1_02.png}
-    \caption{Ausgabe die 2. Quax Position der BwInf Map „quax1.png“}
+    \caption{Ausgabe der 2. Quax-Position der BwInf Map „quax1.png“}
 \end{figure}
 \begin{figure}[H]
 \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/quax1_03.png}
-    \caption{Ausgabe die 3. Quax Position der BwInf Map „quax1.png“}
+    \caption{Ausgabe der 3. Quax-Position der BwInf Map „quax1.png“}
 \end{figure}
 \begin{figure}[H]
 \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/quax2_03.png}
-    \caption{Ausgabe die 3. Quax Position der BwInf Map „quax2.png“}
+    \caption{Ausgabe der 3. Quax-Position der BwInf Map „quax2.png“}
 \end{figure}
 \begin{figure}[H]
 \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/quax3_03.png}
-    \caption{Ausgabe die 3. Quax Position der BwInf Map „quax3.png“}
+    \caption{Ausgabe der 3. Quax-Position der BwInf Map „quax3.png“}
 \end{figure}
 \begin{figure}[H]
 \centering
     \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Programm/quax3_06.png}
-    \caption{Ausgabe die 6. Quax Position der BwInf Map „quax3.png“}
+    \caption{Ausgabe der 6. Quax-Position der BwInf Map „quax3.png“}
 \end{figure}
 
 \subsection{Teilaufgabe (d)}
-Mit einer eher unnatürlichen Verteilung von Flüssen und Seen wie zum Beispiel einem Schachbrettmuster (siehe Abbildung 53), einem verzweigten Labyrinth (siehe Abbildung 54) oder eine Anordnung mehrerer schmaler Wasser und Land streifen (siehe Abbildung 55), können kaum noch größere Flächen eindeutig eingeteilt werden.
+Mit einer eher unnatürlichen Verteilung von Flüssen und Seen wie zum Beispiel einem Schachbrettmuster (siehe Abbildung 53), einem verzweigten Labyrinth (siehe Abbildung 54) oder eine Anordnung mehrerer schmaler Wasser- und Land-Streifen (siehe Abbildung 55) können kaum noch größere Flächen eindeutig eingeteilt werden.
 
 Dies sorgt schnell für einen sehr umfangreichen Quadtree und damit auch für viele Quadcopter-Flüge.
 \\[0.4cm]
-Der hier besprochene Algorithmus läuft am effizientesten, bei eher natürlichen Landschaften, mit größeren Wasser- und Landflächen. Dabei kann der Quadcopter den Typ größere Gebiete mit nur einem Flug identifizieren.
+Der hier besprochene Algorithmus läuft am effizientesten bei eher natürlichen Landschaften mit größeren Wasser- und Landflächen. Dabei kann der Quadcopter den Typ größerer Map-Quadrate mit nur einem Flug identifizieren.
 
 \begin{figure}[H]
 \centering
@@ -929,11 +929,11 @@ Der hier besprochene Algorithmus läuft am effizientesten, bei eher natürlichen
 
 \newpage
 \section{FAZIT}
-Auch wenn die zweite Runde des Bundeswettbewerbs Informatik nicht gerade das einfachste und kürzeste Seminararbeits-Thema ist, war die Teilnahme und die intensive Beschäftigung mit den Aufgaben eine sehr wertvolle Erfahrung für mich.
+Auch wenn die zweite Runde des Bundeswettbewerbs Informatik nicht gerade das einfachste und kürzeste Seminararbeits-Thema ist, waren die Teilnahme und die intensive Beschäftigung mit den Aufgaben eine sehr wertvolle Erfahrung für mich.
 \\[0.4cm]
 Auch wenn ich an beide Aufgaben zunächst falsch herangegangen bin, was mich unglaublich viel Zeit gekostet hat, konnte ich sehr viel daraus lernen.
 \\[0.4cm]
-Die Teilnahme am Bundeswettbewerb Informatik ist jedem interessierten Schüler zu empfehlen, der gerne mal an Rätseln knobelt und zumindest ein bisschen Informatik begeistert ist.
+Die Teilnahme am Bundeswettbewerb Informatik ist jedem interessierten Schüler zu empfehlen, der gerne mal an Rätseln knobelt und zumindest ein bisschen informatikbegeistert ist.
 
 
 %===================================================================================
@@ -1106,7 +1106,7 @@ Alle Bilder befinden sich auch auf der beigelegten CD.
 
 \newpage
 \section{ANHANG}
-Aufgrund der Länge des Quellcodes beider Aufgaben, werden die einzelnen Klassen hier nicht weiter aufgelistet.
+Aufgrund der Länge des Quellcodes beider Aufgaben werden die einzelnen Klassen hier nicht weiter aufgelistet.
 
 Die einzelnen Quellcode-Dateien befinden sich auf der beigelegten CD.
 
