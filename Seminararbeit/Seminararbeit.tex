@@ -690,9 +690,13 @@ Bei der Durchführung des ersten A* Algorithmus wird nun ein Weg aus nur „Walk
 \end{figure}
 
 \subsection{Teilaufgabe (b)}
-% QUADTREE
-% ZUSAMMENSPIEL QUADTREE UND A*
-
+Der Schlüssel zu einem möglichst effizienten Algorithmus, welcher nur wenige Quadcopter-Flüge benötigt, ist die Koordinierung zwischen dem A* Pathfinding und der Quadtree Datenstruktur.
+\\[0.4cm]
+Das A* Grid wird nur mit den nötigsten „Informationen versorgt“.
+Der Quadtree muss vorbereitet sein vom A* Pathfinding aus eine Anforderung für das Scannen eines Bereiches zu bekommen. Dieser Bereich muss dann identifiziert werden und zurück an das Pathfinding System gegeben werden, welches mit dem Resultat das eigene A* Grid aktualisiert und die Wegsuche neu startet.
+\\[0.4cm]
+Ein weiterer nicht zu vernachlässigender Aspekt ist das Umgehen mit dem Sonderfall, dass Quax über ein 20x20 Wasser-Quadrat drüber kommt durch zwei aneinanderliegende, gemischte 20x20 Quadrate.
+Um dies zu verhindern ist 
 Das A* Grid wird zwar aus 10x10 breiten Nodes bestehen, jedoch wird auf den Sonderfall dadurch geachtet, dass der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20 Map-Quadrats entspricht, dessen linke, untere Ecke die gleichen Koordinaten hat wie die Grid-Node (siehe Abbildung 33).
 
 \begin{figure}[H]
@@ -716,7 +720,11 @@ Dadurch entsteht letztendlich ein Geflecht aus überlappenden 20x20 Quadraten, w
 % A*
 % QUADTREE
 \subsubsection{Optimierungsmöglichkeiten}
-Auch bei diesem Algorithmus gibt es noch viele Optimierungsmöglichkeiten zur Verbesserung der Laufzeit oder Verringerung der benötigten Quadcopter Flüge:
+Die Algorithmuslaufzeit der aktuelle Implementierung ist gerade für größere Maps sehr schlecht. Dabei überrascht, dass die einzelnen Komponente eigentlich gar nicht viel Zeit verbrauchen. Das Suchen im Quadtree, das Aktualisieren des A* Grids und die erste Wegsuche verbrauchen alle zusammen nur wenige Millisekunden pro Durchgang. 
+\\[0.4cm]
+Das was am meisten Zeit verbraucht ist die zweite Wegsuche. Nicht zuletzt, weil sie noch nicht durch Caching optimiert ist. Allerdings erklärt auch die Laufzeit des zweiten Pathfinding-Algorithmus nicht die Länge der Gesamtlaufzeit. Die Wahl einer Game-Engine als Entwicklungsumgebung hat die Performance letztendlich durch Hintergrundprozesse doch eher um einiges verschlechtert als verbessert.
+\\[0.4cm]
+Mögliche Optimierungsmöglichkeiten zur Verbesserung der Laufzeit oder Verringerung der benötigten Quadcopter Flüge wären:
 \\[0.4cm]
 \textbf{Multithreading}
 
@@ -929,10 +937,6 @@ Für beide Aufgaben wurden jeweils für Windows 64bit und 86bit Dateien erstellt
 
 \newpage
 \section{ERKLÄRUNG DES VERFASSERS}
-
-
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus consectetur lorem, imperdiet dignissim est auctor a. Vivamus convallis, leo et iaculis egestas, nunc massa porttitor tellus, id faucibus urna justo eget massa. Praesent quis feugiat odio. Nullam quis mattis enim. Fusce volutpat odio in enim sodales venenatis. Mauris consequat.
 
 \begin{figure}[H]
     \includegraphics[width=\linewidth]{Bilder/Sonstiges/ErklaerungDesVerfassers.png}
