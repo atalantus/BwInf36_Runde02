@@ -646,6 +646,48 @@ Als nächstes wird die Node im \code{openSet} mit der geringsten \code{F-Cost} a
 \\[0.4cm]
 Dieser Vorgang wiederholt sich so lange, bis \code{T} erreicht wurde.
 \\[0.4cm]
+Das hier auftretende Problem ist, dass bei einem normalen A* Algorithmus vorher schon das gesamte Grid definiert sein muss. Der Algorithmus muss wissen, welche Nodes „Walkable“ und welche „Unwalkable“ sind um einen Pfad zu finden.
+
+Da das Scannen der gesamten Map jedoch auch mit der Quadtree Struktur viel zu viele letztendlich Quadcopter Flüge beanspruchen würde, gibt es bei der hier verwendeten A* Variante noch den dritten möglichen Node Status „Unknown“.
+
+Wie genau der Algorithmus mit einem dritten Status abläuft, wird nun an einem kleinen Beispiel veranschaulicht.
+\\[0.4cm]
+Zu Beginn hat jede Grid-Node außer \code{S} und \code{T}, die beide den Status „Walkable“ haben, den Status „Unknown“ (siehe Abbildung 33). 
+\begin{figure}[H]
+\centering
+    \includegraphics[width=.5\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/Beispiel_01.png}
+    \caption{Die Map aus A* Sicht. Alle Nodes des Status „Unknown“ sind grau markiert.}
+\end{figure}
+Nun wird der erste Flug durchgeführt und die Grid-Nodes dementsprechend aktualisiert (siehe Abbildung 34).
+\begin{figure}[H]
+\centering
+    \includegraphics[width=.5\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/Beispiel_02.png}
+    \caption{Durch den ersten Flug wurde der Status von einigen Nodes um Quax aufgedeckt. Schwarz steht für „Walkable“, Weiß für „Unwalkable“.}
+\end{figure}
+Danach wird zuerst der A* Pathfinding Algorithmus normal durchgeführt. Das heißt, dass nur Nodes mit dem Status „Walkable“ auch als tatsächlich begehbar angenommen werden. Die restlichen Nodes mit dem Status „Unknown“ oder „Unwalkable“ gelten als nicht begehbar.
+\\[0.4cm]
+Wird so ein Weg zum Ziel gefunden ist der Algorithmus fertig und es steht fest, dass es einen Pfad zur Stadt gibt. Umgekehrt heißt jedoch nicht, dass wenn kein Weg gefunden wurde es keinen Weg gibt. Stattdessen führt man eine zweite A* Suche durch bei der diesmal nicht nur Nodes des Status „Walkable“, sondern auch die des Status „Unknown“ als begehbar betrachtet werden.
+\\[0.4cm]
+Findet diese Suche wiederum einen Pfad zum Ziel, bedeutet das, dass noch weitere Flüge zur Erkundung dieser „Unknown“-Nodes notwendig sind, um sagen zu können, ob es einen Pfad gibt oder nicht.
+Findet dagegen auch die zweite Suche keinen Weg zur Stadt, so bedeutet das, dass es auch wirklich keinen Weg gibt.
+\\[0.4cm]
+Abbildung 35 zeigt die notwendige Durchführung weiterer Flüge zur Findung eines Pfades.
+\begin{figure}[H]
+\centering
+    \includegraphics[width=1\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/Beispiel_03.png}
+    \caption{Da auch nach einem weiteren Flug (links) noch nicht offensichtlich ist, ob es einen Weg gibt oder nicht, wird ein dritter (rechts) durchgeführt.}
+\end{figure}
+Bei der Durchführung des ersten A* Algorithmus wird nun ein Weg aus nur „Walkable“-Nodes gefunden. Damit ist das Pathfinding abgeschlossen. Es wurde ein Weg gefunden (siehe Abbildung 36).
+\begin{figure}[H]
+\centering
+    \includegraphics[width=.5\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/Beispiel_04.png}
+    \caption{Die Vollständige Map. Der Pfad zur Stadt ist pink eingezeichnet.}
+\end{figure}
+
+\subsection{Teilaufgabe (b)}
+% QUADTREE
+% ZUSAMMENSPIEL QUADTREE UND A*
+
 Das A* Grid wird zwar aus 10x10 breiten Nodes bestehen, jedoch wird auf den Sonderfall dadurch geachtet, dass der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20 Map-Quadrats entspricht, dessen linke, untere Ecke die gleichen Koordinaten hat wie die Grid-Node (siehe Abbildung 33).
 
 \begin{figure}[H]
@@ -661,12 +703,6 @@ Dadurch entsteht letztendlich ein Geflecht aus überlappenden 20x20 Quadraten, w
     \includegraphics[width=.8\linewidth]{Bilder/Aufgabe3/Teilaufgabe_A/AStar_Grid_02.png}
     \caption{Ein Geflecht aus Grid-Nodes und den jeweils dazugehörigen Map-Quadraten. Die 2x2 Map-Quadrate überlappen sich sichern somit den Sonderfall ab.}
 \end{figure}
-
-
-
-\subsection{Teilaufgabe (b)}
-% QUADTREE
-% ZUSAMMENSPIEL QUADTREE UND A*
 
 \subsection{Teilaufgabe (c)}
 \subsubsection{Implementierung}
