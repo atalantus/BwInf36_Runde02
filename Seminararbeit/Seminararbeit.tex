@@ -697,7 +697,7 @@ Der Quadtree muss vorbereitet sein vom A* Pathfinding aus eine Anforderung für 
 \\[0.4cm]
 Ein weiterer nicht zu vernachlässigender Aspekt ist das Umgehen mit dem Sonderfall, dass Quax über ein 20x20 Wasser-Quadrat drüber kommt durch zwei aneinanderliegende, gemischte 20x20 Quadrate.
 Um dies zu verhindern ist 
-Das A* Grid wird zwar aus 10x10 breiten Nodes bestehen, jedoch wird auf den Sonderfall dadurch geachtet, dass der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20 Map-Quadrats entspricht, dessen linke, untere Ecke die gleichen Koordinaten hat wie die Grid-Node (siehe Abbildung 33).
+Das A* Grid wird zwar aus 10x10 breiten Nodes bestehen, jedoch wird auf den Sonderfall dadurch geachtet, dass der Status jeder einzelnen Grid-Node jeweils dem Map-Status des 20x20 Map-Quadrats entspricht, dessen linke, untere Ecke die gleichen Koordinaten hat wie die Grid-Node (siehe Abbildung 37).
 
 \begin{figure}[H]
 \centering
@@ -705,7 +705,7 @@ Das A* Grid wird zwar aus 10x10 breiten Nodes bestehen, jedoch wird auf den Sond
     \caption{Der blaue Pixel repräsentiert eine Node im A*-Grid. Der Status dieser Node wird jedoch über den Map-Typ des gelben Quadrats definiert. Beinhaltet dieses zum Beispiel nur Land, ist die Grid-Node „Walkable“.}
 \end{figure}
 
-Dadurch entsteht letztendlich ein Geflecht aus überlappenden 20x20 Quadraten, welches wiederum den Sonderfall abdeckt (siehe Abbildung 34).
+Dadurch entsteht letztendlich ein Geflecht aus überlappenden 20x20 Quadraten, welches wiederum den Sonderfall abdeckt (siehe Abbildung 38).
 
 \begin{figure}[H]
 \centering

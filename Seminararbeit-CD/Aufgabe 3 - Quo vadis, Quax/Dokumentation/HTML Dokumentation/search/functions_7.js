@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['openfile',['OpenFile',['../class_load_image_manager.html#ad37fbcc9a809bf16757ab59386d1572c',1,'LoadImageManager']]]
+  ['mapsquare',['MapSquare',['../class_algorithm_1_1_quadtree_1_1_map_square.html#a79b708b6ed30cd43817ebf5bfb653c37',1,'Algorithm::Quadtree::MapSquare']]]
 ];

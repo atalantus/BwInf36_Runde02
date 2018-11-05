@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['width',['Width',['../class_algorithm_1_1_quadtree_1_1_square.html#ae2d5fca8c6c5089774c14eb7bf5e6c09',1,'Algorithm::Quadtree::Square']]]
+  ['sw_5fpoint',['SW_Point',['../class_algorithm_1_1_quadtree_1_1_square.html#ae4eb1a06ba7865cdf520eb4021bbd730',1,'Algorithm::Quadtree::Square']]]
 ];

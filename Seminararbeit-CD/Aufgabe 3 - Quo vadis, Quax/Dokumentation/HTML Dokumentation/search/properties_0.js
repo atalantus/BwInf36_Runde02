@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dimensions',['Dimensions',['../class_map_data_manager.html#a9c6e93a47a2d5319a0aa30478440fc72',1,'MapDataManager']]]
+  ['count',['Count',['../class_algorithm_1_1_pathfinding_1_1_heap.html#a8bf5a49e5cad028a401f25a547f32711',1,'Algorithm::Pathfinding::Heap']]]
 ];

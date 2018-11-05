@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mapsquare',['MapSquare',['../class_algorithm_1_1_quadtree_1_1_map_square.html#a79b708b6ed30cd43817ebf5bfb653c37',1,'Algorithm::Quadtree::MapSquare']]]
+  ['heap',['Heap',['../class_algorithm_1_1_pathfinding_1_1_heap.html#ac1c69db3e3c6fc9cc7cdd962820eb1fd',1,'Algorithm::Pathfinding::Heap']]]
 ];

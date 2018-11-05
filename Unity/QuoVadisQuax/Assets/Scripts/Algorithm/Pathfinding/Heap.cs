@@ -8,23 +8,35 @@ namespace Algorithm.Pathfinding
     /// <typeparam name="T">Type to store inside the heap</typeparam>
     public class Heap<T> where T : IHeapItem<T>
     {
-        // TODO: Add comments
-
         #region Properties
 
+        /// <summary>
+        ///     Items
+        /// </summary>
         private readonly T[] _items;
 
+        /// <summary>
+        ///     Current item count
+        /// </summary>
         public int Count { get; private set; }
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        ///     Creates a new heap
+        /// </summary>
+        /// <param name="maxHeapSize">Heap's max size</param>
         public Heap(int maxHeapSize)
         {
             _items = new T[maxHeapSize];
         }
 
+        /// <summary>
+        ///     Adds a new item to the heap
+        /// </summary>
+        /// <param name="item">Item to add</param>
         public void Add(T item)
         {
             item.HeapIndex = Count;
@@ -33,6 +45,10 @@ namespace Algorithm.Pathfinding
             Count++;
         }
 
+        /// <summary>
+        ///     Remove the first item from the heap
+        /// </summary>
+        /// <returns></returns>
         public T RemoveFirst()
         {
             var firstItem = _items[0];
@@ -43,16 +59,29 @@ namespace Algorithm.Pathfinding
             return firstItem;
         }
 
+        /// <summary>
+        ///     Update an item
+        /// </summary>
+        /// <param name="item">Item to update</param>
         public void UpdateItem(T item)
         {
             SortUp(item);
         }
 
+        /// <summary>
+        ///     Checks if the heap contains an object
+        /// </summary>
+        /// <param name="item">Item to check</param>
+        /// <returns>True if the heap contains the object</returns>
         public bool Contains(T item)
         {
             return Equals(_items[item.HeapIndex], item);
         }
 
+        /// <summary>
+        ///     Sort item down in heap
+        /// </summary>
+        /// <param name="item">Item to sort</param>
         private void SortDown(T item)
         {
             while (true)
@@ -80,6 +109,10 @@ namespace Algorithm.Pathfinding
             }
         }
 
+        /// <summary>
+        ///     Sort item up in heap
+        /// </summary>
+        /// <param name="item">Item to sort</param>
         private void SortUp(T item)
         {
             var parentIndex = (item.HeapIndex - 1) / 2;
@@ -96,6 +129,11 @@ namespace Algorithm.Pathfinding
             }
         }
 
+        /// <summary>
+        ///     Swap to items in the heap
+        /// </summary>
+        /// <param name="itemA">Item A</param>
+        /// <param name="itemB">Item B</param>
         private void Swap(T itemA, T itemB)
         {
             _items[itemA.HeapIndex] = itemB;
@@ -115,6 +153,9 @@ namespace Algorithm.Pathfinding
     /// <typeparam name="T">Type to store in the heap</typeparam>
     public interface IHeapItem<T> : IComparable<T>
     {
+        /// <summary>
+        ///     Item index inside the heap
+        /// </summary>
         int HeapIndex { get; set; }
     }
 }
