@@ -98,25 +98,25 @@ namespace Algorithm.Quadtree
                     ChildNodes = new[]
                     {
                         new Node(
-                            new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
+                            new Vector2Int(MapSquare.SW_Point.X, MapSquare.SW_Point.Y), newWidth),
                         new Node(
-                            new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y), newWidth),
+                            new Vector2Int(MapSquare.SW_Point.X + newWidth, MapSquare.SW_Point.Y), newWidth),
                         new Node(
-                            new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y + newWidth), newWidth),
+                            new Vector2Int(MapSquare.SW_Point.X + newWidth, MapSquare.SW_Point.Y + newWidth), newWidth),
                         new Node(
-                            new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth), newWidth)
+                            new Vector2Int(MapSquare.SW_Point.X, MapSquare.SW_Point.Y + newWidth), newWidth)
                     };
                 else
                     ChildNodes = new[]
                     {
                         new EndNode(
-                            new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
+                            new Vector2Int(MapSquare.SW_Point.X, MapSquare.SW_Point.Y), newWidth),
                         new EndNode(
-                            new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y), newWidth),
+                            new Vector2Int(MapSquare.SW_Point.X + newWidth, MapSquare.SW_Point.Y), newWidth),
                         new EndNode(
-                            new Vector2Int(MapSquare.SW_Point.x + newWidth, MapSquare.SW_Point.y + newWidth), newWidth),
+                            new Vector2Int(MapSquare.SW_Point.X + newWidth, MapSquare.SW_Point.Y + newWidth), newWidth),
                         new EndNode(
-                            new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth), newWidth)
+                            new Vector2Int(MapSquare.SW_Point.X, MapSquare.SW_Point.Y + newWidth), newWidth)
                     };
             }
             else
@@ -129,27 +129,27 @@ namespace Algorithm.Quadtree
                     ChildNodes = new[]
                     {
                         new Node(
-                            new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
+                            new Vector2Int(MapSquare.SW_Point.X, MapSquare.SW_Point.Y), newWidth),
                         new Node(
-                            new Vector2Int(MapSquare.SW_Point.x + newWidth - 1, MapSquare.SW_Point.y), newWidth),
+                            new Vector2Int(MapSquare.SW_Point.X + newWidth - 1, MapSquare.SW_Point.Y), newWidth),
                         new Node(
-                            new Vector2Int(MapSquare.SW_Point.x + newWidth - 1, MapSquare.SW_Point.y + newWidth - 1),
+                            new Vector2Int(MapSquare.SW_Point.X + newWidth - 1, MapSquare.SW_Point.Y + newWidth - 1),
                             newWidth),
                         new Node(
-                            new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth - 1), newWidth)
+                            new Vector2Int(MapSquare.SW_Point.X, MapSquare.SW_Point.Y + newWidth - 1), newWidth)
                     };
                 else
                     ChildNodes = new[]
                     {
                         new EndNode(
-                            new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y), newWidth),
+                            new Vector2Int(MapSquare.SW_Point.X, MapSquare.SW_Point.Y), newWidth),
                         new EndNode(
-                            new Vector2Int(MapSquare.SW_Point.x + newWidth - 1, MapSquare.SW_Point.y), newWidth),
+                            new Vector2Int(MapSquare.SW_Point.X + newWidth - 1, MapSquare.SW_Point.Y), newWidth),
                         new EndNode(
-                            new Vector2Int(MapSquare.SW_Point.x + newWidth - 1, MapSquare.SW_Point.y + newWidth),
+                            new Vector2Int(MapSquare.SW_Point.X + newWidth - 1, MapSquare.SW_Point.Y + newWidth),
                             newWidth),
                         new EndNode(
-                            new Vector2Int(MapSquare.SW_Point.x, MapSquare.SW_Point.y + newWidth - 1), newWidth)
+                            new Vector2Int(MapSquare.SW_Point.X, MapSquare.SW_Point.Y + newWidth - 1), newWidth)
                     };
             }
         }

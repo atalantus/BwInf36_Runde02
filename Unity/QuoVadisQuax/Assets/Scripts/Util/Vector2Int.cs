@@ -1,16 +1,26 @@
-﻿public struct Vector2Int
+﻿/// <summary>
+///     Integer Vector2
+/// </summary>
+public struct Vector2Int
 {
-    public readonly int x;
-    public readonly int y;
+    /// <summary>
+    ///     X coordinate
+    /// </summary>
+    public readonly int X;
+
+    /// <summary>
+    ///     Y coordinate
+    /// </summary>
+    public readonly int Y;
 
     public Vector2Int(int x, int y)
     {
-        this.x = x;
-        this.y = y;
+        X = x;
+        Y = y;
     }
 
     public override string ToString()
     {
-        return "(" + x + ", " + y + ")";
+        return "(" + X + ", " + Y + ")";
     }
 }

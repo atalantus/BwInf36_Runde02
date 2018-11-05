@@ -1,15 +1,22 @@
 ﻿using System;
 using Algorithm;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+
+#endif
 
 /// <summary>
 ///     Manages the Options GUI
 /// </summary>
 public class OptionsManager : MonoBehaviour
 {
+    #region Properties
+
     public delegate void StartedAlgorithmEventHandler(Vector2Int quaxPos, Vector2Int cityPos);
+
+    public event StartedAlgorithmEventHandler StartedAlgorithm;
 
     [SerializeField] private AlgorithmManager _algorithmManager;
     [SerializeField] private Text[] _algorithmResults;
@@ -33,11 +40,13 @@ public class OptionsManager : MonoBehaviour
     /// <summary>
     ///     Is the options panel currently open
     /// </summary>
-    public bool IsOpen { get; set; }
+    public bool IsOpen { private get; set; }
 
     public bool ShowNodes { get; set; }
 
-    public event StartedAlgorithmEventHandler StartedAlgorithm;
+    #endregion
+
+    #region Methods
 
     private void Awake()
     {
@@ -56,7 +65,7 @@ public class OptionsManager : MonoBehaviour
 
     private void OnLoadingState_Changed(LoadImageManager.LoadingState state)
     {
-        if (state == LoadImageManager.LoadingState.DONE) SetUpOptionsGUI();
+        if (state == LoadImageManager.LoadingState.Done) SetUpOptionsGUI();
     }
 
     private void SetUpOptionsGUI()
@@ -66,7 +75,7 @@ public class OptionsManager : MonoBehaviour
             _quaxPosDropdown.options.Add(new Dropdown.OptionData("Quax " + (i + 1)));
 
         _quaxPosOverlayTexture =
-            new Texture2D(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y,
+            new Texture2D(MapDataManager.Instance.Dimensions.X, MapDataManager.Instance.Dimensions.Y,
                 TextureFormat.ARGB32, false) {filterMode = FilterMode.Point};
         _quaxPosOverlay.GetComponent<RawImage>().texture = _quaxPosOverlayTexture;
 
@@ -75,12 +84,12 @@ public class OptionsManager : MonoBehaviour
         _quaxPosDropdown.RefreshShownValue();
 
         _quaxPosMap.GetComponent<RawImage>().texture = _loadImage.MapTexture;
-        var aspectRatio = MapDataManager.Instance.Dimensions.x / (float) MapDataManager.Instance.Dimensions.y;
+        var aspectRatio = MapDataManager.Instance.Dimensions.X / (float) MapDataManager.Instance.Dimensions.Y;
         _quaxPosMap.GetComponent<AspectRatioFitter>().aspectRatio = aspectRatio;
         _quaxPosOverlay.GetComponent<AspectRatioFitter>().aspectRatio = aspectRatio;
 
-        _guiCoordinates[2].text = MapDataManager.Instance.CityPosition.x.ToString();
-        _guiCoordinates[3].text = MapDataManager.Instance.CityPosition.y.ToString();
+        _guiCoordinates[2].text = MapDataManager.Instance.CityPosition.X.ToString();
+        _guiCoordinates[3].text = MapDataManager.Instance.CityPosition.Y.ToString();
 
         UpdateAlgorithmResults("-", "-", "-");
     }
@@ -95,14 +104,14 @@ public class OptionsManager : MonoBehaviour
     public void SelectQuaxPos(int index)
     {
         _selectedQuax = MapDataManager.Instance.QuaxPositions[index];
-        _guiCoordinates[0].text = _selectedQuax.x.ToString();
-        _guiCoordinates[1].text = _selectedQuax.y.ToString();
+        _guiCoordinates[0].text = _selectedQuax.X.ToString();
+        _guiCoordinates[1].text = _selectedQuax.Y.ToString();
 
         Action markQuax = () =>
         {
-            var size = Mathf.Min(MapDataManager.Instance.Dimensions.x, MapDataManager.Instance.Dimensions.y) / 5;
+            var size = Mathf.Min(MapDataManager.Instance.Dimensions.X, MapDataManager.Instance.Dimensions.Y) / 5;
             if (size % 2 == 0) size++;
-            _quaxPosOverlayTexture.DrawSquare(new Vector2Int(_selectedQuax.x - size / 2, _selectedQuax.y - size / 2),
+            _quaxPosOverlayTexture.DrawSquare(new Vector2Int(_selectedQuax.X - size / 2, _selectedQuax.Y - size / 2),
                 size, Color.magenta);
         };
 
@@ -144,4 +153,6 @@ public class OptionsManager : MonoBehaviour
         Application.Quit();
 #endif
     }
+
+    #endregion
 }

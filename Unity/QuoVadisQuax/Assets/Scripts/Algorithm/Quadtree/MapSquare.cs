@@ -41,7 +41,7 @@ namespace Algorithm.Quadtree
             var containsLand = false;
 
             // Get the pixels
-            var pixels = MapDataManager.Instance.MapTexture.GetPixels(SW_Point.x, SW_Point.y, Width, Height);
+            var pixels = MapDataManager.Instance.MapTexture.GetPixels(SW_Point.X, SW_Point.Y, Width, Height);
             var pixelsSize = pixels.Length;
 
             var prime = Utilities.GetHigherPrime(pixelsSize);

@@ -8,8 +8,10 @@ using UnityEngine;
 /// </summary>
 public class ContainerManager : MonoBehaviour
 {
-    private static readonly string PROCESSING_IMG_MSG_ID = "processing_img";
-    private static readonly string ERROR_LOADING_MAP_MSG_ID = "error_loading_map";
+    #region Properties
+
+    private const string PROCESSING_IMG_MSG_ID = "processing_img";
+    private const string ERROR_LOADING_MAP_MSG_ID = "error_loading_map";
     [SerializeField] private LoadImageManager _loadImage;
     [SerializeField] private GameObject _mapContentPanel;
     [SerializeField] private MapGUIManager _mapManager;
@@ -18,7 +20,10 @@ public class ContainerManager : MonoBehaviour
 
     private List<InfoMessage> _messages;
     [SerializeField] private GameObject _noContentPanel;
-    [SerializeField] private OptionsManager _options;
+
+    #endregion
+
+    #region Methods
 
     private void Awake()
     {
@@ -30,29 +35,27 @@ public class ContainerManager : MonoBehaviour
     {
         switch (state)
         {
-            case LoadImageManager.LoadingState.NOT_LOADING:
+            case LoadImageManager.LoadingState.NotLoading:
                 _noContentPanel.SetActive(true);
                 _mapContentPanel.SetActive(false);
                 break;
-            case LoadImageManager.LoadingState.LOADING:
+            case LoadImageManager.LoadingState.Loading:
                 _noContentPanel.SetActive(true);
                 _mapContentPanel.SetActive(false);
                 DestroyMessage(ERROR_LOADING_MAP_MSG_ID);
                 CreateMessage("Processing Image...", PROCESSING_IMG_MSG_ID, true);
                 break;
-            case LoadImageManager.LoadingState.FAILED:
+            case LoadImageManager.LoadingState.Failed:
                 _noContentPanel.SetActive(true);
                 _mapContentPanel.SetActive(false);
                 DestroyMessage(PROCESSING_IMG_MSG_ID);
                 CreateMessage("Error while processing the image!", ERROR_LOADING_MAP_MSG_ID, false, 5f);
                 break;
-            case LoadImageManager.LoadingState.DONE:
+            case LoadImageManager.LoadingState.Done:
                 _mapContentPanel.SetActive(true);
                 _noContentPanel.SetActive(false);
                 _mapManager.SetMap(_loadImage.MapTexture);
                 DestroyMessage(PROCESSING_IMG_MSG_ID);
-                //if (_loadImage.IsOpen) _loadImage.ToggleGUI();
-                //if (!_options.IsOpen) _options.ToggleGUI();
                 break;
             default:
                 throw new ArgumentOutOfRangeException("state", state, null);
@@ -68,17 +71,19 @@ public class ContainerManager : MonoBehaviour
         infoMsg.Setup(msg, id, spinnerIcon, livetime);
 
         if (_messages.Count >= 5)
-            DestroyMessage(_messages[0].ID);
+            DestroyMessage(_messages[0].Id);
     }
 
     public void DestroyMessage(string id)
     {
-        var messages = _messages.Where(m => m.ID == id).ToArray();
+        var messages = _messages.Where(m => m.Id == id).ToArray();
         foreach (var t in messages) Destroy(t.gameObject);
     }
 
     private void On_DestroyingMsg(string id)
     {
-        _messages.RemoveAll(m => m.ID == id);
+        _messages.RemoveAll(m => m.Id == id);
     }
+
+    #endregion
 }

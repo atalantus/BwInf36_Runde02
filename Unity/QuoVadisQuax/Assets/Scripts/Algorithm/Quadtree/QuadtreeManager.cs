@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using Algorithm.Pathfinding;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace Algorithm.Quadtree
 {
@@ -60,7 +59,7 @@ namespace Algorithm.Quadtree
         public Node RootNode;
 
         /// <summary>
-        ///     The execution time of the quadtree methods
+        ///     The total execution time spent on searching in quadtree
         /// </summary>
         public double QuadtreeTime;
 
@@ -98,7 +97,7 @@ namespace Algorithm.Quadtree
         public void SetupQuadtree()
         {
             RootNode = null;
-            RootNode = new Node(new Vector2Int(0, 0), MapDataManager.Instance.Dimensions.x);
+            RootNode = new Node(new Vector2Int(0, 0), MapDataManager.Instance.Dimensions.X);
             QuadtreeTime = 0;
         }
 
@@ -116,8 +115,8 @@ namespace Algorithm.Quadtree
 
                 var updatedSquares = new List<MapSquare>();
 
-                for (var x = sw_point.x; x < sw_point.x + 2; x++)
-                for (var y = sw_point.y; y < sw_point.y + 2; y++)
+                for (var x = sw_point.X; x < sw_point.X + 2; x++)
+                for (var y = sw_point.Y; y < sw_point.Y + 2; y++)
                 {
                     var point = new Vector2Int(x, y);
                     var isChecked = false;
@@ -137,7 +136,7 @@ namespace Algorithm.Quadtree
                 }
 
                 s.Stop();
-                Debug.LogWarning("Quadtree Search took: " + s.Elapsed.TotalMilliseconds + "ms");
+                //Debug.Log("Quadtree Search took: " + s.Elapsed.TotalMilliseconds + "ms");
                 QuadtreeTime += s.Elapsed.TotalMilliseconds;
 
                 if (UpdatedQuadtree != null)
@@ -161,8 +160,8 @@ namespace Algorithm.Quadtree
 
                 var pixels = new List<Color>();
 
-                for (var x = sw_point.x; x < sw_point.x + 2; x++)
-                for (var y = sw_point.y; y < sw_point.y + 2; y++)
+                for (var x = sw_point.X; x < sw_point.X + 2; x++)
+                for (var y = sw_point.Y; y < sw_point.Y + 2; y++)
                 {
                     Color pixel;
                     if (MapDataManager.Instance.MapTexture.width > x &&

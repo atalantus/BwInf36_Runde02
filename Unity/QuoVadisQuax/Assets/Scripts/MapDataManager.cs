@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <inheritdoc />
 /// <summary>
 ///     Holds information about the Map
-///     SINGLETON
 /// </summary>
 public class MapDataManager : MonoBehaviour
 {

@@ -45,7 +45,7 @@ namespace Algorithm.Quadtree
         {
             SW_Point = swPoint;
             Width = width;
-            NE_Point = new Vector2Int(SW_Point.x + Width - 1, Mathf.Abs(SW_Point.y + Height - 1));
+            NE_Point = new Vector2Int(SW_Point.X + Width - 1, Mathf.Abs(SW_Point.Y + Height - 1));
         }
 
         /// <summary>
@@ -55,8 +55,8 @@ namespace Algorithm.Quadtree
         /// <returns>True if this Square touches the <see cref="Vector2Int" /></returns>
         public bool ContainsPoint(Vector2Int other)
         {
-            return !(other.x > NE_Point.x || other.y > NE_Point.y ||
-                     other.x < SW_Point.x || other.y < SW_Point.y);
+            return !(other.X > NE_Point.X || other.Y > NE_Point.Y ||
+                     other.X < SW_Point.X || other.Y < SW_Point.Y);
         }
 
         #endregion

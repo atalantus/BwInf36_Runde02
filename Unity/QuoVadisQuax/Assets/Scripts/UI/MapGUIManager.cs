@@ -14,7 +14,9 @@ using Node = Algorithm.Pathfinding.Node;
 /// </summary>
 public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public static readonly string COLORING_OVERLAY_MSG_ID = "coloring_overlay";
+    #region Properties
+
+    private const string COLORING_OVERLAY_MSG_ID = "coloring_overlay";
     [SerializeField] private AlgorithmManager _algorithmManager;
     private Thread _clearOverlayTextureThread;
 
@@ -42,6 +44,10 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     private List<Node> _path;
     private bool _readyToColorPath;
 
+    #endregion
+
+    #region Methods
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         _hasFocus = true;
@@ -59,8 +65,6 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         _optionsManager.StartedAlgorithm += SetUpOverlayTexture;
         PathfindingManager.Instance.FinishedPathfinding += (path, foundPath) =>
         {
-            //Debug.LogWarning("MapGUIManager - ColorPath");
-
             _path = foundPath ? path : new List<Node>();
 
             _readyToColorPath = true;
@@ -89,8 +93,6 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 throw new ArgumentOutOfRangeException();
         }
 
-        //Debug.Log("Queue: SW " + mapSquare.SW_Point + " NE " + mapSquare.NE_Point);
-
         _colorSquareOverlayActions.Enqueue(() =>
         {
             _overlayTexture.DrawSquare(mapSquare.SW_Point, mapSquare.Width, color, () =>
@@ -106,9 +108,8 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         for (var index = 0; index < _path.Count - 1; index++)
         {
             var node = _path[index];
-            int posX, posY;
-            posX = node.Position.x;
-            posY = node.Position.y;
+            var posX = node.Position.X;
+            var posY = node.Position.Y;
 
             ThreadQueuer.Instance.QueueMainThreadActionMultiple(() =>
             {
@@ -118,12 +119,9 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
         ThreadQueuer.Instance.QueueMainThreadActionMultiple(() =>
         {
-            //Debug.LogWarning("----- APPLY -----");
             _overlayTexture.Apply();
             _algorithmManager.FinishAlgorithm();
         });
-
-        //Debug.Log("Colored Path");
     }
 
     private void SetUpOverlayTexture(Vector2Int quaxPos, Vector2Int cityPos)
@@ -157,9 +155,10 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private void Update()
     {
-        // Execute overlay stuff things
         if (!_isColoringSquareOverlay)
         {
+            // Update overlay
+
             if (_colorSquareOverlayActions.Count > 0)
             {
                 _isColoringSquareOverlay = true;
@@ -182,19 +181,12 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             if (!_hasFocus) return;
 
             scrollDelta = Mathf.Clamp(scrollDelta, -0.15f, 0.15f);
-            //var mousePos = Input.mousePosition;
-            //mousePos.x -= Screen.width / 2;
-            //mousePos.y -= Screen.height / 2;
-            // Calculate zoom delta
             var zoomDelta = Mathf.Abs(scrollDelta * 650 * Time.deltaTime);
 
             if (scrollDelta > 0f)
             {
                 // Zoom in
                 _mapContainer.transform.localScale *= zoomDelta;
-
-                // TODO: Zoom image to current mouse position
-                //_mapContainer.transform.localPosition -= (mousePos / 4f);
 
                 // Clamp to max zoom level
                 if (_mapContainer.transform.localScale.x > _maxZoomLevel)
@@ -235,4 +227,6 @@ public class MapGUIManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         // Calculate the minimum zoom level
         _minZoomLevel = z / 3;
     }
+
+    #endregion
 }

@@ -2,32 +2,44 @@ using System;
 
 namespace Algorithm.Pathfinding
 {
+    /// <summary>
+    ///     Heap data structure
+    /// </summary>
+    /// <typeparam name="T">Type to store inside the heap</typeparam>
     public class Heap<T> where T : IHeapItem<T>
     {
-        private readonly T[] items;
+        // TODO: Add comments
+
+        #region Properties
+
+        private readonly T[] _items;
+
+        public int Count { get; private set; }
+
+        #endregion
+
+        #region Methods
 
         public Heap(int maxHeapSize)
         {
-            items = new T[maxHeapSize];
+            _items = new T[maxHeapSize];
         }
-
-        public int Count { get; private set; }
 
         public void Add(T item)
         {
             item.HeapIndex = Count;
-            items[Count] = item;
+            _items[Count] = item;
             SortUp(item);
             Count++;
         }
 
         public T RemoveFirst()
         {
-            var firstItem = items[0];
+            var firstItem = _items[0];
             Count--;
-            items[0] = items[Count];
-            items[0].HeapIndex = 0;
-            SortDown(items[0]);
+            _items[0] = _items[Count];
+            _items[0].HeapIndex = 0;
+            SortDown(_items[0]);
             return firstItem;
         }
 
@@ -38,7 +50,7 @@ namespace Algorithm.Pathfinding
 
         public bool Contains(T item)
         {
-            return Equals(items[item.HeapIndex], item);
+            return Equals(_items[item.HeapIndex], item);
         }
 
         private void SortDown(T item)
@@ -47,18 +59,17 @@ namespace Algorithm.Pathfinding
             {
                 var childIndexLeft = item.HeapIndex * 2 + 1;
                 var childIndexRight = item.HeapIndex * 2 + 2;
-                var swapIndex = 0;
 
                 if (childIndexLeft < Count)
                 {
-                    swapIndex = childIndexLeft;
+                    var swapIndex = childIndexLeft;
 
                     if (childIndexRight < Count)
-                        if (items[childIndexLeft].CompareTo(items[childIndexRight]) < 0)
+                        if (_items[childIndexLeft].CompareTo(_items[childIndexRight]) < 0)
                             swapIndex = childIndexRight;
 
-                    if (item.CompareTo(items[swapIndex]) < 0)
-                        Swap(item, items[swapIndex]);
+                    if (item.CompareTo(_items[swapIndex]) < 0)
+                        Swap(item, _items[swapIndex]);
                     else
                         return;
                 }
@@ -75,7 +86,7 @@ namespace Algorithm.Pathfinding
 
             while (true)
             {
-                var parentItem = items[parentIndex];
+                var parentItem = _items[parentIndex];
                 if (item.CompareTo(parentItem) > 0)
                     Swap(item, parentItem);
                 else
@@ -87,14 +98,21 @@ namespace Algorithm.Pathfinding
 
         private void Swap(T itemA, T itemB)
         {
-            items[itemA.HeapIndex] = itemB;
-            items[itemB.HeapIndex] = itemA;
+            _items[itemA.HeapIndex] = itemB;
+            _items[itemB.HeapIndex] = itemA;
             var itemAIndex = itemA.HeapIndex;
             itemA.HeapIndex = itemB.HeapIndex;
             itemB.HeapIndex = itemAIndex;
         }
+
+        #endregion
     }
 
+    /// <inheritdoc />
+    /// <summary>
+    ///     Interface for heap compatible types
+    /// </summary>
+    /// <typeparam name="T">Type to store in the heap</typeparam>
     public interface IHeapItem<T> : IComparable<T>
     {
         int HeapIndex { get; set; }

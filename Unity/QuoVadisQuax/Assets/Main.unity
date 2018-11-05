@@ -1705,12 +1705,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14afe81cc2b3aa7469f9742b70498067, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _algorithmManager: {fileID: 1086849737}
+  _containerManager: {fileID: 2096904372}
   _mapContainer: {fileID: 1698076471}
   _mapRawImage: {fileID: 2088025514}
-  _overlayRawImage: {fileID: 497227767}
-  _containerManager: {fileID: 2096904372}
   _optionsManager: {fileID: 1521842672}
-  _algorithmManager: {fileID: 1086849737}
+  _overlayRawImage: {fileID: 497227767}
 --- !u!114 &631124978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3078,7 +3078,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24b3b832622f432285b4ff7af70f4f7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _optionsManager: {fileID: 0}
   QuadtreeTime: 0
 --- !u!114 &1086849736
 MonoBehaviour:
@@ -4547,20 +4546,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _algorithmManager: {fileID: 1086849737}
-  _loadImage: {fileID: 540640110}
-  _quaxPosDropdown: {fileID: 1736028537}
-  _quaxPosMap: {fileID: 690460893}
-  _quaxPosOverlay: {fileID: 774695105}
+  _algorithmResults:
+  - {fileID: 960056886}
+  - {fileID: 725794891}
+  - {fileID: 2064363428}
   _guiCoordinates:
   - {fileID: 1422637918}
   - {fileID: 1884385532}
   - {fileID: 1895100712}
   - {fileID: 528563831}
+  _loadImage: {fileID: 540640110}
+  _quaxPosDropdown: {fileID: 1736028537}
+  _quaxPosMap: {fileID: 690460893}
+  _quaxPosOverlay: {fileID: 774695105}
   _toggleIcon: {fileID: 1582878405}
-  _algorithmResults:
-  - {fileID: 960056886}
-  - {fileID: 725794891}
-  - {fileID: 2064363428}
 --- !u!1 &1559700159
 GameObject:
   m_ObjectHideFlags: 0
@@ -5999,13 +5998,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _loadImage: {fileID: 540640110}
-  _options: {fileID: 1521842672}
-  _mapManager: {fileID: 631124977}
-  _noContentPanel: {fileID: 1298444448}
   _mapContentPanel: {fileID: 631124974}
+  _mapManager: {fileID: 631124977}
   _messagePanel: {fileID: 1600078452}
   _messagePrefab: {fileID: 1397577690426974, guid: 0c1b2dfa646904d458425e20e3f1a5c9,
     type: 2}
+  _noContentPanel: {fileID: 1298444448}
 --- !u!1 &2098172248
 GameObject:
   m_ObjectHideFlags: 0

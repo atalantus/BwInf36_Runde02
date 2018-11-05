@@ -7,6 +7,10 @@ using Debug = UnityEngine.Debug;
 
 namespace Algorithm.Pathfinding
 {
+    /// <inheritdoc />
+    /// <summary>
+    ///     General pathfinding manager
+    /// </summary>
     public class PathfindingManager : MonoBehaviour
     {
         #region Properties
@@ -16,39 +20,127 @@ namespace Algorithm.Pathfinding
         /// </summary>
         public static PathfindingManager Instance { get; private set; }
 
-        public delegate void RequestMapTileEventHandler(Vector2Int tilePos);
+        /// <summary>
+        ///     Request map tile delegate
+        /// </summary>
+        /// <param name="sw_point">The South-West (Bottom-Left) position of the requested map tile</param>
+        public delegate void RequestMapTileEventHandler(Vector2Int sw_point);
 
-        public delegate void RequestSpecialSquareEventHandler(Vector2Int lw_point);
+        /// <summary>
+        ///     Request special square delegate
+        /// </summary>
+        /// <param name="sw_point">The South-West (Bottom-Left) position of the requested map tile</param>
+        public delegate void RequestSpecialSquareEventHandler(Vector2Int sw_point);
 
+        /// <summary>
+        ///     Started pathfinding delegate
+        /// </summary>
         public delegate void StartedPathfindingEventHandler();
 
+        /// <summary>
+        ///     Finished pathfinding delegate
+        /// </summary>
+        /// <param name="path">List of nodes forming the path</param>
+        /// <param name="foundPath">Was a path found</param>
         public delegate void FinishedPathfindingEventHandler(List<Node> path, bool foundPath);
 
+        /// <summary>
+        ///     Started pathfinding event
+        /// </summary>
         public event StartedPathfindingEventHandler StartedPathfinding;
+
+        /// <summary>
+        ///     Request map tile of quadtree event
+        /// </summary>
         public event RequestMapTileEventHandler RequestedMapTile;
+
+        /// <summary>
+        ///     Request map tile outside of quadtree event
+        /// </summary>
         public event RequestSpecialSquareEventHandler RequestSpecialSquare;
+
+        /// <summary>
+        ///     Finished pathfinding event
+        /// </summary>
         public event FinishedPathfindingEventHandler FinishedPathfinding;
 
+        /// <summary>
+        ///     The grid used for pathfinding
+        /// </summary>
         public Grid PathfindingGrid;
-        private Node startNode, targetNode;
-        private Vector2Int startPos, targetPos;
 
-        private bool createdGrid;
+        /// <summary>
+        ///     The start node
+        /// </summary>
+        private Node _startNode;
+
+        /// <summary>
+        ///     The target node
+        /// </summary>
+        private Node _targetNode;
+
+        /// <summary>
+        ///     The start position
+        /// </summary>
+        private Vector2Int _startPos;
+
+        /// <summary>
+        ///     The target position
+        /// </summary>
+        private Vector2Int _targetPos;
+
+        /// <summary>
+        ///     Is <see cref="PathfindingGrid" /> created
+        /// </summary>
+        private bool _createdGrid;
+
+        /// <summary>
+        ///     Is <see cref="PathfindingGrid" /> updated
+        /// </summary>
         private bool _updatedGrid;
-        private bool _tryPathfindingWithUnknownWalkable;
 
+        /// <summary>
+        ///     Is pathfinding with unknown nodes as walkable
+        /// </summary>
+        private bool _tryPathfinding02;
+
+        /// <summary>
+        ///     Cached open set
+        /// </summary>
         private Heap<Node> _cachedOpenSet;
+
+        /// <summary>
+        ///     Cached closed set
+        /// </summary>
         private HashSet<Node> _cachedClosedSet;
+
+        /// <summary>
+        ///     The cached, last walkable node forming the path
+        /// </summary>
         private Node _cachedLastPathNode;
 
+        /// <summary>
+        ///     The total execution time spent while updating the <see cref="PathfindingGrid" />
+        /// </summary>
         public double TotalTimeUpdateGrid;
+
+        /// <summary>
+        ///     The total execution time spent pathfinding with unknown nodes as unwalkable
+        /// </summary>
         public double TotalTimePathfinding01;
+
+        /// <summary>
+        ///     The total execution time spent pathfinding with unknown nodes as walkable
+        /// </summary>
         public double TotalTimePathfinding02;
 
         #endregion
 
         #region Methods
 
+        /// <summary>
+        ///     Unity Awake
+        /// </summary>
         private void Awake()
         {
             if (Instance == null)
@@ -57,9 +149,15 @@ namespace Algorithm.Pathfinding
                 Destroy(gameObject);
         }
 
+        /// <summary>
+        ///     Unity Start
+        /// </summary>
         private void Start()
         {
-            QuadtreeManager.Instance.UpdatedQuadtree += (square, lw_point) =>
+            /**
+             * Subscribing to events
+             */
+            QuadtreeManager.Instance.UpdatedQuadtree += (square, sw_point) =>
             {
                 ThreadQueuer.Instance.StartThreadedAction(() =>
                 {
@@ -67,7 +165,7 @@ namespace Algorithm.Pathfinding
                     s.Start();
                     try
                     {
-                        UpdateGrid(square, lw_point, ref _updatedGrid);
+                        UpdateGrid(square, sw_point, ref _updatedGrid);
                     }
                     catch (Exception e)
                     {
@@ -75,24 +173,28 @@ namespace Algorithm.Pathfinding
                     }
 
                     s.Stop();
-                    Debug.LogWarning("Updating Grid took: " + s.Elapsed.TotalMilliseconds + "ms");
+                    //Debug.Log("Updating Grid took: " + s.Elapsed.TotalMilliseconds + "ms");
                     TotalTimeUpdateGrid += s.Elapsed.TotalMilliseconds;
                 });
             };
 
             QuadtreeManager.Instance.CheckedSpecialSquare += (isWalkable, sw_point) =>
             {
-                PathfindingGrid.NodeGrid[sw_point.x, sw_point.y].NodeType =
-                    isWalkable ? NodeTypes.WALKABLE : NodeTypes.UNWALKABLE;
+                PathfindingGrid.NodeGrid[sw_point.X, sw_point.Y].NodeType =
+                    isWalkable ? NodeTypes.Walkable : NodeTypes.Unwalkable;
                 _updatedGrid = true;
             };
         }
 
-        public void SetupPathfinding(Vector2Int start, Vector2Int goal)
+        /// <summary>
+        ///     Setup pathfinding
+        /// </summary>
+        /// <param name="start">The start position</param>
+        /// <param name="target">The target position</param>
+        public void SetupPathfinding(Vector2Int start, Vector2Int target)
         {
-            //Debug.Log("PathfindingManager - SetupPathfinding");
-            startPos = start;
-            targetPos = goal;
+            _startPos = start;
+            _targetPos = target;
 
             _cachedOpenSet =
                 new Heap<Node>(PathfindingGrid.NodeGrid.GetLength(0) * PathfindingGrid.NodeGrid.GetLength(1));
@@ -103,14 +205,19 @@ namespace Algorithm.Pathfinding
             TotalTimePathfinding01 = 0;
             TotalTimePathfinding02 = 0;
 
-            ThreadQueuer.Instance.StartThreadedAction(() => { PathfindingGrid.CreateGrid(ref createdGrid); });
+            // Start creating the pathfinding grid
+            ThreadQueuer.Instance.StartThreadedAction(() => { PathfindingGrid.SetupGrid(ref _createdGrid); });
         }
 
+        /// <summary>
+        ///     Update the <see cref="PathfindingGrid" />
+        /// </summary>
+        /// <param name="updatedSquares">List of updated squares</param>
+        /// <param name="sw_point">The South-West (Bottom-Left) point of the searched square</param>
+        /// <param name="updated">Was the grid updated</param>
         public void UpdateGrid(List<MapSquare> updatedSquares, Vector2Int sw_point, ref bool updated)
         {
-            //Debug.LogWarning("PathfindingManager - UpdateGrid");
-
-            var isWalkable = true;
+            bool isWalkable;
 
             if (updatedSquares.TrueForAll(s => s.MapType == MapTypes.Ground))
             {
@@ -122,48 +229,52 @@ namespace Algorithm.Pathfinding
             }
             else
             {
-                //Debug.LogWarning(sw_point + " nicht eindeutig!");
+                // Need more accurate square information outside of quadtree
                 if (RequestSpecialSquare != null)
                     RequestSpecialSquare.Invoke(sw_point);
                 return;
             }
 
-
-            PathfindingGrid.NodeGrid[sw_point.x, sw_point.y].NodeType =
-                isWalkable ? NodeTypes.WALKABLE : NodeTypes.UNWALKABLE;
+            PathfindingGrid.NodeGrid[sw_point.X, sw_point.Y].NodeType =
+                isWalkable ? NodeTypes.Walkable : NodeTypes.Unwalkable;
 
             updated = true;
         }
 
+        /// <summary>
+        ///     Unity Update
+        /// </summary>
         private void Update()
         {
-            if (createdGrid)
+            /**
+             * Grid was created
+             */
+            if (_createdGrid)
             {
-                //Debug.Log("PathfindingManager - Update - createdGrid");
-                startNode = PathfindingGrid.NodeGrid[startPos.x, startPos.y];
-                targetNode = PathfindingGrid.NodeGrid[targetPos.x, targetPos.y];
+                _startNode = PathfindingGrid.NodeGrid[_startPos.X, _startPos.Y];
+                _targetNode = PathfindingGrid.NodeGrid[_targetPos.X, _targetPos.Y];
 
-                _cachedLastPathNode = startNode;
+                _cachedLastPathNode = _startNode;
 
-                //Debug.Log(startNode);
-                //Debug.Log(targetNode);
-
-                createdGrid = false;
+                _createdGrid = false;
 
                 if (StartedPathfinding != null)
                     StartedPathfinding.Invoke();
 
-                startNode.NodeType = NodeTypes.WALKABLE;
-                targetNode.NodeType = NodeTypes.WALKABLE;
+                _startNode.NodeType = NodeTypes.Walkable;
+                _targetNode.NodeType = NodeTypes.Walkable;
 
+                // Start the initial pathfinding
                 _updatedGrid = true;
             }
 
+            /**
+             * Grid was updated
+             */
             if (_updatedGrid)
             {
                 _updatedGrid = false;
 
-                //Debug.LogWarning("PathfindingManager - Update - SearchPath 01");
                 ThreadQueuer.Instance.StartThreadedAction(() =>
                 {
                     var s = new Stopwatch();
@@ -179,16 +290,18 @@ namespace Algorithm.Pathfinding
                     }
 
                     s.Stop();
-                    Debug.LogWarning("Pathfinding 01 took: " + s.Elapsed.TotalMilliseconds + "ms");
+                    //Debug.Log("Pathfinding 01 took: " + s.Elapsed.TotalMilliseconds + "ms");
                     TotalTimePathfinding01 += s.Elapsed.TotalMilliseconds;
                 });
             }
 
-            if (_tryPathfindingWithUnknownWalkable)
+            /**
+             * Execute pathfinding with unknown nodes as walkable
+             */
+            if (_tryPathfinding02)
             {
-                _tryPathfindingWithUnknownWalkable = false;
+                _tryPathfinding02 = false;
 
-                //Debug.LogWarning("PathfindingManager - Update - SearchPath 02");
                 ThreadQueuer.Instance.StartThreadedAction(() =>
                 {
                     var s = new Stopwatch();
@@ -204,61 +317,58 @@ namespace Algorithm.Pathfinding
                     }
 
                     s.Stop();
-                    Debug.LogWarning("Pathfinding 02 took: " + s.Elapsed.TotalMilliseconds + "ms");
+                    //Debug.Log("Pathfinding 02 took: " + s.Elapsed.TotalMilliseconds + "ms");
                     TotalTimePathfinding02 += s.Elapsed.TotalMilliseconds;
                 });
             }
         }
 
+        /// <summary>
+        ///     Try find a path to the <see cref="_targetNode" />
+        /// </summary>
+        /// <param name="canWalkUnknown">Are unknown nodes considered walkable</param>
         public void FindPath(bool canWalkUnknown)
         {
-            //Debug.Log("PathfindingManager - FindPath - canWalkUnknown: " + canWalkUnknown);
-
             Heap<Node> openSet;
             HashSet<Node> closedSet;
 
             if (!canWalkUnknown)
             {
-                //Debug.LogWarning("Use Cached Sets");
+                // Use cached sets
                 openSet = _cachedOpenSet;
                 closedSet = _cachedClosedSet;
                 openSet.Add(_cachedLastPathNode);
             }
             else
             {
+                // Start from the zero
                 openSet =
                     new Heap<Node>(PathfindingGrid.NodeGrid.GetLength(0) * PathfindingGrid.NodeGrid.GetLength(1));
                 closedSet = new HashSet<Node>();
-                //closedSet = new HashSet<Node>(_cachedClosedSet);
-                //openSet.Add(_cachedLastPathNode);
-                openSet.Add(startNode);
+                openSet.Add(_startNode);
             }
 
             while (openSet.Count > 0)
             {
+                // Remove node from the open set and add it to the closed set
                 var currentNode = openSet.RemoveFirst();
                 closedSet.Add(currentNode);
 
-                if (currentNode == targetNode)
+                if (currentNode == _targetNode)
                 {
-                    // Found a path
-
-                    var path = RetracePath(startNode, targetNode);
+                    // Found a path to the target
+                    var path = RetracePath(_startNode, _targetNode);
 
                     if (canWalkUnknown)
                     {
                         // Get the first unknown node in the path
                         for (var i = 0; i < path.Count; i++)
-                            //Debug.LogWarning("Checking Path Node " + path[i].Position + " Type: " + path[i].NodeType);
-                            if (path[i].NodeType == NodeTypes.UNKNOWN)
+                            if (path[i].NodeType == NodeTypes.Unknown)
                             {
-                                // cache last path node
-                                if (i - 1 < 0)
-                                    _cachedLastPathNode = startNode;
-                                else
-                                    _cachedLastPathNode = path[i - 1];
+                                // cache the last node on the path that is walkable
+                                _cachedLastPathNode = i - 1 < 0 ? _startNode : path[i - 1];
 
-                                // Request map information about this node
+                                // Request map information about the first unknown node on the path
                                 if (RequestedMapTile != null)
                                     RequestedMapTile.Invoke(path[i].Position);
                                 break;
@@ -266,7 +376,11 @@ namespace Algorithm.Pathfinding
                     }
                     else
                     {
-                        // Found a valid path -> DONE!
+                        // Found a valid path from the start to the city
+
+                        /**
+                         * DONE
+                         */
                         if (FinishedPathfinding != null)
                             FinishedPathfinding.Invoke(path, true);
                     }
@@ -274,17 +388,24 @@ namespace Algorithm.Pathfinding
                     return;
                 }
 
+                /**
+                 * Check all neighbours
+                 */
                 foreach (var neighbour in PathfindingGrid.GetNeighbours(currentNode))
                 {
+                    // Is the neighbour important
                     if (!neighbour.IsWalkable(canWalkUnknown) || closedSet.Contains(neighbour)) continue;
 
-                    var newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour);
-                    if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                    // Calculate neighbours G-Cost
+                    var newMovementCostToNeighbour = currentNode.GCost + GetDistance(currentNode, neighbour);
+                    if (newMovementCostToNeighbour < neighbour.GCost || !openSet.Contains(neighbour))
                     {
-                        neighbour.gCost = newMovementCostToNeighbour;
-                        neighbour.hCost = GetDistance(neighbour, targetNode);
-                        neighbour.parent = currentNode;
+                        // Update the neighbour 
+                        neighbour.GCost = newMovementCostToNeighbour;
+                        neighbour.HCost = GetDistance(neighbour, _targetNode);
+                        neighbour.Parent = currentNode;
 
+                        // Add neighbour to the open set if it's not already in there
                         if (!openSet.Contains(neighbour))
                             openSet.Add(neighbour);
                         else
@@ -293,7 +414,7 @@ namespace Algorithm.Pathfinding
                 }
             }
 
-            // Couldn't find a path
+            // Unable to find a path
             if (canWalkUnknown)
             {
                 // There is no path
@@ -302,22 +423,26 @@ namespace Algorithm.Pathfinding
             }
             else
             {
-                // Try again with Unknown nodes as walkable
-                _tryPathfindingWithUnknownWalkable = true;
+                // Try again with unknown nodes as walkable
+                _tryPathfinding02 = true;
             }
         }
 
-        private List<Node> RetracePath(Node startNode, Node endNode)
+        /// <summary>
+        ///     Retraces the path from the target node back to the start node
+        /// </summary>
+        /// <param name="startNode">Start node</param>
+        /// <param name="targetNode">Target node</param>
+        /// <returns>The path from the start node to the target node</returns>
+        private List<Node> RetracePath(Node startNode, Node targetNode)
         {
-            //Debug.Log("PathfindingManager - RetracePath");
-
             var path = new List<Node>();
-            var currentNode = endNode;
+            var currentNode = targetNode;
 
             while (currentNode != startNode)
             {
                 path.Add(currentNode);
-                currentNode = currentNode.parent;
+                currentNode = currentNode.Parent;
             }
 
             path.Reverse();
@@ -325,12 +450,16 @@ namespace Algorithm.Pathfinding
             return path;
         }
 
+        /// <summary>
+        ///     Calculates the distance between to nodes
+        /// </summary>
+        /// <param name="nodeA">First node</param>
+        /// <param name="nodeB">Second node</param>
+        /// <returns>Distance between the two nodes</returns>
         private int GetDistance(Node nodeA, Node nodeB)
         {
-            //Debug.Log("PathfindingManager - GetDistance");
-
-            var dstX = Mathf.Abs(nodeA.Position.x - nodeB.Position.x);
-            var dstY = Mathf.Abs(nodeA.Position.y - nodeB.Position.y);
+            var dstX = Mathf.Abs(nodeA.Position.X - nodeB.Position.X);
+            var dstY = Mathf.Abs(nodeA.Position.Y - nodeB.Position.Y);
 
             if (dstX > dstY)
                 return 14 * dstY + 10 * (dstX - dstY);

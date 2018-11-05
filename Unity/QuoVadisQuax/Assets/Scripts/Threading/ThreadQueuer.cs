@@ -3,9 +3,14 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
+/// <summary>
+///     Manages multithreading
+/// </summary>
 public class ThreadQueuer : MonoBehaviour
 {
-    private const int MainThreadActionsMultipleMaxSize = 10;
+    #region Properties
+
+    private const int MainThreadActionsMultipleMaxSize = 100;
     private List<Action> _mainThreadActions;
     private List<Action> _mainThreadActionsMultiple;
 
@@ -13,6 +18,10 @@ public class ThreadQueuer : MonoBehaviour
     ///     The Singleton Instance
     /// </summary>
     public static ThreadQueuer Instance { get; private set; }
+
+    #endregion
+
+    #region Methods
 
     private void Awake()
     {
@@ -39,18 +48,10 @@ public class ThreadQueuer : MonoBehaviour
                 clearList = false;
             }
 
-            //Debug.LogWarning("MainThreadActionsMultiple: " + mainThreadActions.Count);
-
-            for (var i = 0; i < mainThreadActions.Count; i++)
-            {
-                var a = mainThreadActions[i];
-                a();
-            }
+            foreach (var a in mainThreadActions) a();
 
             if (clearList) _mainThreadActionsMultiple.Clear();
             else _mainThreadActionsMultiple.RemoveRange(0, MainThreadActionsMultipleMaxSize);
-
-            //Debug.LogWarning(1f/Time.deltaTime);
         }
 
         if (_mainThreadActions.Count > 0)
@@ -62,6 +63,11 @@ public class ThreadQueuer : MonoBehaviour
         }
     }
 
+    /// <summary>
+    ///     Execute an action on new thread
+    /// </summary>
+    /// <param name="threadedAction">Action to execute on new thread</param>
+    /// <param name="callback">Callback method</param>
     public void StartThreadedAction(Action threadedAction, Action callback = null)
     {
         var action = new ThreadStart(threadedAction);
@@ -71,6 +77,11 @@ public class ThreadQueuer : MonoBehaviour
         t.Start();
     }
 
+    /// <summary>
+    ///     Execute an action on the main thread
+    /// </summary>
+    /// <param name="mainThreadAction">Action to execute on the main thread</param>
+    /// <param name="callback">Callback method</param>
     public void QueueMainThreadAction(Action mainThreadAction, Action callback = null)
     {
         _mainThreadActions.Add(mainThreadAction);
@@ -78,8 +89,14 @@ public class ThreadQueuer : MonoBehaviour
             _mainThreadActions.Add(callback);
     }
 
+    /// <summary>
+    ///     Execute an action along with multiple others on the main thread
+    /// </summary>
+    /// <param name="mainThreadAction">Action to execute on the main thread</param>
     public void QueueMainThreadActionMultiple(Action mainThreadAction)
     {
         _mainThreadActionsMultiple.Add(mainThreadAction);
     }
+
+    #endregion
 }

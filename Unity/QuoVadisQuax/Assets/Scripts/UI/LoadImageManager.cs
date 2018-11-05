@@ -7,6 +7,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using Grid = Algorithm.Pathfinding.Grid;
 
+#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
+using System.Runtime.InteropServices;
+#endif
+
 /// <summary>
 ///     Manages the LoadImage GUI
 /// </summary>
@@ -17,14 +21,18 @@ public class LoadImageManager : MonoBehaviour
     [DllImport("user32.dll")] static extern bool SetForegroundWindow(IntPtr hWnd);
 #endif
 
+    #region Properties
+
     public delegate void LoadingImageEventHandler(LoadingState state);
+
+    public event LoadingImageEventHandler UpdatedLoadingState;
 
     public enum LoadingState
     {
-        NOT_LOADING,
-        LOADING,
-        FAILED,
-        DONE
+        NotLoading,
+        Loading,
+        Failed,
+        Done
     }
 
     private IntPtr _hWndUnity;
@@ -32,7 +40,7 @@ public class LoadImageManager : MonoBehaviour
     /// <summary>
     ///     Is the LoadImage GUI open
     /// </summary>
-    public bool IsOpen { get; private set; }
+    private bool IsOpen { get; set; }
 
     /// <summary>
     ///     The world position when the LoadImage GUI is open
@@ -49,10 +57,14 @@ public class LoadImageManager : MonoBehaviour
     /// </summary>
     public Texture2D MapTexture { get; private set; }
 
-    public event LoadingImageEventHandler UpdatedLoadingState;
+
     private bool _isCheckingMap;
     private bool _isMapValid;
     private bool _isProcessingImg;
+
+    #endregion
+
+    #region Methods
 
     private void Awake()
     {
@@ -66,7 +78,7 @@ public class LoadImageManager : MonoBehaviour
     private void Start()
     {
         if (UpdatedLoadingState != null)
-            UpdatedLoadingState.Invoke(LoadingState.NOT_LOADING);
+            UpdatedLoadingState.Invoke(LoadingState.NotLoading);
     }
 
     private void Update()
@@ -76,12 +88,12 @@ public class LoadImageManager : MonoBehaviour
             if (_isMapValid)
             {
                 if (UpdatedLoadingState != null)
-                    UpdatedLoadingState.Invoke(LoadingState.DONE);
+                    UpdatedLoadingState.Invoke(LoadingState.Done);
             }
             else
             {
                 if (UpdatedLoadingState != null)
-                    UpdatedLoadingState.Invoke(LoadingState.FAILED);
+                    UpdatedLoadingState.Invoke(LoadingState.Failed);
             }
 
             _isProcessingImg = false;
@@ -137,7 +149,7 @@ public class LoadImageManager : MonoBehaviour
             if (File.Exists(imagePath))
             {
                 if (UpdatedLoadingState != null)
-                    UpdatedLoadingState.Invoke(LoadingState.LOADING);
+                    UpdatedLoadingState.Invoke(LoadingState.Loading);
 
                 // Create map texture
                 var imageData = File.ReadAllBytes(imagePath);
@@ -180,7 +192,7 @@ public class LoadImageManager : MonoBehaviour
         {
             Debug.LogError(e.Message);
             if (UpdatedLoadingState != null)
-                UpdatedLoadingState.Invoke(LoadingState.FAILED);
+                UpdatedLoadingState.Invoke(LoadingState.Failed);
         }
     }
 
@@ -237,4 +249,6 @@ public class LoadImageManager : MonoBehaviour
     {
         return new Vector2Int(i % width, i / width);
     }
+
+    #endregion
 }
