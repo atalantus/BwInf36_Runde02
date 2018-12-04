@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.2">
+  <zoom_level>11</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>539</x>
+      <y>429</y>
+      <w>264</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>Program
+--
+private static void Main(string[] args)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>121</x>
+      <y>429</y>
+      <w>374</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;static&gt;&gt;
+Utilities
+--
+public static void FillArray&lt;T&gt;(this T[] array, T value)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>22</x>
+      <y>121</y>
+      <w>286</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>Wall
+--
+public Row[] Rows
+--
+private Wall(int height)
+public Wall(int height, int bricksPerRow)
+public Wall Clone()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>737</x>
+      <y>88</y>
+      <w>440</w>
+      <h>286</h>
+    </coordinates>
+    <panel_attributes>Row : IComparable&lt;Row&gt;
+--
+public bool[] Bricks
+public int[] PlacedBricks
+public int PlacedBricksIndex
+public int RowSum
+public List&lt;NextPossibleRowSum&gt; NextPossibleRowSums
+public int NextBrickToPlace
+private List&lt;NextPossibleRowSums&gt; _lastPossibleRowSums
+--
+public Row()
+public Row(int bricksPerRow)
+public void PlaceNextBrick()
+public void RemoveLastBrick()
+public Row Clone()
+public int CompareTo(Row other)
+public override string ToString()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>715</x>
+      <y>770</y>
+      <w>506</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;struct&gt;&gt;
+NextPossibleRowSum
+--
+public int PossibleRowSum
+public int UsedBrickIndex
+--
+public NextPossibleRowSum(int possibleRowSum, int usedBrickIndex)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>22</x>
+      <y>594</y>
+      <w>660</w>
+      <h>286</h>
+    </coordinates>
+    <panel_attributes>WallBuilder
+--
+public int WallHeight
+public int BricksPerRow
+public int WallLength
+public int GapCount
+public int UsedGapCount
+public int FreeGaps
+public Stopwatch AlgorithmStopwatch
+--
+**public void BuildWall(int n)**
+**public Wall FillNextGap(int nextGap, Wall curWall, int freeGaps)**
+private bool ContainsPossibleRowSum(Row row, NextPossibleRowSum nprs, int nextGapPos)
+public void CalculateWallProperties()
+private void PrintWallProperties()
+private void PrintWall(Wall wall)
+private void PrintAlgorithmTime()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>297</x>
+      <y>176</y>
+      <w>462</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0,n
+m2=
+hat als Reihen &gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;400.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>957</x>
+      <y>363</y>
+      <w>242</w>
+      <h>429</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0,n
+m2=
+hat als moegliche RowSums &gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;370.0</additional_attributes>
+  </element>
+</diagram>
